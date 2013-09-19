@@ -20,7 +20,7 @@ from logicmonitor import LogicMonitor
 
 class Hostgroup(LogicMonitor):
     
-    def __init__(self, fullpath, description=None, properties={}, alertenable=True, credentials_file="/tmp/lm_credentials.txt"):
+    def __init__(self, fullpath, description=None, properties={}, alertenable=True, credentials_file="lm_credentials.txt"):
         """Initializor for the LogicMonitor host object"""
         LogicMonitor.__init__(self, credentials_file)
         self.fullpath = fullpath
