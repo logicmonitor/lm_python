@@ -18,7 +18,7 @@ from logicmonitor import LogicMonitor
 
 class Host(LogicMonitor):
     
-    def __init__(self, collector, hostname=None, displayname=None, description=None, properties={}, groups=[], alertenable=True, credentials_file="lm_credentials.txt"):
+    def __init__(self, collector, hostname=None, displayname=None, description=None, properties={}, groups=[], alertenable=True, company="companyname", user="bruce.banner", password="1mth3HULK!!!", digest=False):
         """Initializor for the LogicMonitor host object"""
         LogicMonitor.__init__(self, credentials_file)
         self.collector = self.getcollectorbydescription(collector)

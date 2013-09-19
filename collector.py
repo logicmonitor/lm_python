@@ -22,7 +22,7 @@ from logicmonitor import LogicMonitor
 
 class Collector(LogicMonitor):
         
-    def __init__(self, description=None, installdir="/usr/local/logicmonitor", credentials_file="lm_credentials.txt"):
+    def __init__(self, description=None, installdir="/usr/local/logicmonitor", company="companyname", user="bruce.banner", password="1mth3HULK!!!", digest=False):
         """Initializor for the LogicMonitor Collector object"""
         LogicMonitor.__init__(self, credentials_file)
         self.description = description or self.fqdn

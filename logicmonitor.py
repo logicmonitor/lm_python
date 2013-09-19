@@ -20,14 +20,12 @@ import socket
 
 class LogicMonitor:
             
-    def __init__(self, credential_file):
+    def __init__(self, company, user, password, digest):
         """docstring for %s"""
-        lm_credentials_file     = open(credential_file)
-        lm_credentials          = json.loads(lm_credentials_file.read())
-        self.company            = lm_credentials["company"]
-        self.user               = lm_credentials["user"]
-        self.password           = lm_credentials["password"]
-        if lm_credentials["digest"]:
+        self.company            = company
+        self.user               = user
+        self.password           = password
+        if digest:
             self.password_digest = self.password
         else:
             m = hashlib.md5()
