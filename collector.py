@@ -199,8 +199,8 @@ class Collector(LogicMonitor):
             offsetstart = start + timedelta(0, offset)
             offsetend = offsetstart + timedelta(0, duration*60)
             resp = json.loads(self.rpc("setAgentSDT", {"agentId": self.id, "type": 1, "notifyCC": True,
-            "year": offsetstart.year, "month": offsetstart.month, "day": offsetstart.day, "hour": offsetstart.hour, "minute": offsetstart.minute,
-            "endYear": offsetend.year, "endMonth": offsetend.month, "endDay": offsetend.day, "endHour": offsetend.hour, "endMinute": offsetend.minute,
+            "year": offsetstart.year, "month": offsetstart.month - 1, "day": offsetstart.day, "hour": offsetstart.hour, "minute": offsetstart.minute,
+            "endYear": offsetend.year, "endMonth": offsetend.month - 1, "endDay": offsetend.day, "endHour": offsetend.hour, "endMinute": offsetend.minute,
             }))
             if resp["status"] == 200:
                 return resp["data"]

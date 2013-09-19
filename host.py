@@ -21,11 +21,10 @@ class Host(LogicMonitor):
     def __init__(self, collector, hostname=None, displayname=None, description=None, properties={}, groups=[], alertenable=True, credentials_file="/tmp/lm_credentials.txt"):
         """Initializor for the LogicMonitor host object"""
         LogicMonitor.__init__(self, credentials_file)
-        self.collector = self._getcollectorbydescription(collector)
-        #end if
+        self.collector = self.getcollectorbydescription(collector)
         self.hostname = hostname or self.fqdn
         self.displayname = displayname or self.fqdn
-        self.info = self._gethostbydisplayname(self.displayname) or self._gethostbyhostname(self.hostname)
+        self.info = self.gethostbydisplayname(self.displayname) or self.gethostbyhostname(self.hostname)
         self.properties = properties
         self.groups = groups
         self.description = description
@@ -99,8 +98,8 @@ class Host(LogicMonitor):
     
     def ischanged(self):
         """Return true if the host doesn't match the LogicMonitor account"""
-        ignore = ['system.categories']
-        hostresp = self._gethostbydisplayname(self.displayname) or self._gethostbyhostname(self.hostname)
+        ignore = ['system.categories', 'snmp.version']
+        hostresp = self.gethostbydisplayname(self.displayname) or self.gethostbyhostname(self.hostname)
         propresp = self.getproperties()
         if propresp and hostresp:
             if hostresp["alertEnable"] != self.alertenable:
@@ -124,7 +123,7 @@ class Host(LogicMonitor):
                 #end if
             #end for
             for group in self.groups:
-                groupjson = self._getgroup(group)
+                groupjson = self.getgroup(group)
                 if groupjson is None:
                     return True
                 elif groupjson['id'] not in g:
@@ -169,8 +168,8 @@ class Host(LogicMonitor):
             offsetstart = start + timedelta(0, offset)
             offsetend = offsetstart + timedelta(0, duration*60)
             resp = json.loads(self.rpc("setHostSDT", {"hostId": self.info["id"], "type": 1, 
-            "year": offsetstart.year, "month": offsetstart.month, "day": offsetstart.day, "hour": offsetstart.hour, "minute": offsetstart.minute,
-            "endYear": offsetend.year, "endMonth": offsetend.month, "endDay": offsetend.day, "endHour": offsetend.hour, "endMinute": offsetend.minute,
+            "year": offsetstart.year, "month": offsetstart.month-1, "day": offsetstart.day, "hour": offsetstart.hour, "minute": offsetstart.minute,
+            "endYear": offsetend.year, "endMonth": offsetend.month-1, "endDay": offsetend.day, "endHour": offsetend.hour, "endMinute": offsetend.minute,
             }))
             if resp["status"] == 200:
                 return resp["data"]
@@ -189,110 +188,7 @@ class Host(LogicMonitor):
     #                                  #
     ####################################    
 
-    def _gethostbyhostname(self, hostname):
-        hostlist_json = json.loads(self.rpc("getHosts", {"hostGroupId": 1}))
-        if hostlist_json["status"] == 200:
-            hosts = hostlist_json["data"]["hosts"]
-            for host in hosts:
-                if host["hostName"] == hostname and host["agentId"] == self.collector["id"]:
-                    return host
-                #end if
-            #end for
-            return None
-        else:
-            print "Error: Unable to retrieve list of hosts from server"
-            exit(resp["status"])
-        #end if
-    #end gethostbyhostname
-
-    def _gethostbydisplayname(self, displayname):
-        host_json = json.loads(self.rpc("getHost", {"displayName": displayname}))
-        if host_json["status"] == 200:
-            return host_json["data"]
-        else:
-            return None
-        #end if
-    #end gethostbydisplayname
-
-    def _getcollectorbyid(self, id):
-        """return the collector json object for the collector with matching ID in your LogicMonitor account"""
-        collector_json = json.loads(self.rpc("getAgent", {"id": id}))
-        if collector_json["status"] == 200:
-            return collector_json["data"]
-        else:
-            exit(resp["status"])
-        #end if
-    #end getcollectorbyid
-    
-    def _getcollectorbydescription(self, description):
-        """return the collector json object for the collector with the matching FQDN (description) in your LogicMonitor account"""
-        collector_list = self.getcollectors()
-        if collector_list is not None:
-            for collector in collector_list:
-                if collector["description"] == description:
-                    return collector
-                #end if
-            #end for
-        #end if
-        return None
-    #end getcollectorbydescription
-    
-    def _getgroup(self, fullpath):
-        """Return a JSON object with the current state of a group in your LogicMonitor account"""
-        resp = json.loads(self.rpc("getHostGroups", {}))
-        if resp["status"] == 200:
-            groups = resp["data"]
-            for group in groups:
-                if group["fullPath"] == fullpath.lstrip('/'):
-                    return group
-                #end if
-            #end for
-        else:
-            print "Error: Unable to retreive the list of host groups from the server."
-            exit(resp["status"])
-        #end if
-        return None
-    #end _getgroup
-    
-    def _creategroup(self, fullpath):
-        """Recursively create a path of host groups. return value is the id of the newly created hostgroup in your LogicMonitor account"""
-        if self._getgroup(fullpath):
-            return self._getgroup(fullpath)["id"]
-        #end if
-        parentpath, name = fullpath.rsplit('/', 1)
-        parentgroup = self._getgroup(parentpath)
-        if fullpath == "/":
-            return 1
-        elif parentpath == "":
-            parentid = 1
-            resp = json.loads(self.rpc("addHostGroup", {"name": name, "parentId": parentid, "alertEnable": True}))
-            if resp["status"] == 200:
-                return resp["data"]["id"]
-            else:
-                print "Error: unable to create new hostgroup"
-                exit(resp["status"])
-            #end if
-        elif parentgroup:
-            parentid = parentgroup["id"]
-            resp = json.loads(self.rpc("addHostGroup", {"name": name, "parentId": parentid, "alertEnable": True}))
-            if resp["status"] == 200:
-                return resp["data"]["id"]
-            else:
-                print "Error: unable to create new hostgroup"
-                exit(resp["status"])
-            #end if
-        else:
-            resp = json.loads(self.rpc("addHostGroup", {"name": name, "parentId": self._creategroup(parentpath), "alertEnable": True}))
-            if resp["status"] == 200:
-                return resp["data"]["id"]
-            else:
-                print "Error: unable to create new hostgroup"
-                print json.dumps(resp)
-            #end if
-            
-        #end if
-    #end _createparentgroup
-    
+        
     def _buildhosthash(self, hostname, displayname, collector, description, groups, properties, alertenable):
         """Return a property formated hash for the creation of a host using the rpc function"""
         h = {}
@@ -309,7 +205,7 @@ class Host(LogicMonitor):
         if groups != []:
             groupids = ""
             for group in groups:
-                groupids = groupids + str(self._creategroup(group)) + ","
+                groupids = groupids + str(self.creategroup(group)) + ","
             #end for
             h["hostGroupIds"] = groupids.rstrip(',')
         #end if

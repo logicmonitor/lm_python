@@ -80,6 +80,107 @@ class LogicMonitor:
             self.module.fail_json(msg=resp)
         #end if
     #end getcollectors
+    
+    def getgroup(self, fullpath):
+        """Return a JSON object with the current state of a group in your LogicMonitor account"""
+        resp = json.loads(self.rpc("getHostGroups", {}))
+        if resp["status"] == 200:
+            groups = resp["data"]
+            for group in groups:
+                if group["fullPath"] == fullpath.lstrip('/'):
+                    return group
+                #end if
+            #end for
+        #end if
+        return None
+    #end getgroup
 
+    def creategroup(self, fullpath):
+        """Recursively create a path of host groups. return value is the id of the newly created hostgroup in your LogicMonitor account"""
+        if self.getgroup(fullpath):
+            #group already exists
+            return self.getgroup(fullpath)["id"]
+        #end if
+        if fullpath == "/":
+            #manage the global settings
+            return 1
+        #end if
+        parentpath, name = fullpath.rsplit('/', 1)
+        parentgroup = self.getgroup(parentpath)
+        if parentpath == "":
+            parentid = 1
+            resp = json.loads(self.rpc("addHostGroup", {"name": name, "parentId": parentid, "alertEnable": True}))
+            if resp["status"] == 200:
+                return resp["data"]["id"]
+            else:
+                print "Error: unable to create new hostgroup"
+                exit(resp["status"])
+            #end if
+        elif parentgroup:
+            parentid = parentgroup["id"]
+            resp = json.loads(self.rpc("addHostGroup", {"name": name, "parentId": parentid, "alertEnable": True}))
+            if resp["status"] == 200:
+                return resp["data"]["id"]
+            else:
+                print "Error: unable to create new hostgroup"
+                exit(resp["status"])
+            #end if
+        else:
+            resp = json.loads(self.rpc("addHostGroup", {"name": name, "parentId": self.creategroup(parentpath), "alertEnable": True}))
+            if resp["status"] == 200:
+                return resp["data"]["id"]
+            else:
+                print "Error: unable to create new hostgroup"
+                print json.dumps(resp)
+            #end if
+            
+        #end if
+    #end creategroup
+    
+    def gethostbyhostname(self, hostname, collector):
+        hostlist_json = json.loads(self.rpc("getHosts", {"hostGroupId": 1}))
+        if collector is not None and hostlist_json["status"] == 200:
+            hosts = hostlist_json["data"]["hosts"]
+            for host in hosts:
+                if host["hostName"] == hostname and host["agentId"] == collector["id"]:
+                    return host
+                #end if
+            #end for
+        #end if
+        return None
+    #end gethostbyhostname
+
+    def gethostbydisplayname(self, displayname):
+        host_json = json.loads(self.rpc("getHost", {"displayName": displayname}))
+        if host_json["status"] == 200:
+            return host_json["data"]
+        else:
+            return None
+        #end if
+    #end gethostbydisplayname
+
+    def getcollectorbyid(self, id):
+        """return the collector json object for the collector with matching ID in your LogicMonitor account"""
+        collector_json = json.loads(self.rpc("getAgent", {"id": id}))
+        if collector_json["status"] == 200:
+            return collector_json["data"]
+        else:
+            exit(resp["status"])
+        #end if
+    #end getcollectorbyid
+    
+    def getcollectorbydescription(self, description):
+        """return the collector json object for the collector with the matching FQDN (description) in your LogicMonitor account"""
+        collector_list = self.getcollectors()
+        if collector_list is not None:
+            for collector in collector_list:
+                if collector["description"] == description:
+                    return collector
+                #end if
+            #end for
+        #end if
+        return None
+    #end getcollectorbydescription
+    
     
 #end LogicMonitor
