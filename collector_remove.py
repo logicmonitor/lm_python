@@ -36,7 +36,7 @@ def main():
 
     col = Collector(params)
 
-    exit_code = col.destroy()
+    exit_code = col.remove()
 
     return exit_code
 
