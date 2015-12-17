@@ -194,7 +194,6 @@ class Collector(LogicMonitor):
             logging.debug("Platform is Linux")
 
             output = Service.getStatus("logicmonitor-agent")
-
             if "is running" not in output:
                 logging.debug("Service logicmonitor-agent is not running")
                 logging.debug("System changed")
@@ -204,12 +203,12 @@ class Collector(LogicMonitor):
                     self.exit(changed=True)
 
                 logging.debug("Starting logicmonitor-agent service")
-                output = Service.doAction("logicmonitor-agent", "start")
+                (output, err) = Service.doAction("logicmonitor-agent", "start")
 
                 if output != 0:
                     self.fail(
                         msg="Error: Failed starting logicmonitor-agent " +
-                            "service. {0}".format(output))
+                            "service. {0}".format(err))
 
             output = Service.getStatus("logicmonitor-watchdog")
 
@@ -222,12 +221,13 @@ class Collector(LogicMonitor):
                     self.exit(changed=True)
 
                 logging.debug("Starting logicmonitor-watchdog service")
-                output = Service.doAction("logicmonitor-watchdog", "start")
+                (output, err) = Service.doAction("logicmonitor-watchdog",
+                                                 "start")
 
                 if output != 0:
                     self.fail(
                         msg="Error: Failed starting logicmonitor-watchdog " +
-                            "service. {0}".format(output))
+                            "service. {0}".format(err))
         else:
             self.fail(
                 msg="Error: LogicMonitor Collector must be " +
@@ -241,20 +241,21 @@ class Collector(LogicMonitor):
             logging.debug("Platform is Linux")
 
             logging.debug("Restarting logicmonitor-agent service")
-            output = Service.doAction("logicmonitor-agent", "restart")
+            (output, err) = Service.doAction("logicmonitor-agent", "restart")
 
             if output != 0:
                 self.fail(
                     msg="Error: Failed starting logicmonitor-agent " +
-                        "service. {0}".format(output))
+                        "service. {0}".format(err))
 
             logging.debug("Restarting logicmonitor-watchdog service")
-            output = Service.doAction("logicmonitor-watchdog", "restart")
+            (output, err) = Service.doAction("logicmonitor-watchdog",
+                                             "restart")
 
             if output != 0:
                 self.fail(
                     msg="Error: Failed starting logicmonitor-watchdog " +
-                        "service. {0}".format(output))
+                        "service. {0}".format(err))
         else:
             (self.fail(
                 msg="Error: LogicMonitor Collector must be installed " +
@@ -278,12 +279,12 @@ class Collector(LogicMonitor):
                     self.exit(changed=True)
 
                 logging.debug("Stopping service logicmonitor-agent")
-                output = Service.doAction("logicmonitor-agent", "stop")
+                (output, err) = Service.doAction("logicmonitor-agent", "stop")
 
                 if output != 0:
                     self.fail(
                         msg="Error: Failed stopping logicmonitor-agent " +
-                            "service. {0}".format(output))
+                            "service. {0}".format(err))
 
             output = Service.getStatus("logicmonitor-watchdog")
 
@@ -296,12 +297,12 @@ class Collector(LogicMonitor):
                     self.exit(changed=True)
 
                 logging.debug("Stopping service logicmonitor-watchdog")
-                output = Service.doAction("logicmonitor-watchdog", "stop")
+                (output, err) = Service.doAction("logicmonitor-watchdog", "stop")
 
                 if output != 0:
                     self.fail(
                         msg="Error: Failed stopping logicmonitor-watchdog " +
-                            "service. {0}".format(output))
+                            "service. {0}".format(err))
         else:
             self.fail(
                 msg="Error: LogicMonitor Collector must be " +
