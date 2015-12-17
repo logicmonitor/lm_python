@@ -461,7 +461,7 @@ class Collector(LogicMonitor):
 
             if delete["status"] is 200:
                 logging.debug("RPC call succeeded")
-                return delete["data"]
+                return delete
             else:
                 # The collector couldn't unregister. Start the service again
                 logging.debug("Error unregistering collecting. {0}"
