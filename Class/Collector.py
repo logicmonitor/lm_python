@@ -459,8 +459,10 @@ class Collector(LogicMonitor):
                 return delete["data"]
             else:
                 # The collector couldn't unregister. Start the service again
-                logging.debug("Error unregistering collecting." +
-                              "The collector service still be restarted")
+                logging.debug("Error unregistering collecting. {0}"
+                              .format(json.dumps(delete)))
+                logging.debug("The collector service will be restarted")
+
                 self.start()
                 self.fail(msg=json.dumps(delete))
         else:
