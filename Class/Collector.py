@@ -50,7 +50,7 @@ class Collector(LogicMonitor):
         self.install()
         self.start()
 
-    def destroy(self):
+    def remove(self):
         """Idempotent function to make sure that there is
         not a running collector installed and registered"""
         logging.debug("Running Collector.destroy...")
