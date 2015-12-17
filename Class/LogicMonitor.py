@@ -108,6 +108,7 @@ class LogicMonitor(object):
         specified hostname"""
         logging.debug("Running LogicMonitor.get_host_by_hostname...")
 
+        logging.debug("Looking for hostname {0}".format(hostname))
         logging.debug("Making RPC call to 'getHosts'")
         hostlist_json = json.loads(self.rpc("getHosts", {"hostGroupId": 1}))
 
@@ -141,6 +142,7 @@ class LogicMonitor(object):
         specified display name"""
         logging.debug("Running LogicMonitor.get_host_by_displayname...")
 
+        logging.debug("Looking for displayname {0}".format(displayname))
         logging.debug("Making RPC call to 'getHost'")
         host_json = (json.loads(self.rpc("getHost",
                                 {"displayName": displayname})))
