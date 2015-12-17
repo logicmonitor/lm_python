@@ -8,7 +8,7 @@ import sys
 from datetime import datetime, timedelta
 from subprocess import call
 from LogicMonitor import LogicMonitor
-import Service
+from Service import Service
 
 
 class Collector(LogicMonitor):
