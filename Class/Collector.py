@@ -4,9 +4,10 @@ import json
 import logging
 import os
 import platform
+import subprocess
 import sys
 from datetime import datetime, timedelta
-from subprocess import call
+from subprocess import Popen
 from LogicMonitor import LogicMonitor
 from Service import Service
 
@@ -80,9 +81,10 @@ class Collector(LogicMonitor):
                                str(self.id) + "_" + str(arch) +
                                ".bin")
 
-            """create the installer file and
-            return the file object"""
+            logging.debug("Looking for existing installer at {0}"
+                          .format(installfilepath))
             if not os.path.isfile(installfilepath):
+                logging.debug("No previous installer found")
                 logging.debug("System changed")
                 self.change = True
 
@@ -111,10 +113,8 @@ class Collector(LogicMonitor):
                 msg="Error: LogicMonitor Collector must be " +
                 "installed on a Linux device."))
         else:
-            (self.fail(
-                msg="Error: Something went wrong. We were " +
-                "unable  to retrieve the installer from " +
-                "the server"))
+            self.fail(
+                msg="Error: Unable  to retrieve the installer from the server")
 
     def install(self):
         """Execute the LogicMonitor installer if not
@@ -141,12 +141,14 @@ class Collector(LogicMonitor):
                 os.chmod(installer, 0744)
 
                 logging.debug("Executing installer")
-                output = call([installer, "-y"])
+                p = (Popen([installer, "-y"],
+                           stdout=subprocess.PIPE))
+                ret, err = p.communicate()
 
-                if output != 0:
+                if p.returncode != 0:
                     (self.fail(
-                        msg="There was an issue installing " +
-                        "the collector"))
+                        msg="Error: Unable to install collector: {0}"
+                            .format(err)))
                 else:
                     logging.debug("Collector installed successfully")
             else:
@@ -171,12 +173,14 @@ class Collector(LogicMonitor):
                 self.exit(changed=True)
 
             logging.debug("Running collector uninstaller")
-            output = call([uninstallfile])
+            p = (Popen([uninstallfile],
+                       stdout=subprocess.PIPE))
+            ret, err = p.communicate()
 
-            if output != 0:
-                (self.fail(
-                    msg="There was an issue installing the " +
-                    "collector"))
+            if p.returncode != 0:
+                self.fail(
+                    msg="Error: Unable to uninstall collector: {0}"
+                    .format(err))
             else:
                 logging.debug("Collector successfully uninstalled")
         else:
@@ -297,7 +301,8 @@ class Collector(LogicMonitor):
                     self.exit(changed=True)
 
                 logging.debug("Stopping service logicmonitor-watchdog")
-                (output, err) = Service.doAction("logicmonitor-watchdog", "stop")
+                (output, err) = Service.doAction("logicmonitor-watchdog",
+                                                 "stop")
 
                 if output != 0:
                     self.fail(
