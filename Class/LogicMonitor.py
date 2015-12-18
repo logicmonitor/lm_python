@@ -19,11 +19,9 @@ class LogicMonitor(object):
         self.password = params["password"]
         self.fqdn = socket.getfqdn()
 
-        # Use Ansible module functions if provided
+        # Grab the Ansible module if provided
         if module is not None:
-            self.check_mode = module.check_mode
-            self.fail = module.fail_json
-            self.exit = module.exit_json
+            self.module = module
 
     def rpc(self, action, params):
         """Make a call to the LogicMonitor RPC library
@@ -101,7 +99,7 @@ class LogicMonitor(object):
             logging.debug("RPC call succeeded")
             return resp_json["data"]
         else:
-            self.module.fail_json(msg=resp)
+            self.fail(msg=resp)
 
     def get_host_by_hostname(self, hostname, collector):
         """Returns a host object for the host matching the
@@ -257,17 +255,27 @@ class LogicMonitor(object):
 
     def fail(self, msg):
         logging.warning(msg)
-        print(msg)
-        sys.exit(1)
+
+        # Use Ansible module functions if provided
+        if self.module is not None:
+            self.module.fail_json(msg=msg)
+        else:
+            print(msg)
+            sys.exit(1)
 
     def exit(self, changed):
         logging.debug("Changed: {0}".format(changed))
-        print("Changed: {0}".format(changed))
-        sys.exit(0)
+
+        # Use Ansible module functions if provided
+        if self.module is not None:
+            self.module.exit_json(changed=changed)
+        else:
+            print("Changed: {0}".format(changed))
+            sys.exit(0)
 
     def output_info(self, info):
         logging.debug("Properties: {0}".format(info))
 
         if hasattr(self, "module"):
             logging.debug("Registering properties as Ansible facts")
-            self.exit(changed=False, ansible_facts=info)
+            self.module.exit_json(changed=False, ansible_facts=info)
