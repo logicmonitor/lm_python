@@ -21,13 +21,6 @@ class Host(LogicMonitor):
             logging.debug("Collector is {0}".format(self.params["collector"]))
             self.collector = (self.get_collector_by_description(
                               self.params["collector"]))
-        else:
-            self.fail(msg="Error: No collector specified.")
-
-        # Verify Collector was found
-        if self.collector is None:
-            self.fail("Error: Collector {0} not found."
-                      .format(self.params["collector"]))
 
         if self.params["hostname"]:
             logging.debug("Hostname is {0}".format(self.params["hostname"]))
@@ -137,6 +130,8 @@ class Host(LogicMonitor):
                 logging.debug("RPC call failed")
                 logging.debug(resp)
                 return resp["errmsg"]
+        elif self.collector is None:
+            self.fail(msg="No collector specified")
         else:
             logging.debug("Host already registered")
 
