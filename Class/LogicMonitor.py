@@ -18,10 +18,12 @@ class LogicMonitor(object):
         self.user = params["user"]
         self.password = params["password"]
         self.fqdn = socket.getfqdn()
+        self.urlopen = urllib.urlopen
 
         # Grab the Ansible module if provided
         if module is not None:
             self.module = module
+            self.urlopen = open_url  # use the ansible provided open_url
 
     def rpc(self, action, params):
         """Make a call to the LogicMonitor RPC library
@@ -40,7 +42,7 @@ class LogicMonitor(object):
         param_str = param_str + creds
 
         try:
-            f = (urllib.urlopen(
+            f = (self.urlopen(
                 "https://{0}.logicmonitor.com/santaba/rpc/{1}?{2}"
                 .format(self.company, action, param_str)))
 
@@ -76,7 +78,7 @@ class LogicMonitor(object):
             logging.debug("Attempting to open URL: " +
                           "https://{0}.logicmonitor.com/santaba/do/{1}?{2}"
                           .format(self.company, action, param_str))
-            f = (urllib.urlopen(
+            f = (self.urlopen(
                 "https://{0}.logicmonitor.com/santaba/do/{1}?{2}"
                 .format(self.company, action, param_str)))
             return f.read()
