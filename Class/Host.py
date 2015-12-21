@@ -14,6 +14,7 @@ class Host(LogicMonitor):
         logging.debug("Instantiating Host object")
         self.change = False
         self.params = params
+        self.collector = None
 
         LogicMonitor.__init__(self, module, **self.params)
 
