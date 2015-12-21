@@ -258,7 +258,7 @@ class LogicMonitor(object):
 
         # Use Ansible module functions if provided
         if self.module is not None:
-            self.module.fail_json(msg=msg)
+            self.module.fail_json(msg=msg, changed=self.change)
         else:
             print(msg)
             sys.exit(1)

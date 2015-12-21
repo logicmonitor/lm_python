@@ -18,7 +18,7 @@ class Collector(LogicMonitor):
         """Initializor for the LogicMonitor Collector object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating Collector object")
-
+        self.change = False
         self.params = params
 
         LogicMonitor.__init__(self, module, **params)
@@ -30,7 +30,6 @@ class Collector(LogicMonitor):
 
         self.info = self._get()
         self.installdir = "/usr/local/logicmonitor"
-        self.change = False
         self.platform = platform.system()
         self.is_64bits = sys.maxsize > 2**32
         self.duration = self.params['duration']

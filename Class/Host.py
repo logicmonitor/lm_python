@@ -12,7 +12,7 @@ class Host(LogicMonitor):
         """Initializor for the LogicMonitor host object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating Host object")
-
+        self.change = False
         self.params = params
 
         LogicMonitor.__init__(self, module, **self.params)
@@ -49,7 +49,6 @@ class Host(LogicMonitor):
         self.description = self.params["description"]
         self.starttime = self.params["starttime"]
         self.duration = self.params["duration"]
-        self.change = False
         self.alertenable = self.params["alertenable"]
 
     def create(self):
