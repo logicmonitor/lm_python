@@ -4,12 +4,11 @@ import logging
 import subprocess
 from subprocess import Popen
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 class Service(object):
     @staticmethod
     def getStatus(name):
+        logging.basicConfig(level=logging.DEBUG)
         logging.debug("Retrieving status of service {0}".format(name))
 
         ret = -1
