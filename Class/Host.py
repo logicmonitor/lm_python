@@ -486,8 +486,14 @@ class Host(LogicMonitor):
                     p[prop["name"]] = prop["value"]
 
         logging.debug("Comparing properties")
-        if p != self.properties:
-            return True
+        # Iterate provided properties and compare to received properties
+        for prop in self.properties:
+            if (prop not in p or
+               p[prop] != self.properties[prop]):
+                logging.debug("Properties mismatch")
+                return True
+        logging.debug("Properties match")
+
     def _strip_groups(self, groups):
         """Function to strip whitespace from group list.
         This function provides the user some flexibility when
