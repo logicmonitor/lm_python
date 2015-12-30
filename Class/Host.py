@@ -46,11 +46,14 @@ class Host(LogicMonitor):
 
         self.info = info
         self.properties = self.params["properties"]
-        self.groups = self.params["groups"]
         self.description = self.params["description"]
         self.starttime = self.params["starttime"]
         self.duration = self.params["duration"]
         self.alertenable = self.params["alertenable"]
+        if self.params["groups"] is not None:
+            self.groups = self._strip_groups(self.params["groups"])
+        else:
+            self.groups = None
 
     def create(self):
         """Idemopotent function to create if missing,
