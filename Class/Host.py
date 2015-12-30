@@ -465,3 +465,9 @@ class Host(LogicMonitor):
         logging.debug("Comparing properties")
         if p != self.properties:
             return True
+    def _strip_groups(self, groups):
+        """Function to strip whitespace from group list.
+        This function provides the user some flexibility when
+        formatting group arguments """
+        logging.debug("Running Host._strip_groups...")
+        return map(lambda x: x.strip(), groups)
