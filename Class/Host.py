@@ -365,8 +365,7 @@ class Host(LogicMonitor):
             groupids = ""
 
             for group in groups:
-                groupids = (groupids +
-                            str(self.create_group(group)) + ",")
+                groupids = groupids + str(self.create_group(group)) + ","
 
             h["hostGroupIds"] = groupids.rstrip(',')
 
@@ -417,7 +416,6 @@ class Host(LogicMonitor):
 
         g = []
         fullpathinids = hostresp["fullPathInIds"]
-
         logging.debug("Building list of groups")
         for path in fullpathinids:
             if path != []:
@@ -436,19 +434,23 @@ class Host(LogicMonitor):
                 groupjson = self.get_group(group)
 
                 if groupjson is None:
+                    logging.debug("Group mismatch. No result.")
                     return True
                 elif groupjson['id'] not in g:
+                    logging.debug("Group mismatch. ID doesn't exist.")
                     return True
                 else:
                     g.remove(groupjson['id'])
 
             if g != []:
+                logging.debug("Group mismatch. New ID exists.")
                 return True
+            logging.debug("Groups match")
 
     def _compare_props(self, propresp, ignore):
         """Function to compare the host's current
         properties against provided properties"""
-        logging.debug("Running Host._compare_props")
+        logging.debug("Running Host._compare_props...")
         p = {}
 
         logging.debug("Creating list of properties")
@@ -456,9 +458,7 @@ class Host(LogicMonitor):
             if prop["name"] not in ignore:
                 if ("*******" in prop["value"]
                    and self._verify_property(prop["name"])):
-
-                    p[prop["name"]] = (
-                        self.properties[prop["name"]])
+                    p[prop["name"]] = self.properties[prop["name"]]
                 else:
                     p[prop["name"]] = prop["value"]
 
