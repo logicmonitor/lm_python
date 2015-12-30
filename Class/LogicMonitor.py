@@ -249,11 +249,15 @@ class LogicMonitor(object):
             if resp["status"] == 200:
                 logging.debug("RPC call succeeded")
                 return resp["data"]["id"]
+            elif resp["errmsg"] == "The record already exists":
+                logging.debug("The hostgroup already exists")
+                group = self.get_group(fullpath)
+                return group["id"]
             else:
                 logging.debug("RPC call failed")
                 self.fail(
-                    msg="Error: unable to create new hostgroup." +
-                    "\n%s" % resp["errmsg"])
+                    msg="Error: unable to create new hostgroup \"{0}\".\n{1}"
+                    .format(name, resp["errmsg"]))
 
     def fail(self, msg):
         logging.warning(msg)
