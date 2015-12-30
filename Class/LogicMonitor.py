@@ -18,12 +18,14 @@ class LogicMonitor(object):
         self.user = params["user"]
         self.password = params["password"]
         self.fqdn = socket.getfqdn()
-        self.urlopen = urllib.urlopen
 
         # Grab the Ansible module if provided
-        if module is not None:
+        try:
             self.module = module
             self.urlopen = open_url  # use the ansible provided open_url
+        except:
+            self.module = None
+            self.urlopen = urllib.urlopen
 
     def rpc(self, action, params):
         """Make a call to the LogicMonitor RPC library
@@ -268,9 +270,9 @@ class LogicMonitor(object):
         logging.warning(msg)
 
         # Use Ansible module functions if provided
-        if self.module is not None:
+        try:
             self.module.fail_json(msg=msg, changed=self.change)
-        else:
+        except:
             print(msg)
             sys.exit(1)
 
@@ -278,15 +280,15 @@ class LogicMonitor(object):
         logging.debug("Changed: {0}".format(changed))
 
         # Use Ansible module functions if provided
-        if self.module is not None:
+        try:
             self.module.exit_json(changed=changed)
-        else:
+        except:
             print("Changed: {0}".format(changed))
             sys.exit(0)
 
     def output_info(self, info):
-        logging.debug("Properties: {0}".format(info))
-
-        if hasattr(self, "module"):
+        try:
             logging.debug("Registering properties as Ansible facts")
             self.module.exit_json(changed=False, ansible_facts=info)
+        except:
+            logging.debug("Properties: {0}".format(info))
