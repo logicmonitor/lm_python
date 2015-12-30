@@ -229,18 +229,22 @@ class LogicMonitor(object):
             else:
                 parentid = self.create_group(parentpath)
 
-            # h = {"name": name,
-            #      "parentId": parentid,
-            #      "alertEnable": self.alertenable or True,
-            #      "description": self.description or ""}
+            h = None
 
-            h = self._build_host_group_hash(
-                fullpath,
-                self.description,
-                self.properties,
-                self.alertenable)
-            h["name"] = name
-            h["parentId"] = parentid
+            # Determine if we're creating a group from host or hostgroup class
+            if hasattr(self, '_build_host_group_hash'):
+                h = self._build_host_group_hash(
+                    fullpath,
+                    self.description,
+                    self.properties,
+                    self.alertenable)
+                h["name"] = name
+                h["parentId"] = parentid
+            else:
+                h = {"name": name,
+                     "parentId": parentid,
+                     "alertEnable": True,
+                     "description": ""}
 
             logging.debug("Making RPC call to 'addHostGroup'")
             resp = json.loads(
