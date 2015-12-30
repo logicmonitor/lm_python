@@ -18,11 +18,6 @@ class Host(LogicMonitor):
 
         LogicMonitor.__init__(self, module, **self.params)
 
-        if self.params["collector"]:
-            logging.debug("Collector is {0}".format(self.params["collector"]))
-            self.collector = (self.get_collector_by_description(
-                              self.params["collector"]))
-
         if self.params["hostname"]:
             logging.debug("Hostname is {0}".format(self.params["hostname"]))
             self.hostname = self.params['hostname']
@@ -39,9 +34,37 @@ class Host(LogicMonitor):
                           .format(self.fqdn))
             self.displayname = self.fqdn
 
+        # Attempt to host information via display name of host name
+        logging.debug("Attempting to find host by displayname {0}"
+                      .format(self.displayname))
         info = self.get_host_by_displayname(self.displayname)
 
+        if info is not None:
+            logging.debug("Host found by displayname")
+            # Used the host information to grab the collector description
+            # if not provided
+            if (not hasattr(self.params, "collector") and
+               "agentDescription" in info):
+                logging.debug("Setting collector from host response. " +
+                              "Collector {0}".format(info["agentDescription"]))
+                self.params["collector"] = info["agentDescription"]
+        else:
+            logging.debug("Host not found by displayname")
+
+        # At this point, a valid collector description is required for success
+        # Check that the description exists or fail
+        if self.params["collector"]:
+            logging.debug("Collector specified is {0}"
+                          .format(self.params["collector"]))
+            self.collector = (self.get_collector_by_description(
+                              self.params["collector"]))
+        else:
+            self.fail(msg="No collector specified.")
+
+        # If the host wasn't found via displayname, attempt by hostname
         if info is None:
+            logging.debug("Attempting to find host by hostname {0}"
+                          .format(self.hostname))
             info = self.get_host_by_hostname(self.hostname, self.collector)
 
         self.info = info
