@@ -160,6 +160,8 @@ class Hostgroup(LogicMonitor):
                 logging.debug(resp)
                 logging.debug("RPC call succeeded")
                 return resp
+            elif resp["errmsg"] == "No such group":
+                logging.debug("Group doesn't exist")
             else:
                 logging.debug("RPC call failed")
                 logging.debug(resp)
