@@ -262,7 +262,9 @@ class Host(LogicMonitor):
             if hostresp["displayedAs"] != self.displayname:
                 return True
 
-            if hostresp["agentId"] != self.collector["id"]:
+            if (self.collector and
+               hasattr(self.collector, "id") and
+               hostresp["agentId"] != self.collector["id"]):
                 return True
 
             logging.debug("Comparing groups.")
