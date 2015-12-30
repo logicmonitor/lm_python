@@ -16,10 +16,9 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
-    parser.add_argument("-C", "--collector",
-                        help="Collector FQDN",
-                        required=True)
 
+    parser.add_argument("-C", "--collector",
+                        help="Collector FQDN")
     parser.add_argument("-H", "--hostname",
                         help="Machine hostname")
     parser.add_argument("-d", "--displayname",
