@@ -202,15 +202,16 @@ class LogicMonitor(object):
         Returns the id of the newly created hostgroup"""
         logging.debug("Running LogicMonitor.create_group...")
 
-        if self.get_group(fullpath):
+        res = self.get_group(fullpath)
+        if res:
             logging.debug("Group {0} exists.".format(fullpath))
-            return self.get_group(fullpath)["id"]
+            return res["id"]
 
         if fullpath == "/":
             logging.debug("Specified group is root. Doing nothing.")
             return 1
         else:
-            logging.debug("Creating group")
+            logging.debug("Creating group named {0}".format(fullpath))
             logging.debug("System changed")
             self.change = True
 
