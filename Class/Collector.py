@@ -371,7 +371,7 @@ class Collector(LogicMonitor):
             return resp["data"]
         else:
             logging.debug("RPC call failed")
-            self.fail(msg=json.dumps(msg=resp))
+            self.fail(msg=resp["errmsg"])
 
     def site_facts(self):
         """Output current properties information for the Collector"""
@@ -427,7 +427,7 @@ class Collector(LogicMonitor):
                     self.id = create["data"]["id"]
                     return create["data"]
                 else:
-                    self.fail(msg=json.dumps(msg=create))
+                    self.fail(msg=create["errmsg"])
             else:
                 self.info = ret
                 self.id = ret["id"]
@@ -464,11 +464,11 @@ class Collector(LogicMonitor):
             else:
                 # The collector couldn't unregister. Start the service again
                 logging.debug("Error unregistering collecting. {0}"
-                              .format(json.dumps(delete)))
+                              .format(delete["errmsg"]))
                 logging.debug("The collector service will be restarted")
 
                 self.start()
-                self.fail(msg=json.dumps(delete))
+                self.fail(msg=delete["errmsg"])
         else:
             logging.debug("Collector not found")
             return None

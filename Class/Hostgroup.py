@@ -123,7 +123,7 @@ class Hostgroup(LogicMonitor):
                     logging.debug("RPC call failed")
                     self.fail(
                         msg="Error: Unable to update the " +
-                            "host.\n{0}".format(json.dumps(resp)))
+                            "host.\n{0}".format(resp["errmsg"]))
             else:
                 logging.debug("Group properties match supplied properties. " +
                               "No changes to make")
@@ -262,7 +262,7 @@ class Hostgroup(LogicMonitor):
             return resp["data"]
         else:
             logging.debug("RPC call failed")
-            self.fail(msg=json.dumps(msg=resp))
+            self.fail(msg=resp["errmsg"])
 
     def site_facts(self):
         """Output current properties information for the Hostgroup"""

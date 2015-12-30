@@ -102,7 +102,7 @@ class Host(LogicMonitor):
             else:
                 logging.debug("Error: there was an issue retrieving the " +
                               "host properties")
-                logging.debug(json.dumps(properties_json))
+                logging.debug(properties_json["errmsg"])
 
                 self.fail(msg=properties_json["status"])
         else:
@@ -344,7 +344,7 @@ class Host(LogicMonitor):
             return resp["data"]
         else:
             logging.debug("RPC call failed")
-            self.fail(msg=json.dumps(msg=resp))
+            self.fail(msg=resp["errmsg"])
 
     def site_facts(self):
         """Output current properties information for the Host"""
