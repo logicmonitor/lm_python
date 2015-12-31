@@ -157,7 +157,7 @@ class Host(LogicMonitor):
                 logging.debug(resp)
                 return resp["errmsg"]
         elif self.collector is None:
-            self.fail(msg="No collector specified")
+            self.fail(msg="Specified collector doesn't exist")
         else:
             logging.debug("Host already registered")
 
