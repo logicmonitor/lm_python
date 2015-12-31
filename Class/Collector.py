@@ -91,12 +91,16 @@ class Collector(LogicMonitor):
                     self.exit(changed=True)
 
                 logging.debug("Downloading installer file")
-                with open(installfilepath, "w") as f:
+                try:
+                    f = open(installfilepath, "w")
                     installer = (self.do("logicmonitorsetup",
                                          {"id": self.id,
                                           "arch": arch}))
                     f.write(installer)
-                f.closed
+                    f.closed
+                except:
+                    self.fail(msg="Unable to open installer file for writing")
+                    f.closed
             else:
                 logging.debug("Collector installer already exists")
                 return installfilepath
