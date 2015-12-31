@@ -9,7 +9,9 @@ Fork, then clone the repo:
 
     git clone git@github.com:your-username/logicmonitor/lm_python.git
 
-Contribute your changes.
+Contribute your changes. Please follow the development model outlined [here].
+
+[here]: http://nvie.com/posts/a-successful-git-branching-model/
 
 Push to your fork and [submit a pull request][pr].
 
