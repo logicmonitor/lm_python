@@ -267,7 +267,7 @@ class LogicMonitor(object):
 
         # Use Ansible module functions if provided
         try:
-            self.module.fail_json(msg=msg, changed=self.change)
+            self.module.fail_json(msg=msg, changed=self.change, failed=True)
         except:
             print(msg)
             sys.exit(1)
@@ -277,7 +277,7 @@ class LogicMonitor(object):
 
         # Use Ansible module functions if provided
         try:
-            self.module.exit_json(changed=changed)
+            self.module.exit_json(changed=changed, success=True)
         except:
             print("Changed: {0}".format(changed))
             sys.exit(0)
