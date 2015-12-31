@@ -55,9 +55,8 @@ class LogicMonitor(object):
                 self.fail(msg="Error: {0}".format(resp["errmsg"]))
             else:
                 return raw
-
-        except IOError as ioe:
-            print ioe
+        except IOError, ioe:
+            logging.debug(ioe)
             self.fail(msg="Error: Unknown exception making RPC call")
 
     def do(self, action, params):
@@ -83,8 +82,7 @@ class LogicMonitor(object):
                 "https://{0}.logicmonitor.com/santaba/do/{1}?{2}"
                 .format(self.company, action, param_str))
             return f.read()
-
-        except IOError as ioe:
+        except IOError, ioe:
             logging.debug("Error opening URL. {0}".format(ioe))
             self.fail("Unknown exception opening URL")
 
