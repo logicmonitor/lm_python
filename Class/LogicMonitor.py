@@ -18,6 +18,7 @@ class LogicMonitor(object):
         self.user = params["user"]
         self.password = params["password"]
         self.fqdn = socket.getfqdn()
+        self.lm_url = "logicmonitor.com/santaba"
 
         # Grab the Ansible module if provided
         try:
@@ -44,9 +45,8 @@ class LogicMonitor(object):
         param_str = param_str + creds
 
         try:
-            f = self.urlopen(
-                "https://{0}.logicmonitor.com/santaba/rpc/{1}?{2}"
-                .format(self.company, action, param_str))
+            url = ("https://{0}.{1}/rpc/{2}?{3}"
+                   .format(self.company, self.lm_url, action, param_str))
 
             raw = f.read()
             resp = json.loads(raw)
@@ -76,11 +76,14 @@ class LogicMonitor(object):
 
         try:
             logging.debug("Attempting to open URL: " +
-                          "https://{0}.logicmonitor.com/santaba/do/{1}?{2}"
-                          .format(self.company, action, param_str))
+                          "https://{0}.{1}/do/{2}?{3}"
+                          .format(self.company,
+                                  self.lm_url,
+                                  action,
+                                  param_str))
             f = self.urlopen(
-                "https://{0}.logicmonitor.com/santaba/do/{1}?{2}"
-                .format(self.company, action, param_str))
+                "https://{0}.{1}/do/{2}?{3}"
+                .format(self.company, self.lm_url, action, param_str))
             return f.read()
         except IOError, ioe:
             logging.debug("Error opening URL. {0}".format(ioe))
