@@ -106,15 +106,15 @@ class Collector(LogicMonitor):
                 return installfilepath
 
         elif self.id is None:
-            (self.fail(
+            self.fail(
                 msg="Error: There is currently no collector " +
                     "associated with this device. To download " +
                     " the installer, first create a collector " +
-                    "for this device."))
+                    "for this device.")
         elif self.platform != "Linux":
-            (self.fail(
+            self.fail(
                 msg="Error: LogicMonitor Collector must be " +
-                "installed on a Linux device."))
+                "installed on a Linux device.")
         else:
             self.fail(
                 msg="Error: Unable  to retrieve the installer from the server")

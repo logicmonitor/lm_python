@@ -33,10 +33,10 @@ class LogicMonitor(object):
         logging.debug("Running LogicMonitor.rpc")
 
         param_str = urllib.urlencode(params)
-        creds = (urllib.urlencode(
+        creds = urllib.urlencode(
             {"c": self.company,
                 "u": self.user,
-                "p": self.password}))
+                "p": self.password})
 
         if param_str:
             param_str = param_str + "&"
@@ -44,16 +44,15 @@ class LogicMonitor(object):
         param_str = param_str + creds
 
         try:
-            f = (self.urlopen(
+            f = self.urlopen(
                 "https://{0}.logicmonitor.com/santaba/rpc/{1}?{2}"
-                .format(self.company, action, param_str)))
+                .format(self.company, action, param_str))
 
             raw = f.read()
             resp = json.loads(raw)
             if resp["status"] == 403:
                 logging.debug("Authentication failed.")
-                self.fail(
-                    msg="Error: {0}".format(resp["errmsg"]))
+                self.fail(msg="Error: {0}".format(resp["errmsg"]))
             else:
                 return raw
 
@@ -80,14 +79,13 @@ class LogicMonitor(object):
             logging.debug("Attempting to open URL: " +
                           "https://{0}.logicmonitor.com/santaba/do/{1}?{2}"
                           .format(self.company, action, param_str))
-            f = (self.urlopen(
+            f = self.urlopen(
                 "https://{0}.logicmonitor.com/santaba/do/{1}?{2}"
-                .format(self.company, action, param_str)))
+                .format(self.company, action, param_str))
             return f.read()
 
         except IOError as ioe:
             logging.debug("Error opening URL. {0}".format(ioe))
-            print ioe
             self.fail("Unknown exception opening URL")
 
     def get_collectors(self):
