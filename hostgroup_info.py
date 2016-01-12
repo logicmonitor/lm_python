@@ -16,7 +16,7 @@ def main():
                         help="LogicMonitor password",
                         required=True)
     parser.add_argument("-f", "--fullpath",
-                        help="Full path of the host group",
+                        help="Full path of the device group",
                         required=True)
     args = parser.parse_args()
 
