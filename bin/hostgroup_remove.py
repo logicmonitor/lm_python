@@ -1,13 +1,10 @@
 #!/usr/bin/python
 
 import argparse
-import logging
-from Class.Collector import Collector
+from lm_python.Hostgroup import Hostgroup
 
 
 def main():
-    logging.basicConfig(level=logging.DEBUG)
-
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--company",
                         help="LogicMonitor account",
@@ -18,6 +15,10 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
+    parser.add_argument("-f", "--fullpath",
+                        help="Full path of the device group",
+                        required=True)
+
     args = parser.parse_args()
 
     params = {}
@@ -32,14 +33,15 @@ def main():
     params["properties"] = {}
     params["starttime"] = None
 
-    # Require params
+    # Required params
     params["company"] = args.company
     params["user"] = args.user
     params["password"] = args.password
+    params["fullpath"] = args.fullpath
 
-    col = Collector(params)
+    hg = Hostgroup(params)
 
-    exit_code = col.create()
+    exit_code = hg.remove()
 
     return exit_code
 

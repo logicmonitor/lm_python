@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 import argparse
-from Class.Host import Host
+import json
+from lm_python.Hostgroup import Hostgroup
 
 
 def main():
@@ -15,17 +16,17 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
+    parser.add_argument("-f", "--fullpath",
+                        help="Full path of the device group",
+                        required=True)
 
-    parser.add_argument("-C", "--collector",
-                        help="Collector FQDN")
-    parser.add_argument("-H", "--hostname",
-                        help="Machine hostname")
-    parser.add_argument("-d", "--displayname",
-                        help="Machine display name")
-    parser.add_argument("-D", "--duration",
-                        help="SDT duration")
-    parser.add_argument("-s", "--starttime",
-                        help="SDT start time")
+    parser.add_argument("--description",
+                        help="Text description of the host")
+    parser.add_argument("-P", "--properties",
+                        help="A dictionary of properties to set for the host",
+                        type=json.loads)
+    parser.add_argument("-a", "--alertenable",
+                        help="Turn alerting on or off")
     args = parser.parse_args()
 
     params = {}
@@ -44,21 +45,19 @@ def main():
     params["company"] = args.company
     params["user"] = args.user
     params["password"] = args.password
-    params["collector"] = args.collector
+    params["fullpath"] = args.fullpath
 
     # Optional params
-    if args.hostname is not None:
-        params["hostname"] = args.hostname
-    if args.displayname is not None:
-        params["displayname"] = args.displayname
-    if args.duration is not None:
-        params["duration"] = args.duration
-    if args.starttime is not None:
-        params["starttime"] = args.starttime
+    if args.description is not None:
+        params["description"] = args.description
+    if args.properties is not None:
+        params["properties"] = args.properties
+    if args.alertenable is not None:
+        params["alertenable"] = args.alertenable
 
-    h = Host(params)
+    hg = Hostgroup(params)
 
-    exit_code = h.sdt()
+    exit_code = hg.add()
 
     return exit_code
 

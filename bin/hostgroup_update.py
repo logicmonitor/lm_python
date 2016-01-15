@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 import argparse
-from Class.Hostgroup import Hostgroup
+import json
+from lm_python.Hostgroup import Hostgroup
 
 
 def main():
@@ -16,8 +17,16 @@ def main():
                         help="LogicMonitor password",
                         required=True)
     parser.add_argument("-f", "--fullpath",
-                        help="Full path of the host group",
+                        help="Full path of the device group",
                         required=True)
+
+    parser.add_argument("--description",
+                        help="Text description of the host")
+    parser.add_argument("-P", "--properties",
+                        help="A dictionary of properties to set for the host",
+                        type=json.loads)
+    parser.add_argument("-a", "--alertenable",
+                        help="Turn alerting on or off")
     args = parser.parse_args()
 
     params = {}
@@ -38,9 +47,17 @@ def main():
     params["password"] = args.password
     params["fullpath"] = args.fullpath
 
+    # Optional params
+    if args.description is not None:
+        params["description"] = args.description
+    if args.properties is not None:
+        params["properties"] = args.properties
+    if args.alertenable is not None:
+        params["alertenable"] = args.alertenable
+
     hg = Hostgroup(params)
 
-    exit_code = hg.site_facts()
+    exit_code = hg.update()
 
     return exit_code
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from Class.Collector import Collector
+from lm_python.Collector import Collector
 
 
 def main():

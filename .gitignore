@@ -10,7 +10,6 @@ dist
 build
 eggs
 parts
-bin
 var
 sdist
 develop-eggs
@@ -26,6 +25,9 @@ pip-log.txt
 .tox
 nosetests.xml
 
+# distribution folder
+dist
+
 # Translations
 *.mo
 
@@ -33,3 +35,6 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# dev tools
+upload.sh

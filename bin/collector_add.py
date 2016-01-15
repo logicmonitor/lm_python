@@ -1,10 +1,13 @@
 #!/usr/bin/python
 
 import argparse
-from Class.Collector import Collector
+import logging
+from lm_python.Collector import Collector
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--company",
                         help="LogicMonitor account",
@@ -36,7 +39,7 @@ def main():
 
     col = Collector(params)
 
-    exit_code = col.remove()
+    exit_code = col.create()
 
     return exit_code
 

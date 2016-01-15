@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from Class.Host import Host
+from lm_python.Host import Host
 
 
 def main():
