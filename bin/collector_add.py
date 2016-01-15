@@ -2,7 +2,7 @@
 
 import argparse
 import logging
-from Class.Collector import Collector
+from lm_python.Collector import Collector
 
 
 def main():
