@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from Class.Host import Host
+from lm_python.Host import Host
 
 
 def main():
@@ -22,10 +22,6 @@ def main():
                         help="Machine hostname")
     parser.add_argument("-d", "--displayname",
                         help="Machine display name")
-    parser.add_argument("-D", "--duration",
-                        help="SDT duration")
-    parser.add_argument("-s", "--starttime",
-                        help="SDT start time")
     args = parser.parse_args()
 
     params = {}
@@ -47,18 +43,14 @@ def main():
     params["collector"] = args.collector
 
     # Optional params
-    if args.hostname is not None:
-        params["hostname"] = args.hostname
+    if args.displayname is not None:
+        params["hostname"] = args.displayname
     if args.displayname is not None:
         params["displayname"] = args.displayname
-    if args.duration is not None:
-        params["duration"] = args.duration
-    if args.starttime is not None:
-        params["starttime"] = args.starttime
 
     h = Host(params)
 
-    exit_code = h.sdt()
+    exit_code = h.remove()
 
     return exit_code
 
