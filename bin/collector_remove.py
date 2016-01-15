@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from Class.Host import Host
-
+from lm_python.Collector import Collector
 
 def main():
     parser = argparse.ArgumentParser()
@@ -15,13 +14,6 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
-
-    parser.add_argument("-C", "--collector",
-                        help="Collector FQDN")
-    parser.add_argument("-H", "--hostname",
-                        help="Machine hostname")
-    parser.add_argument("-d", "--displayname",
-                        help="Machine display name")
     args = parser.parse_args()
 
     params = {}
@@ -36,21 +28,14 @@ def main():
     params["properties"] = {}
     params["starttime"] = None
 
-    # Required params
+    # Require params
     params["company"] = args.company
     params["user"] = args.user
     params["password"] = args.password
-    params["collector"] = args.collector
 
-    # Optional params
-    if args.hostname is not None:
-        params["hostname"] = args.hostname
-    if args.displayname is not None:
-        params["displayname"] = args.displayname
+    col = Collector(params)
 
-    h = Host(params)
-
-    exit_code = h.site_facts()
+    exit_code = col.remove()
 
     return exit_code
 

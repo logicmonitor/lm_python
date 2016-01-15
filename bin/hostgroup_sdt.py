@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from Class.Collector import Collector
+from lm_python.Hostgroup import Hostgroup
 
 
 def main():
@@ -15,6 +15,15 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
+    parser.add_argument("-f", "--fullpath",
+                        help="Full path of the device group",
+                        required=True)
+
+    parser.add_argument("-D", "--duration",
+                        help="SDT duration")
+    parser.add_argument("-s", "--starttime",
+                        help="SDT start time")
+
     args = parser.parse_args()
 
     params = {}
@@ -29,14 +38,22 @@ def main():
     params["properties"] = {}
     params["starttime"] = None
 
-    # Require params
+    # Required params
     params["company"] = args.company
     params["user"] = args.user
     params["password"] = args.password
+    params["fullpath"] = args.fullpath
 
-    col = Collector(params)
+    # Optional params
+    if args.duration is not None:
+        params["duration"] = args.duration
 
-    exit_code = col.remove()
+    if args.starttime is not None:
+        params["starttime"] = args.starttime
+
+    hg = Hostgroup(params)
+
+    exit_code = hg.sdt()
 
     return exit_code
 

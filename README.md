@@ -16,6 +16,22 @@ This repository is not a complete set of scripts required to fully manage your
 LogicMonitor account, nor does it cover the full extent of the LogicMonitor
 API. Here's what we have so far.
 
+## Setup
+Install the lm_python package using a python package tool or clone the
+repository from github and install the package locally
+
+#### Package example
+```
+$> pip install lm_python
+```
+
+#### github example
+```
+$> git clone https://github.com/logicmonitor/lm_python.git
+$> cd lm_python
+$> python setup.py install
+```
+
 #### Platform specific tools
 The following scripts are for managing specific types of device
 
@@ -46,7 +62,7 @@ are wanting to install a new collector. For more information about collector
 management [click here](http://help.logicmonitor.com/using/managing-collectors/).
 
 ```
-$> python collector_add.py -h
+$> collector_add.py -h
 usage: collector_add.py [-h] -c COMPANY -u USER -p PASSWORD
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
@@ -64,7 +80,7 @@ collector management
 [click here](http://help.logicmonitor.com/using/managing-collectors/).
 
 ```
-$> python collector_remove.py -h
+$> collector_remove.py -h
 usage: collector_remove.py [-h] -c COMPANY -u USER -p PASSWORD
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
@@ -83,7 +99,7 @@ For more information about collector management
 [click here](http://help.logicmonitor.com/using/managing-collectors/).
 
 ```
-$> python collector_sdt.py -h
+$> collector_sdt.py -h
 usage: collector_sdt.py [-h] -c COMPANY -u USER -p PASSWORD [-d DURATION] [-s STARTTIME]
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
@@ -103,7 +119,7 @@ be created. For more information on managing hosts
 [click here](http://help.logicmonitor.com/using/managing-hosts/).
 
 ```
-$> python host_add.py -h
+$> host_add.py -h
 usage: host_add.py [-h] -c COMPANY -u USER -p PASSWORD -C COLLECTOR
                    [-H HOSTNAME] [-d DISPLAYNAME] [--description DESCRIPTION]
                    [-P PROPERTIES] [-g GROUPS [GROUPS ...]] [-a ALERTENABLE]
@@ -129,7 +145,7 @@ if they were created by adding this host. For more information on managing hosts
 [click here](http://help.logicmonitor.com/using/managing-hosts/).
 
 ```
-$> python host_remove.py -h
+$> host_remove.py -h
 usage: host_remove.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
                       [-H HOSTNAME] [-d DISPLAYNAME]
 required arguments:
@@ -148,7 +164,7 @@ This idempotent script updates a device already being monitored by your LogicMon
 [click here](http://help.logicmonitor.com/using/managing-hosts/).
 
 ```
-$> python host_update.py -h
+$> host_update.py -h
 usage: host_update.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
                       [-H HOSTNAME] [-d DISPLAYNAME]
                       [--description DESCRIPTION] [-P PROPERTIES]
@@ -177,7 +193,7 @@ information on managing hosts
 
 
 ```
-$> python host_sdt.py  -h
+$> host_sdt.py  -h
 usage: host_sdt.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
                    [-H HOSTNAME] [-d DISPLAYNAME] [-D DURATION] [-s STARTTIME]
 required arguments:
@@ -199,7 +215,7 @@ monitored by your LogicMonitor account. For more information on managing hosts
 [click here](http://help.logicmonitor.com/using/managing-hosts/).
 
 ```
-$> python host_info.py -h
+$> host_info.py -h
 usage: host_info.py [-h] -c COMPANY -u USER -p PASSWORD -C COLLECTOR
                     [-H HOSTNAME] [-d DISPLAYNAME]
 required arguments:
@@ -221,7 +237,7 @@ be created. For more information on managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python hostgroup_add.py -h
+$> hostgroup_add.py -h
 usage: hostgroup_add.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
                         [--description DESCRIPTION] [-P PROPERTIES]
                         [-a ALERTENABLE]
@@ -243,7 +259,7 @@ For more information on managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python hostgroup_remove.py -h
+$> hostgroup_remove.py -h
 usage: hostgroup_remove.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
@@ -260,7 +276,7 @@ managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python hostgroup_update.py -h
+$> hostgroup_update.py -h
 usage: hostgroup_update.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
                            [--description DESCRIPTION] [-P PROPERTIES]
                            [-a ALERTENABLE]
@@ -284,7 +300,7 @@ For more information on managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python hostgroup_sdt.py -h
+$> hostgroup_sdt.py -h
 usage: hostgroup_sdt.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
                         [-D DURATION] [-s STARTTIME]
 required arguments:
@@ -303,7 +319,7 @@ This script retrieves and displays information about a device group in your Logi
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python hostgroup_info.py -h
+$> hostgroup_info.py -h
 usage: hostgroup_info.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
 required arguments:
     -c COMPANY,  --company COMPANY        LogicMonitor account
