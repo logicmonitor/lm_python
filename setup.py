@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='lm_python',
+setup(name='logicmonitor-core',
       version='1.0',
       description='LogicMonitor API python classes',
       long_description='LogicMonitor is a cloud-based, full stack, IT \
@@ -13,24 +13,9 @@ setup(name='lm_python',
       author='LogicMonitor',
       author_email='jeff.wozniak@logicmonitor.com',
       license='MIT',
-      packages=['lm_python'],
+      packages=['logicmonitor-core'],
       install_requires=[
           'datetime',
           'logging'
-      ],
-      scripts=[
-          'bin/collector_add.py',
-          'bin/collector_remove.py',
-          'bin/collector_sdt.py',
-          'bin/host_add.py',
-          'bin/host_info.py',
-          'bin/host_remove.py',
-          'bin/host_sdt.py',
-          'bin/host_update.py',
-          'bin/hostgroup_add.py',
-          'bin/hostgroup_info.py',
-          'bin/hostgroup_remove.py',
-          'bin/hostgroup_sdt.py',
-          'bin/hostgroup_update.py'
       ],
       zip_safe=False)
