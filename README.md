@@ -22,7 +22,7 @@ repository from github and install the package locally
 
 #### Package example
 ```
-$> pip install lm_python
+$> pip install logicmonitor-core
 ```
 
 #### github example
