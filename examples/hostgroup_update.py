@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from lm_python.Hostgroup import Hostgroup
+from logicmonitor_core.Hostgroup import Hostgroup
 
 
 def main():
