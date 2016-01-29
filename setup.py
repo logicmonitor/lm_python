@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='logicmonitor-core',
+setup(name='logicmonitor_core',
       version='1.0',
       description='LogicMonitor API python classes',
       long_description='LogicMonitor is a cloud-based, full stack, IT \
@@ -13,7 +13,7 @@ setup(name='logicmonitor-core',
       author='LogicMonitor',
       author_email='jeff.wozniak@logicmonitor.com',
       license='MIT',
-      packages=['logicmonitor-core'],
+      packages=['logicmonitor_core'],
       install_requires=[
           'datetime',
           'logging'

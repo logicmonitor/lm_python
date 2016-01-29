@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from lm_python.Host import Host
+from logicmonitor_core.Host import Host
 
 
 def main():
