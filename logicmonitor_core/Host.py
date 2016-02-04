@@ -290,61 +290,64 @@ class Host(LogicMonitor):
         (maintenance window) for this host"""
         logging.debug("Running Host.sdt...")
 
-        logging.debug("System changed")
-        self.change = True
+        if self.info:
+            logging.debug("System changed")
+            self.change = True
 
-        if self.check_mode:
-            self.exit(changed=True)
+            if self.check_mode:
+                self.exit(changed=True)
 
-        duration = self.duration
-        starttime = self.starttime
-        offset = starttime
+            duration = self.duration
+            starttime = self.starttime
+            offset = starttime
 
-        if starttime:
-            logging.debug("Start time specified")
-            start = datetime.strptime(starttime, '%Y-%m-%d %H:%M')
-            offsetstart = start
-        else:
-            logging.debug("No start time specified. Using default.")
-            start = datetime.utcnow()
-
-            # Use user UTC offset
-            logging.debug("Making RPC call to 'getTimeZoneSetting'")
-            accountresp = (json.loads(self.rpc("getTimeZoneSetting", {})))
-
-            if accountresp["status"] == 200:
-                logging.debug("RPC call succeeded")
-
-                offset = accountresp["data"]["offset"]
-                offsetstart = start + timedelta(0, offset)
+            if starttime:
+                logging.debug("Start time specified")
+                start = datetime.strptime(starttime, '%Y-%m-%d %H:%M')
+                offsetstart = start
             else:
-                self.fail(
-                    msg="Error: Unable to retrieve timezone offset")
+                logging.debug("No start time specified. Using default.")
+                start = datetime.utcnow()
 
-        offsetend = offsetstart + timedelta(0, int(duration)*60)
+                # Use user UTC offset
+                logging.debug("Making RPC call to 'getTimeZoneSetting'")
+                accountresp = (json.loads(self.rpc("getTimeZoneSetting", {})))
 
-        h = {"hostId": self.info["id"],
-             "type": 1,
-             "year": offsetstart.year,
-             "month": offsetstart.month - 1,
-             "day": offsetstart.day,
-             "hour": offsetstart.hour,
-             "minute": offsetstart.minute,
-             "endYear": offsetend.year,
-             "endMonth": offsetend.month - 1,
-             "endDay": offsetend.day,
-             "endHour": offsetend.hour,
-             "endMinute": offsetend.minute}
+                if accountresp["status"] == 200:
+                    logging.debug("RPC call succeeded")
 
-        logging.debug("Making RPC call to 'setHostSDT'")
-        resp = (json.loads(self.rpc("setHostSDT", h)))
+                    offset = accountresp["data"]["offset"]
+                    offsetstart = start + timedelta(0, offset)
+                else:
+                    self.fail(
+                        msg="Error: Unable to retrieve timezone offset")
 
-        if resp["status"] == 200:
-            logging.debug("RPC call succeeded")
-            return resp["data"]
+            offsetend = offsetstart + timedelta(0, int(duration)*60)
+
+            h = {"hostId": self.info["id"],
+                 "type": 1,
+                 "year": offsetstart.year,
+                 "month": offsetstart.month - 1,
+                 "day": offsetstart.day,
+                 "hour": offsetstart.hour,
+                 "minute": offsetstart.minute,
+                 "endYear": offsetend.year,
+                 "endMonth": offsetend.month - 1,
+                 "endDay": offsetend.day,
+                 "endHour": offsetend.hour,
+                 "endMinute": offsetend.minute}
+
+            logging.debug("Making RPC call to 'setHostSDT'")
+            resp = (json.loads(self.rpc("setHostSDT", h)))
+
+            if resp["status"] == 200:
+                logging.debug("RPC call succeeded")
+                return resp["data"]
+            else:
+                logging.debug("RPC call failed")
+                self.fail(msg=resp["errmsg"])
         else:
-            logging.debug("RPC call failed")
-            self.fail(msg=resp["errmsg"])
+            self.fail(msg="Error: Host doesn't exit.")
 
     def site_facts(self):
         """Output current properties information for the Host"""
