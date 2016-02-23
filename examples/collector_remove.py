@@ -3,6 +3,7 @@
 import argparse
 from logicmonitor_core.Collector import Collector
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--company",

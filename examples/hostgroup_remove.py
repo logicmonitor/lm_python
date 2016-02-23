@@ -29,7 +29,6 @@ def main():
     params["duration"] = 30
     params["fullpath"] = None
     params["groups"] = []
-    params["hostname"] = None
     params["properties"] = {}
     params["starttime"] = None
 
