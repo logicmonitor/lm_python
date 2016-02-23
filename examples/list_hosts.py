@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 import argparse
-from logicmonitor_core.Hostgroup import Hostgroup
+import json
+from logicmonitor_core.HostList import HostList
 
 
 def main():
@@ -15,32 +16,29 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
-    parser.add_argument("-f", "--fullpath",
-                        help="Full path of the device group",
-                        required=True)
+
+    parser.add_argument("-g", "--group",
+                        help="Limit the results to hosts in the group path " +
+                        "specified. Example: /Servers")
     args = parser.parse_args()
 
     params = {}
-    params["alertenable"] = True
-    params["collector"] = None
-    params["description"] = ""
-    params["displayname"] = None
-    params["duration"] = 30
-    params["fullpath"] = None
-    params["groups"] = []
-    params["properties"] = {}
-    params["starttime"] = None
+    params["group"] = None
 
     # Required params
     params["company"] = args.company
     params["user"] = args.user
     params["password"] = args.password
-    params["fullpath"] = args.fullpath
 
-    hg = Hostgroup(params)
+    # Optional params
+    if args.group is not None:
+        params["group"] = args.group
 
-    exit_code = hg.site_facts()
+    host_list = HostList(params)
+    hosts = host_list.get_hosts()
 
-    return exit_code
+    print json.dumps(hosts)
+
+    return 0
 
 main()
