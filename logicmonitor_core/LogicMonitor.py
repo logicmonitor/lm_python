@@ -12,8 +12,6 @@ class LogicMonitor(object):
 
     def __init__(self, module, **params):
         self.__version__ = "1.0-python"
-
-        logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating LogicMonitor object")
 
         self.check_mode = False
@@ -28,6 +26,7 @@ class LogicMonitor(object):
             self.module = module
             self.urlopen = open_url  # use the ansible provided open_url
             self.__version__ = self.__version__ + "-ansible-module"
+            logging.basicConfig(level=logging.DEBUG)
         except:
             self.module = None
             self.urlopen = urllib2.urlopen
@@ -287,11 +286,11 @@ class LogicMonitor(object):
         try:
             self.module.fail_json(msg=msg, changed=self.change, failed=True)
         except:
-            logging.debug(msg)
+            print(msg)
             sys.exit(1)
 
     def exit(self, changed):
-        logging.debug("Changed: {0}".format(changed))
+        print("Changed: {0}".format(changed))
 
         # Use Ansible module functions if provided
         try:
@@ -305,4 +304,4 @@ class LogicMonitor(object):
             logging.debug("Registering properties as Ansible facts")
             self.module.exit_json(changed=False, ansible_facts=info)
         except:
-            logging.debug("Properties: {0}".format(info))
+            print("Properties: {0}".format(info))
