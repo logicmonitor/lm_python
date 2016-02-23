@@ -18,7 +18,8 @@ def main():
                         required=True)
 
     parser.add_argument("-g", "--group",
-                        help="Machine hostname")
+                        help="Limit the results to hosts in the group path " +
+                        "specified. Example: /Servers")
     args = parser.parse_args()
 
     params = {}
