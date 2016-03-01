@@ -21,9 +21,9 @@ def main():
                         required=True)
 
     parser.add_argument("--description",
-                        help="Text description of the host")
+                        help="Text description of the host group")
     parser.add_argument("-P", "--properties",
-                        help="A dictionary of properties to set for the host",
+                        help="A dictionary of properties to set for the host group",
                         type=json.loads)
     parser.add_argument("-a", "--alertenable",
                         help="Turn alerting on or off")
@@ -36,8 +36,6 @@ def main():
     params["displayname"] = None
     params["duration"] = 30
     params["fullpath"] = None
-    params["groups"] = []
-    params["hostname"] = None
     params["properties"] = {}
     params["starttime"] = None
 
