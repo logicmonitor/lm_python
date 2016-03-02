@@ -230,6 +230,26 @@ optional arguments:
 ```
 
 ### list_hosts.py
+### datasource_sdt.py
+This script places a datasource in scheduled down time (SDT) or maintenance mode.
+This will suppress alerting for the duration of the SDT. This script is not
+idempotent and the same datasource can be put into SDT multiple times. For more
+information on managing datasources
+[click here](http://help.logicmonitor.com/the-new-ui/devices/device-datasources-instances/).
+
+
+```
+$> python ./examples/datasource_sdt.py  -h
+usage: device_sdt.py [-h] -c COMPANY -u USER -p PASSWORD -i ID
+    required arguments:
+       -c COMPANY,     --company COMPANY           LogicMonitor account
+       -u USER,        --user USER                 LogicMonitor user name
+       -p PASSWORD,    --password PASSWORD         LogicMonitor password
+    optional arguments:
+       -h, --help                                  Show this help message and exit
+       -i ID,          --id ID                     Datasource ID
+```
+
 This script list all devices being monitored in your LogicMonitor account.
 
 ```
