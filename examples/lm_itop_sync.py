@@ -63,11 +63,11 @@ def main():
     itop_mysql_db = args.md    # iTop MYSQL database name
 
     # MySQL database for Server class; replace x with #
-    server_table = "synchro_data_server_1"
+    server_table = "synchro_data_server_x"
     # MySQL database for Printer class; replace y with #
-    printer_table = "synchro_data_printer_2"
+    printer_table = "synchro_data_printer_y"
     # MySQL database for Hypervisor class; replace z with #
-    hypervisor_table = "synchro_data_hypervisor_5"
+    hypervisor_table = "synchro_data_hypervisor_z"
     # iTop Organization ID that all devices will be categorized with (3 = Demo)
     itop_org_id = "3"
 
@@ -122,55 +122,44 @@ def main():
 
             elif itop_class == "Server":
                 # Concatenate SQL
-                sql = "".join(["INSERT INTO ",
-                               server_table,
-                               " (primary_key, name, description, org_id, man",
-                               "agementip) VALUES (%s, %s, %s, ",
-                               itop_org_id,
-                               ", %s)"])
-                cur.execute(sql, (primary_key, name, description,
-                                  managementip))
+                sql = "INSERT INTO " + server_table +\
+                      " (primary_key, name, description, org_id, man" +\
+                      "agementip) VALUES ({0}, \"{1}\", \"{2}\", " +\
+                      itop_org_id + ", \"{3}\")"
+
+                cur.execute(sql.format(primary_key, name, description,
+                                       managementip))
                 db.commit()
                 print " - " + name
 
             elif itop_class == "Printer":
                 # Concatenate SQL
-                sql = "".join(["INSERT INTO ",
-                               printer_table,
-                               " (primary_key, name, description, org_id) VAL",
-                               "UES (%s, %s, %s, ",
-                               itop_org_id,
-                               ")"])
-                print sql
-                cur.execute(sql, (primary_key, name, description))
+                sql = "INSERT INTO " + printer_table +\
+                      " (primary_key, name, description, org_id) VALUES " +\
+                      "({0}, \"{1}\", \"{2}\", " + itop_org_id + ")"
+                cur.execute(sql.format(primary_key, name, description))
                 db.commit()
                 print " - " + name
 
             elif itop_class == "Hypervisor":
                 # Concatenate SQL
-                sql = "".join(["INSERT INTO ",
-                               hypervisor_table,
-                               " (primary_key, name, description, org_id) VAL",
-                               "UES (%s, %s, %s, ",
-                               itop_org_id,
-                               ")"])
-                cur.execute(sql, (primary_key, name, description))
+                sql = "INSERT INTO " + hypervisor_table +\
+                      " (primary_key, name, description, org_id) VALUES " +\
+                      "({0}, \"{1}\", \"{2}\", " + itop_org_id + ")"
+                cur.execute(sql.format(primary_key, name, description))
                 db.commit()
                 print " - " + name
 
     # Execute iTop PHP script to insert MySQL temporary table data into
     # CMDB (create or update). Concatenate URL to PHP script
-    url_sync = "".join(["http://",
-                        itop_params["host"],
-                        "/web/synchro/synchro_exec.php"])
+    url_sync = "http://" + itop_params["host"] +\
+               "/web/synchro/synchro_exec.php"
 
     # Get the last character of each table, which provides the data_source #
     # Build comma-separate string to use in URL payload.
-    ds_value = "".join([server_table[-1:],
-                        ",",
-                        printer_table[-1:],
-                        ",",
-                        hypervisor_table[-1:]])
+    ds_value = server_table[-1:] + "," + printer_table[-1:] + "," +\
+                                   hypervisor_table[-1:]
+
     payload = {"data_sources": ds_value}
 
     # Remotely execute iTop PHP script
