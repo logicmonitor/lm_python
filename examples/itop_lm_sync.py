@@ -23,11 +23,9 @@ from logicmonitor_core.Host import Host
 
 def getTree(itop_params, ci_type):
     # Concatenate URL
-    url = "".join(["http://",
-                   itop_params["host"],
-                   "/web/webservices/export.php?query=",
-                   itop_params["query_phrasebook"],
-                   "&format=xml"])
+    url = "http://" + itop_params["host"] +\
+          "/web/webservices/export.php?query=" +\
+          itop_params["query_phrasebook"] + "&format=xml"
 
     try:
         # Get XML - write to temp file
