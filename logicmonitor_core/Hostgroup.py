@@ -90,7 +90,7 @@ class Hostgroup(LogicMonitor):
             logging.debug("Group already exists")
 
     def update(self):
-        """Idempotent function to ensure the host group settings
+        """Idempotent function to ensure the device group settings
         (alertenable, properties, etc) in the
         LogicMonitor account match the current object."""
         logging.debug("Running Hostgroup.update")
@@ -140,7 +140,7 @@ class Hostgroup(LogicMonitor):
             return self.add()
 
     def remove(self):
-        """Idempotent function to ensure the host group
+        """Idempotent function to ensure the device group
         does not exist in your LogicMonitor account"""
         logging.debug("Running Hostgroup.remove...")
 

@@ -213,7 +213,7 @@ class LogicMonitor(object):
         return None
 
     def create_group(self, fullpath):
-        """Recursively create a path of host groups.
+        """Recursively create a path of device groups.
         Returns the id of the newly created hostgroup"""
         logging.debug("Running LogicMonitor.create_group...")
 

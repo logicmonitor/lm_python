@@ -28,7 +28,6 @@ def main():
     params["duration"] = 30
     params["starttime"] = None
 
-
     # Required params
     params["company"] = args.company
     params["user"] = args.user

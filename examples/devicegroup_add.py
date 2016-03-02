@@ -21,9 +21,9 @@ def main():
                         required=True)
 
     parser.add_argument("--description",
-                        help="Text description of the host group")
+                        help="Text description of the device group")
     parser.add_argument("-P", "--properties",
-                        help="A dictionary of properties to set for the host group",
+                        help="A dictionary of properties to set for the device group",
                         type=json.loads)
     parser.add_argument("-a", "--alertenable",
                         help="Turn alerting on or off")

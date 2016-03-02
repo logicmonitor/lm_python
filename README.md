@@ -42,24 +42,24 @@ The following scripts are for managing specific types of device
 
 #### Platform agnostic tools
 **Host management:**
-- host_add
-- host_remove
-- host_update
-- host_sdt
-- host_info
+- device_add
+- device_remove
+- device_update
+- device_sdt
+- device_info
 
 ** device group management:**
-- hostgroup_add
-- hostgroup_remove
-- hostgroup_update
-- hostgroup_sdt
-- hostgroup_info
+- devicegroup_add
+- devicegroup_remove
+- devicegroup_update
+- devicegroup_sdt
+- devicegroup_info
 
 ### collector_add.py
 This idempotent script creates a new LogicMonitor collector for a Linux device.
 This script assumes that you are running the script on the machine that you
 are wanting to install a new collector. For more information about collector
-management [click here](http://help.logicmonitor.com/using/managing-collectors/).
+management [click here](http://help.logicmonitor.com/the-new-ui/settings/collectors/what-is-the-logicmonitor-collector/).
 
 ```
 $> python ./examples/collector_add.py -h
@@ -77,7 +77,7 @@ This idempotent script removes and existing LogicMonitor collector from a
 Linux device. This script assumes that you are running the script on the
 machine that you want to remove a collector from. For more information about
 collector management
-[click here](http://help.logicmonitor.com/using/managing-collectors/).
+[click here](http://help.logicmonitor.com/the-new-ui/settings/collectors/what-is-the-logicmonitor-collector/).
 
 ```
 $> python ./examples/collector_remove.py -h
@@ -96,7 +96,7 @@ maintenance mode. This script assumes that you are running the script on the
 same machine as the collector to SDT. This script is not
 idempotent and the same collector can be put into SDT multiple times.
 For more information about collector management
-[click here](http://help.logicmonitor.com/using/managing-collectors/).
+[click here](http://help.logicmonitor.com/the-new-ui/settings/collectors/what-is-the-logicmonitor-collector/).
 
 ```
 $> python ./examples/collector_sdt.py -h
@@ -111,16 +111,16 @@ optional arguments:
     -s STARTTIME, --starttime STARTTIME SDT start time
 ```
 
-### host_add.py
+### device_add.py
 This idempotent script adds a new device to monitoring in your LogicMonitor
-account. This addition includes setting host properties and group membership.
-If the groups required for the addition of this host do not exist, they will
-be created. For more information on managing hosts
-[click here](http://help.logicmonitor.com/using/managing-hosts/).
+account. This addition includes setting device properties and group membership.
+If the groups required for the addition of this device do not exist, they will
+be created. For more information on managing devices
+[click here](http://help.logicmonitor.com/the-new-ui/devices/).
 
 ```
-$> python ./examples/host_add.py -h
-usage: host_add.py [-h] -c COMPANY -u USER -p PASSWORD -C COLLECTOR
+$> python ./examples/device_add.py -h
+usage: device_add.py [-h] -c COMPANY -u USER -p PASSWORD -C COLLECTOR
                    [-H HOSTNAME] [-d DISPLAYNAME] [--description DESCRIPTION]
                    [-P PROPERTIES] [-g GROUPS [GROUPS ...]] [-a ALERTENABLE]
 required arguments:
@@ -130,23 +130,23 @@ required arguments:
     -C COLLECTOR, --collector COLLECTOR                 Collector FQDN
 optional arguments:
   -h,             --help                                Show this help message and exit
-  -H HOSTNAME,    --hostname HOSTNAME                   Machine hostname
-  -d DISPLAYNAME, --displayname DISPLAYNAME             Machine display name
-  -P PROPERTIES,  --properties PROPERTIES               A dictionary of properties to set for the host
+  -H HOSTNAME,    --hostname HOSTNAME                   Device hostname
+  -d DISPLAYNAME, --displayname DISPLAYNAME             Device display name
+  -P PROPERTIES,  --properties PROPERTIES               A dictionary of properties to set for the device
   -a ALERTENABLE, --alertenable ALERTENABLE             Turn alerting on or off
-  -g GROUPS [GROUPS ...], --groups GROUPS [GROUPS ...]  Groups the host should be a member of
-  --description DESCRIPTION                             Text description of the host
+  -g GROUPS [GROUPS ...], --groups GROUPS [GROUPS ...]  Groups the device should be a member of
+  --description DESCRIPTION                             Text description of the device
 ```
 
-### host_remove.py
+### device_remove.py
 This idempotent script removes a device from monitoring in your LogicMonitor
-account. Note: this does not remove device groups that contain this host even
-if they were created by adding this host. For more information on managing hosts
-[click here](http://help.logicmonitor.com/using/managing-hosts/).
+account. Note: this does not remove device groups that contain this device even
+if they were created by adding this device. For more information on managing devices
+[click here](http://help.logicmonitor.com/the-new-ui/devices/).
 
 ```
-$> python ./examples/host_remove.py -h
-usage: host_remove.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
+$> python ./examples/device_remove.py -h
+usage: device_remove.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
                       [-H HOSTNAME] [-d DISPLAYNAME]
 required arguments:
     -c COMPANY,     --company COMPANY             LogicMonitor account
@@ -155,17 +155,17 @@ required arguments:
 optional arguments:
     -h, --help                                    Show this help message and exit
     -C COLLECTOR,   --collector COLLECTOR         Collector FQDN
-    -H HOSTNAME,    --hostname HOSTNAME           Machine hostname
-    -d DISPLAYNAME, --displayname DISPLAYNAME     Machine display name
+    -H HOSTNAME,    --hostname HOSTNAME           Device hostname
+    -d DISPLAYNAME, --displayname DISPLAYNAME     Device display name
 ```
 
-### host_update.py
+### device_update.py
 This idempotent script updates a device already being monitored by your LogicMonitor account.
-[click here](http://help.logicmonitor.com/using/managing-hosts/).
+[click here](http://help.logicmonitor.com/the-new-ui/devices/).
 
 ```
-$> python ./examples/host_update.py -h
-usage: host_update.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
+$> python ./examples/device_update.py -h
+usage: device_update.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
                       [-H HOSTNAME] [-d DISPLAYNAME]
                       [--description DESCRIPTION] [-P PROPERTIES]
                       [-g GROUPS [GROUPS ...]] [-a ALERTENABLE]
@@ -176,25 +176,25 @@ required arguments:
 optional arguments:
     -h,             --help                                  Show this help message and exit
     -C COLLECTOR,   --collector COLLECTOR                   Collector FQDN
-    -H HOSTNAME,    --hostname HOSTNAME                     Machine hostname
-    -d DISPLAYNAME, --displayname DISPLAYNAME               Machine display name
-    -P PROPERTIES,  --properties PROPERTIES                 A dictionary of properties to set for the host
+    -H HOSTNAME,    --hostname HOSTNAME                     Device hostname
+    -d DISPLAYNAME, --displayname DISPLAYNAME               Device display name
+    -P PROPERTIES,  --properties PROPERTIES                 A dictionary of properties to set for the device
     -a ALERTENABLE, --alertenable ALERTENABLE               Turn alerting on or off
-    -g GROUPS [GROUPS ...], --groups GROUPS [GROUPS ...]    Groups the host should be a member of
-    --description DESCRIPTION                               Text description of the host
+    -g GROUPS [GROUPS ...], --groups GROUPS [GROUPS ...]    Groups the device should be a member of
+    --description DESCRIPTION                               Text description of the device
 ```
 
-### host_sdt.py
+### device_sdt.py
 This script places a host in scheduled down time (SDT) or maintenance mode.
 This will suppress alerting for the duration of the SDT. This script is not
 idempotent and the same device can be put into SDT multiple times. For more
-information on managing hosts
-[click here](http://help.logicmonitor.com/using/managing-hosts/).
+information on managing devices
+[click here](http://help.logicmonitor.com/the-new-ui/devices/).
 
 
 ```
-$> python ./examples/host_sdt.py  -h
-usage: host_sdt.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
+$> python ./examples/device_sdt.py  -h
+usage: device_sdt.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
                    [-H HOSTNAME] [-d DISPLAYNAME] [-D DURATION] [-s STARTTIME]
 required arguments:
     -c COMPANY,   --company COMPANY               LogicMonitor account
@@ -203,20 +203,20 @@ required arguments:
 optional arguments:
     -h,             --help                        Show this help message and exit
     -C COLLECTOR,   --collector COLLECTOR         Collector FQDN
-    -H HOSTNAME,    --hostname HOSTNAME           Machine hostname
-    -d DISPLAYNAME, --displayname DISPLAYNAME     Machine display name
+    -H HOSTNAME,    --hostname HOSTNAME           Device hostname
+    -d DISPLAYNAME, --displayname DISPLAYNAME     Device display name
     -D DURATION,    --duration DURATION           SDT duration
     -s STARTTIME,   --starttime STARTTIME         SDT start time
 ```
 
-### host_info.py
+### device_info.py
 This script retrieves and displays information about a device already being
-monitored by your LogicMonitor account. For more information on managing hosts
-[click here](http://help.logicmonitor.com/using/managing-hosts/).
+monitored by your LogicMonitor account. For more information on managing devices
+[click here](http://help.logicmonitor.com/the-new-ui/devices/).
 
 ```
-$> python ./examples/host_info.py -h
-usage: host_info.py [-h] -c COMPANY -u USER -p PASSWORD -C COLLECTOR
+$> python ./examples/device_info.py -h
+usage: device_info.py [-h] -c COMPANY -u USER -p PASSWORD -C COLLECTOR
                     [-H HOSTNAME] [-d DISPLAYNAME]
 required arguments:
     -c COMPANY,     --company COMPANY           LogicMonitor account
@@ -225,11 +225,10 @@ required arguments:
 optional arguments:
     -h, --help                                  Show this help message and exit
     -C COLLECTOR,   --collector COLLECTOR       Collector FQDN
-    -H HOSTNAME,    --hostname HOSTNAME         Machine hostname
-    -d DISPLAYNAME, --displayname DISPLAYNAME   Machine display name
+    -H HOSTNAME,    --hostname HOSTNAME         Device hostname
+    -d DISPLAYNAME, --displayname DISPLAYNAME   Device display name
 ```
 
-### list_hosts.py
 ### datasource_sdt.py
 This script places a datasource in scheduled down time (SDT) or maintenance mode.
 This will suppress alerting for the duration of the SDT. This script is not
@@ -250,11 +249,12 @@ usage: device_sdt.py [-h] -c COMPANY -u USER -p PASSWORD -i ID
        -i ID,          --id ID                     Datasource ID
 ```
 
+### list_devices.py
 This script list all devices being monitored in your LogicMonitor account.
 
 ```
-$> python ./examples/list_hosts.py -h
-usage: host_add.py [-h] -c COMPANY -u USER -p PASSWORD
+$> python ./examples/list_devices.py -h
+usage: device_add.py [-h] -c COMPANY -u USER -p PASSWORD
                    [-g GROUP]
 required arguments:
     -c COMPANY,   --company COMPANY                     LogicMonitor account
@@ -267,16 +267,16 @@ optional arguments:
 
 ```
 
-### hostgroup_add.py
+### devicegroup_add.py
 This idempotent script adds a new device group to your LogicMonitor account.
-This addition includes setting host properties and group membership.
-If the groups required for the addition of this host do not exist, they will
+This addition includes setting device properties and group membership.
+If the groups required for the addition of this device do not exist, they will
 be created. For more information on managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python ./examples/hostgroup_add.py -h
-usage: hostgroup_add.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+$> python ./examples/devicegroup_add.py -h
+usage: devicegroup_add.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
                         [--description DESCRIPTION] [-P PROPERTIES]
                         [-a ALERTENABLE]
 required arguments:
@@ -286,19 +286,19 @@ required arguments:
     -f FULLPATH,    --fullpath FULLPATH             Full path of the device group
 optional arguments:
     -h,             --help                          Show this help message and exit
-    -P PROPERTIES,  --properties PROPERTIES         A dictionary of properties to set for the host
+    -P PROPERTIES,  --properties PROPERTIES         A dictionary of properties to set for the device
     -a ALERTENABLE, --alertenable ALERTENABLE       Turn alerting on or off
-    --description DESCRIPTION                       Text description of the host
+    --description DESCRIPTION                       Text description of the device
 ```
 
-### hostgroup_remove.py
+### devicegroup_remove.py
 This idempotent script removes a device group from your LogicMonitor account.
 For more information on managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python ./examples/hostgroup_remove.py -h
-usage: hostgroup_remove.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+$> python ./examples/devicegroup_remove.py -h
+usage: devicegroup_remove.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
     -u USER,     --user USER            LogicMonitor user name
@@ -308,14 +308,14 @@ optional arguments:
     -h,          --help                 Show this help message and exit
 ```
 
-### hostgroup_update.py
+### devicegroup_update.py
 This idempotent script updates a device group that in your LogicMonitor account. If the device group doesn't exist, it will create it. For most information about
 managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python ./examples/hostgroup_update.py -h
-usage: hostgroup_update.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+$> python ./examples/devicegroup_update.py -h
+usage: devicegroup_update.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
                            [--description DESCRIPTION] [-P PROPERTIES]
                            [-a ALERTENABLE]
 required arguments:
@@ -325,12 +325,12 @@ required arguments:
     -f FULLPATH,    --fullpath FULLPATH         Full path of the device group
 optional arguments:
     -h,             --help                      Show this help message and exit
-    -P PROPERTIES,  --properties PROPERTIES     A dictionary of properties to set for the host
+    -P PROPERTIES,  --properties PROPERTIES     A dictionary of properties to set for the device
     -a ALERTENABLE, --alertenable ALERTENABLE   Turn alerting on or off
-    --description DESCRIPTION                   Text description of the host
+    --description DESCRIPTION                   Text description of the device
 ```
 
-### hostgroup_sdt.py
+### devicegroup_sdt.py
 This script places a device group in scheduled down time (SDT) or maintenance
 mode. This will suppress alerting for the duration of the SDT. This script is
 not idempotent and the same device can be put into SDT multiple times.
@@ -338,8 +338,8 @@ For more information on managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python ./examples/hostgroup_sdt.py -h
-usage: hostgroup_sdt.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+$> python ./examples/devicegroup_sdt.py -h
+usage: devicegroup_sdt.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
                         [-D DURATION] [-s STARTTIME]
 required arguments:
     -c COMPANY,   --company COMPANY       LogicMonitor account
@@ -352,13 +352,13 @@ optional arguments:
     -s STARTTIME, --starttime STARTTIME   SDT start time
 ```
 
-### hostgroup_info.py
+### devicegroup_info.py
 This script retrieves and displays information about a device group in your LogicMonitor account. For more information on managing device groups
 [click here](http://help.logicmonitor.com/the-new-ui/devices/device-groups/).
 
 ```
-$> python ./examples/hostgroup_info.py -h
-usage: hostgroup_info.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+$> python ./examples/devicegroup_info.py -h
+usage: devicegroup_info.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
 required arguments:
     -c COMPANY,  --company COMPANY        LogicMonitor account
     -u USER,     --user USER              LogicMonitor user name
