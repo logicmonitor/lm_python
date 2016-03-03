@@ -57,23 +57,28 @@ def main():
                         help="LogicMonitor username", required=True)
     parser.add_argument("-p", "--password", metavar="PASSWORD",
                         help="LogicMonitor password", required=True)
+    parser.add_argument("-cn", metavar="COLLECTOR_NAME",
+                        help="LogicMonitor collector description",
+                        required=True)
     parser.add_argument("-ih", metavar="ITOP_HOST",
                         help="iTop server hostname", required=True)
     parser.add_argument("-iu", metavar="ITOP_USERNAME",
                         help="iTop server username", required=True)
     parser.add_argument("-ip", metavar="ITOP_PASSWORD",
                         help="iTop server password", required=True)
+    parser.add_argument("-iq", metavar="ITOP_QUERY_PHRASEBOOK",
+                        help="iTop query phrasebook #", required=True)
     args = parser.parse_args()
 
     # Define variables
-    lm_agentid = "Collector_Description"    # LM Collector ID to add Devices to
+    lm_agentid = args.cn    # LM Collector ID to add Devices to
 
     # Define iTop parameters
     itop_params = {}
     itop_params["host"] = args.ih    # iTop server hostname
     itop_params["user"] = args.iu    # iTop account
     itop_params["password"] = args.ip    # iTop password
-    itop_params["query_phrasebook"] = "1"     # iTop query phrasebook #
+    itop_params["query_phrasebook"] = args.iq     # iTop query phrasebook #
 
     # Define LogicMonitor parameters
     params = {}
