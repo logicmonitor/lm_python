@@ -37,6 +37,8 @@ def main():
                         help="iTop server username", required=True)
     parser.add_argument("-ip", metavar="ITOP_PASSWORD",
                         help="iTop server password", required=True)
+    parser.add_argument("-io", metavar="ITOP_ORG_ID",
+                        help="iTop organization id", required=True)
     parser.add_argument("-mh", metavar="MYSQL_HOST",
                         help="iTop MySQL server hostname (optional)")
     parser.add_argument("-mu", metavar="MYSQL_USERNAME",
@@ -45,6 +47,15 @@ def main():
                         help="iTop MySQL server password", required=True)
     parser.add_argument("-md", metavar="MYSQL_DATABASE",
                         help="iTop MySQL server database name", required=True)
+    parser.add_argument("-st", metavar="SERVER_TABLE",
+                        help="iTop MySQL staging table name for Server class",
+                        required=True)
+    parser.add_argument("-pt", metavar="PRINTER_TABLE",
+                        help="iTop MySQL staging table name for Printer class",
+                        required=True)
+    parser.add_argument("-ht", metavar="HYPERVISOR_TABLE",
+                        help="iTop MySQL staging table name for Hypervisor" +
+                        " class", required=True)
     args = parser.parse_args()
 
     # Define iTop parameters
@@ -63,13 +74,13 @@ def main():
     itop_mysql_db = args.md    # iTop MYSQL database name
 
     # MySQL database for Server class; replace x with #
-    server_table = "synchro_data_server_x"
+    server_table = args.st
     # MySQL database for Printer class; replace y with #
-    printer_table = "synchro_data_printer_y"
+    printer_table = args.pt
     # MySQL database for Hypervisor class; replace z with #
-    hypervisor_table = "synchro_data_hypervisor_z"
+    hypervisor_table = args.ht
     # iTop Organization ID that all devices will be categorized with (3 = Demo)
-    itop_org_id = "3"
+    itop_org_id = args.io
 
     # Define LogicMonitor parameters
     params = {}
