@@ -9,7 +9,7 @@ functional examples of interaction with the LogicMonitor API in python.
 In order to use these scripts there are a few things you will need.
 - Access to a LogicMonitor account
 - Sufficient permissions to perform the desired action
-- A ruby run time environment (Python version [TODO] or later)
+- Python version 2.7 or later
 
 ## Overview
 This repository is not a complete set of scripts required to fully manage your
