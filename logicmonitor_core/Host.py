@@ -451,8 +451,8 @@ class Host(LogicMonitor):
 
                 hgresp = json.loads(self.rpc("getHostGroup", h))
 
-                if (hgresp["status"] == 200
-                   and hgresp["data"]["appliesTo"] == ""):
+                if (hgresp["status"] == 200 and
+                   hgresp["data"]["appliesTo"] == ""):
 
                     g.append(path[-1])
 
@@ -484,8 +484,8 @@ class Host(LogicMonitor):
         logging.debug("Creating list of properties")
         for prop in propresp:
             if prop["name"] not in ignore:
-                if ("*******" in prop["value"]
-                   and self._verify_property(prop["name"])):
+                if ("*******" in prop["value"] and
+                   self._verify_property(prop["name"])):
                     p[prop["name"]] = self.properties[prop["name"]]
                 else:
                     p[prop["name"]] = prop["value"]

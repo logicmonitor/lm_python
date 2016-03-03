@@ -23,6 +23,7 @@ class LogicMonitor(object):
 
         # Grab the Ansible module if provided
         try:
+            from ansible.module_utils.urls import open_url
             self.module = module
             self.urlopen = open_url  # use the ansible provided open_url
             self.__version__ = self.__version__ + "-ansible-module"
