@@ -180,8 +180,8 @@ class Hostgroup(LogicMonitor):
 
         if properties is not None and group is not None:
             logging.debug("Comparing simple group properties")
-            if (group["alertEnable"] != self.alertenable
-               or group["description"] != self.description):
+            if (group["alertEnable"] != self.alertenable or
+               group["description"] != self.description):
 
                 return True
 
@@ -190,8 +190,8 @@ class Hostgroup(LogicMonitor):
             logging.debug("Creating list of properties")
             for prop in properties:
                 if prop["name"] not in ignore:
-                    if ("*******" in prop["value"]
-                       and self._verify_property(prop["name"])):
+                    if ("*******" in prop["value"] and
+                       self._verify_property(prop["name"])):
 
                         p[prop["name"]] = (
                             self.properties[prop["name"]])

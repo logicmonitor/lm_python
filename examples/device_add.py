@@ -27,7 +27,7 @@ def main():
     parser.add_argument("--description",
                         help="Text description of the host")
     parser.add_argument("-P", "--properties",
-                        help="A dictionary of properties to set for the device",
+                        help="A dictionary of device properties to set",
                         type=json.loads)
     parser.add_argument("-g", "--groups",
                         help="Groups the device should be a member of",
