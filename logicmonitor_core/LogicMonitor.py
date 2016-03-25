@@ -40,8 +40,8 @@ class LogicMonitor(object):
         param_str = urllib.urlencode(params)
         creds = urllib.urlencode(
             {"c": self.company,
-                "u": self.user,
-                "p": self.password})
+             "u": self.user,
+             "p": self.password})
 
         if param_str:
             param_str = param_str + "&"
