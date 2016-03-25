@@ -23,7 +23,7 @@ class Collector(LogicMonitor):
 
         LogicMonitor.__init__(self, module, **params)
 
-        if self.params['description']:
+        if "description" in self.params:
             self.description = self.params['description']
         else:
             self.description = self.fqdn
@@ -32,8 +32,11 @@ class Collector(LogicMonitor):
         self.installdir = "/usr/local/logicmonitor"
         self.platform = platform.system()
         self.is_64bits = sys.maxsize > 2**32
-        self.duration = self.params['duration']
-        self.starttime = self.params['starttime']
+
+        if "duration" in self.params:
+            self.duration = self.params['duration']
+        if "starttime" in self.params:
+            self.starttime = self.params['starttime']
 
         if self.info is None:
             self.id = None
@@ -56,7 +59,7 @@ class Collector(LogicMonitor):
         logging.debug("Running Collector.destroy...")
 
         self.stop()
-        self._unreigster()
+        self._unregister()
         self.uninstall()
 
     def get_installer_binary(self):
@@ -441,10 +444,10 @@ class Collector(LogicMonitor):
                 msg="Error: LogicMonitor Collector must be " +
                 "installed on a Linux device.")
 
-    def _unreigster(self):
+    def _unregister(self):
         """Delete this collector from the associated
         LogicMonitor account"""
-        logging.debug("Running Collector._unreigster...")
+        logging.debug("Running Collector._unregister...")
 
         if self.info is None:
             logging.debug("Retrieving collector information")
