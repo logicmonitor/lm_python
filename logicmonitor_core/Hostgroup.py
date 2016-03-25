@@ -90,7 +90,7 @@ class Hostgroup(LogicMonitor):
             logging.debug("Group already exists")
 
     def update(self):
-        """Idempotent function to ensure the host group settings
+        """Idempotent function to ensure the device group settings
         (alertenable, properties, etc) in the
         LogicMonitor account match the current object."""
         logging.debug("Running Hostgroup.update")
@@ -140,7 +140,7 @@ class Hostgroup(LogicMonitor):
             return self.add()
 
     def remove(self):
-        """Idempotent function to ensure the host group
+        """Idempotent function to ensure the device group
         does not exist in your LogicMonitor account"""
         logging.debug("Running Hostgroup.remove...")
 
@@ -180,8 +180,8 @@ class Hostgroup(LogicMonitor):
 
         if properties is not None and group is not None:
             logging.debug("Comparing simple group properties")
-            if (group["alertEnable"] != self.alertenable
-               or group["description"] != self.description):
+            if (group["alertEnable"] != self.alertenable or
+               group["description"] != self.description):
 
                 return True
 
@@ -190,8 +190,8 @@ class Hostgroup(LogicMonitor):
             logging.debug("Creating list of properties")
             for prop in properties:
                 if prop["name"] not in ignore:
-                    if ("*******" in prop["value"]
-                       and self._verify_property(prop["name"])):
+                    if ("*******" in prop["value"] and
+                       self._verify_property(prop["name"])):
 
                         p[prop["name"]] = (
                             self.properties[prop["name"]])

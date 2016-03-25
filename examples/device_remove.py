@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-import json
-from logicmonitor_core.Hostgroup import Hostgroup
+from logicmonitor_core.Host import Host
 
 
 def main():
@@ -16,17 +15,13 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
-    parser.add_argument("-f", "--fullpath",
-                        help="Full path of the device group",
-                        required=True)
 
-    parser.add_argument("--description",
-                        help="Text description of the host")
-    parser.add_argument("-P", "--properties",
-                        help="A dictionary of properties to set for the host",
-                        type=json.loads)
-    parser.add_argument("-a", "--alertenable",
-                        help="Turn alerting on or off")
+    parser.add_argument("-C", "--collector",
+                        help="Collector FQDN")
+    parser.add_argument("-H", "--hostname",
+                        help="Device hostname")
+    parser.add_argument("-d", "--displayname",
+                        help="Device display name")
     args = parser.parse_args()
 
     params = {}
@@ -45,19 +40,17 @@ def main():
     params["company"] = args.company
     params["user"] = args.user
     params["password"] = args.password
-    params["fullpath"] = args.fullpath
+    params["collector"] = args.collector
 
     # Optional params
-    if args.description is not None:
-        params["description"] = args.description
-    if args.properties is not None:
-        params["properties"] = args.properties
-    if args.alertenable is not None:
-        params["alertenable"] = args.alertenable
+    if args.displayname is not None:
+        params["hostname"] = args.displayname
+    if args.displayname is not None:
+        params["displayname"] = args.displayname
 
-    hg = Hostgroup(params)
+    h = Host(params)
 
-    exit_code = hg.add()
+    exit_code = h.remove()
 
     return exit_code
 

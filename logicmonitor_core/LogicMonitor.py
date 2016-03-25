@@ -23,6 +23,7 @@ class LogicMonitor(object):
 
         # Grab the Ansible module if provided
         try:
+            from ansible.module_utils.urls import open_url
             self.module = module
             self.urlopen = open_url  # use the ansible provided open_url
             self.__version__ = self.__version__ + "-ansible-module"
@@ -39,8 +40,8 @@ class LogicMonitor(object):
         param_str = urllib.urlencode(params)
         creds = urllib.urlencode(
             {"c": self.company,
-                "u": self.user,
-                "p": self.password})
+             "u": self.user,
+             "p": self.password})
 
         if param_str:
             param_str = param_str + "&"
@@ -213,7 +214,7 @@ class LogicMonitor(object):
         return None
 
     def create_group(self, fullpath):
-        """Recursively create a path of host groups.
+        """Recursively create a path of device groups.
         Returns the id of the newly created hostgroup"""
         logging.debug("Running LogicMonitor.create_group...")
 

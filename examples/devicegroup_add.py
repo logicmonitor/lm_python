@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from logicmonitor_core.Host import Host
+from logicmonitor_core.Hostgroup import Hostgroup
 
 
 def main():
@@ -16,22 +16,15 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
-    parser.add_argument("-C", "--collector",
-                        help="Collector FQDN",
+    parser.add_argument("-f", "--fullpath",
+                        help="Full path of the device group",
                         required=True)
 
-    parser.add_argument("-H", "--hostname",
-                        help="Machine hostname")
-    parser.add_argument("-d", "--displayname",
-                        help="Machine display name")
     parser.add_argument("--description",
-                        help="Text description of the host")
+                        help="Text description of the device group")
     parser.add_argument("-P", "--properties",
-                        help="A dictionary of properties to set for the host",
+                        help="A dictionary of device group properties to set",
                         type=json.loads)
-    parser.add_argument("-g", "--groups",
-                        help="Groups the host should be a member of",
-                        nargs='+',)
     parser.add_argument("-a", "--alertenable",
                         help="Turn alerting on or off")
     args = parser.parse_args()
@@ -43,8 +36,6 @@ def main():
     params["displayname"] = None
     params["duration"] = 30
     params["fullpath"] = None
-    params["groups"] = None
-    params["hostname"] = None
     params["properties"] = {}
     params["starttime"] = None
 
@@ -52,25 +43,19 @@ def main():
     params["company"] = args.company
     params["user"] = args.user
     params["password"] = args.password
-    params["collector"] = args.collector
+    params["fullpath"] = args.fullpath
 
     # Optional params
-    if args.hostname is not None:
-        params["hostname"] = args.hostname
-    if args.displayname is not None:
-        params["displayname"] = args.displayname
     if args.description is not None:
         params["description"] = args.description
     if args.properties is not None:
         params["properties"] = args.properties
-    if args.groups is not None:
-        params["groups"] = args.groups
     if args.alertenable is not None:
         params["alertenable"] = args.alertenable
 
-    h = Host(params)
+    hg = Hostgroup(params)
 
-    exit_code = h.add()
+    exit_code = hg.add()
 
     return exit_code
 
