@@ -23,7 +23,7 @@ class Collector(LogicMonitor):
 
         LogicMonitor.__init__(self, module, **params)
 
-        if self.params['description']:
+        if "description" in self.params:
             self.description = self.params['description']
         else:
             self.description = self.fqdn
@@ -32,8 +32,11 @@ class Collector(LogicMonitor):
         self.installdir = "/usr/local/logicmonitor"
         self.platform = platform.system()
         self.is_64bits = sys.maxsize > 2**32
-        self.duration = self.params['duration']
-        self.starttime = self.params['starttime']
+
+        if "duration" in self.params:
+            self.duration = self.params['duration']
+        if "starttime" in self.params:
+            self.starttime = self.params['starttime']
 
         if self.info is None:
             self.id = None
