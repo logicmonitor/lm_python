@@ -56,7 +56,7 @@ class Collector(LogicMonitor):
         logging.debug("Running Collector.destroy...")
 
         self.stop()
-        self._unreigster()
+        self._unregister()
         self.uninstall()
 
     def get_installer_binary(self):
@@ -441,10 +441,10 @@ class Collector(LogicMonitor):
                 msg="Error: LogicMonitor Collector must be " +
                 "installed on a Linux device.")
 
-    def _unreigster(self):
+    def _unregister(self):
         """Delete this collector from the associated
         LogicMonitor account"""
-        logging.debug("Running Collector._unreigster...")
+        logging.debug("Running Collector._unregister...")
 
         if self.info is None:
             logging.debug("Retrieving collector information")
