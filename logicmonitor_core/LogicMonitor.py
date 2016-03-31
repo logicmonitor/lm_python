@@ -87,9 +87,10 @@ class LogicMonitor(object):
 
         if param_str:
             param_str = param_str + "&"
-        param_str = param_str + creds
+        param_cred_str = param_str + creds
 
         try:
+            # log param string without credentials
             logging.debug("Attempting to open URL: " +
                           "https://{0}.{1}/do/{2}?{3}"
                           .format(self.company,
@@ -98,7 +99,7 @@ class LogicMonitor(object):
                                   param_str))
             f = self.urlopen(
                 "https://{0}.{1}/do/{2}?{3}"
-                .format(self.company, self.lm_url, action, param_str))
+                .format(self.company, self.lm_url, action, param_cred_str))
             return f.read()
         except IOError, ioe:
             logging.debug("Error opening URL. {0}".format(ioe))
