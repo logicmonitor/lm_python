@@ -50,8 +50,9 @@ class Service(object):
             ret = p.returncode
 
         else:
-            ret = ("Unknown error performing '{0}' on service {1}"
+            msg = ("Unknown error performing '{0}' on service {1}"
                    .format(action, name))
+            ret = msg
 
         return (ret, msg)
 
