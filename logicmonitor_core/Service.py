@@ -70,7 +70,7 @@ class Service(object):
         try:
             p = (Popen(["service", "--status-all"],
                        stdout=subprocess.PIPE))
-            ret = p.communicate()
+            p.communicate()
             result = p.returncode
 
             if result == 0 or result == 1:
