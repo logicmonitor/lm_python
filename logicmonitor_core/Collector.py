@@ -52,6 +52,7 @@ class Collector(LogicMonitor):
         self.get_installer_binary()
         self.install()
         self.start()
+        logging.debug("Collector created")
 
     def remove(self):
         """Idempotent function to make sure that there is
@@ -61,6 +62,7 @@ class Collector(LogicMonitor):
         self.stop()
         self._unregister()
         self.uninstall()
+        logging.debug("Collector removed")
 
     def get_installer_binary(self):
         """Download the LogicMonitor collector installer binary"""
