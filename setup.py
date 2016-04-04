@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='logicmonitor_core',
-      version='1.0.7',
+      version='1.0.7.1',
       description='LogicMonitor API python classes',
       long_description='LogicMonitor is a cloud-based, full stack, IT \
           infrastructure monitoring solution that allows you to manage your \
