@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import logging
+import os
 import subprocess
 from subprocess import Popen
 
@@ -50,8 +51,9 @@ class Service(object):
             ret = p.returncode
 
         else:
-            ret = ("Unknown error performing '{0}' on service {1}"
+            msg = ("Unknown error performing '{0}' on service {1}"
                    .format(action, name))
+            ret = msg
 
         return (ret, msg)
 
@@ -59,28 +61,21 @@ class Service(object):
     def _getType(name):
         logging.debug("Getting service {0} control type".format(name))
 
-        try:
-            p = (Popen(["/etc/init.d/{0}".format(name), "status"],
-                       stdout=subprocess.PIPE))
-            ret = p.communicate()
-            result = p.returncode
-
-            if result == 0 or result == 1:
-                logging.debug("Service control is via init.d")
-                return "init.d"
-        except:
+        if os.path.isdir("/etc/init.d"):
+            logging.debug("Service control is via init.d")
+            return "init.d"
+        else:
             result = -1
 
         try:
-            p = (Popen(["service", name, "status"],
+            p = (Popen(["service", "--status-all"],
                        stdout=subprocess.PIPE))
-            ret = p.communicate()
+            p.communicate()
             result = p.returncode
 
             if result == 0 or result == 1:
                 logging.debug("Service control is via service")
                 return "service"
         except:
-            ret = result
-
-        return ret
+            result = -1
+        return result
