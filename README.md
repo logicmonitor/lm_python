@@ -1,4 +1,7 @@
 # lm_python
+
+[![Build Status](https://travis-ci.org/logicmonitor/lm_python.svg?branch=master)](https://travis-ci.org/logicmonitor/lm_python)
+
 LogicMonitor is a cloud-based, full stack, IT infrastructure monitoring
 solution that allows you to manage your infrastructure from the cloud.
 lm_python contains a set of stand-alone scripts which can be used to manage
