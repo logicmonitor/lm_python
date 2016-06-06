@@ -3,3 +3,9 @@
 
 import mock
 from should import it
+
+
+# make flake8 no error for this template
+# delte this two after cases written
+mock
+it
