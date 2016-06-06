@@ -18,7 +18,8 @@ def dump_to_StringIO(json_relative):
 class FakeJSONs(object):
 
     """ mocked jsons.
-    You need to call .clear() to ensure the contents in the setup() """
+    .clear() need to be called in setup()s
+    to ensure the contents could be read """
 
     @classmethod
     def clear(cls):
