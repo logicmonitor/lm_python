@@ -32,7 +32,6 @@ class LogicMonitor(object):
             self.module = None
             self.urlopen = urllib2.urlopen
 
-
     def rpc(self, action, params):
         """Make a call to the LogicMonitor RPC library
         and return the response"""
@@ -50,8 +49,8 @@ class LogicMonitor(object):
         param_str = param_str + creds
 
         try:
-            url = ("https://{0}.{1}/rpc/{2}?{3}"
-                   .format(self.company, self.lm_url, action, param_str))
+            url = ("https://" + self.company + ". " + self.lm_url +
+                   "/rpc/" + action + "?" + param_str)
 
             # Set custom LogicMonitor header with version
             headers = {"X-LM-User-Agent": self.__version__}
@@ -68,7 +67,7 @@ class LogicMonitor(object):
             resp = json.loads(raw)
             if resp["status"] == 403:
                 logging.debug("Authentication failed.")
-                self.fail(msg="Error: {0}".format(resp["errmsg"]))
+                self.fail(msg="Error: " + resp["errmsg"])
             else:
                 return raw
         except IOError, ioe:
@@ -93,17 +92,14 @@ class LogicMonitor(object):
         try:
             # log param string without credentials
             logging.debug("Attempting to open URL: " +
-                          "https://{0}.{1}/do/{2}?{3}"
-                          .format(self.company,
-                                  self.lm_url,
-                                  action,
-                                  param_str))
+                          "https://" + self.company + "." + self.lm_url +
+                          "/do/" + action + "?" + param_str)
             f = self.urlopen(
-                "https://{0}.{1}/do/{2}?{3}"
-                .format(self.company, self.lm_url, action, param_cred_str))
+                "https://" + self.company + "." + self.lm_url +
+                "/do/" + action + "?" + param_cred_str)
             return f.read()
         except IOError, ioe:
-            logging.debug("Error opening URL. {0}".format(ioe))
+            logging.debug("Error opening URL. " + ioe)
             self.fail("Unknown exception opening URL")
 
     def get_collectors(self):
@@ -126,7 +122,7 @@ class LogicMonitor(object):
         specified hostname"""
         logging.debug("Running LogicMonitor.get_host_by_hostname...")
 
-        logging.debug("Looking for hostname {0}".format(hostname))
+        logging.debug("Looking for hostname " + hostname)
         logging.debug("Making RPC call to 'getHosts'")
         hostlist_json = json.loads(self.rpc("getHosts", {"hostGroupId": 1}))
 
@@ -137,8 +133,8 @@ class LogicMonitor(object):
                 hosts = hostlist_json["data"]["hosts"]
 
                 logging.debug(
-                    "Looking for host matching: hostname {0} and collector {1}"
-                    .format(hostname, collector["id"]))
+                    "Looking for host matching: hostname " + hostname +
+                    " and collector " + collector["id"])
 
                 for host in hosts:
                     if (host["hostName"] == hostname and
@@ -160,7 +156,7 @@ class LogicMonitor(object):
         specified display name"""
         logging.debug("Running LogicMonitor.get_host_by_displayname...")
 
-        logging.debug("Looking for displayname {0}".format(displayname))
+        logging.debug("Looking for displayname " + displayname)
         logging.debug("Making RPC call to 'getHost'")
         host_json = (json.loads(self.rpc("getHost",
                                 {"displayName": displayname})))
@@ -180,8 +176,8 @@ class LogicMonitor(object):
 
         collector_list = self.get_collectors()
         if collector_list is not None:
-            logging.debug("Looking for collector with description {0}"
-                          .format(description))
+            logging.debug("Looking for collector with description " +
+                          description)
             for collector in collector_list:
                 if collector["description"] == description:
                     logging.debug("Collector match found")
@@ -201,7 +197,7 @@ class LogicMonitor(object):
             logging.debug("RPC called succeeded")
             groups = resp["data"]
 
-            logging.debug("Looking for group matching {0}".format(fullpath))
+            logging.debug("Looking for group matching " + fullpath)
             for group in groups:
                 if group["fullPath"] == fullpath.lstrip('/'):
                     logging.debug("Group match found")
@@ -222,14 +218,14 @@ class LogicMonitor(object):
 
         res = self.get_group(fullpath)
         if res:
-            logging.debug("Group {0} exists.".format(fullpath))
+            logging.debug("Group " + fullpath + " exists.")
             return res["id"]
 
         if fullpath == "/":
             logging.debug("Specified group is root. Doing nothing.")
             return 1
         else:
-            logging.debug("Creating group named {0}".format(fullpath))
+            logging.debug("Creating group named " + fullpath)
             logging.debug("System changed")
             self.change = True
 
@@ -279,8 +275,8 @@ class LogicMonitor(object):
             else:
                 logging.debug("RPC call failed")
                 self.fail(
-                    msg="Error: unable to create new hostgroup \"{0}\".\n{1}"
-                    .format(name, resp["errmsg"]))
+                    msg="Error: unable to create new hostgroup \"" + name +
+                        "\".\n" + resp["errmsg"])
 
     def fail(self, msg):
         logging.warning(msg)
@@ -293,13 +289,13 @@ class LogicMonitor(object):
             sys.exit(1)
 
     def exit(self, changed):
-        print("Changed: {0}".format(changed))
+        print("Changed: " + changed)
 
         # Use Ansible module functions if provided
         try:
             self.module.exit_json(changed=changed, success=True)
         except:
-            print("Changed: {0}".format(changed))
+            print("Changed: " + changed)
             sys.exit(0)
 
     def output_info(self, info):
@@ -307,4 +303,4 @@ class LogicMonitor(object):
             logging.debug("Registering properties as Ansible facts")
             self.module.exit_json(changed=False, ansible_facts=info)
         except:
-            print("Properties: {0}".format(info))
+            print("Properties: " + info)

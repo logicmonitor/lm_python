@@ -19,24 +19,22 @@ class Host(LogicMonitor):
         LogicMonitor.__init__(self, module, **self.params)
 
         if self.params["hostname"]:
-            logging.debug("Hostname is {0}".format(self.params["hostname"]))
+            logging.debug("Hostname is " + self.params["hostname"])
             self.hostname = self.params['hostname']
         else:
-            logging.debug("No hostname specified. Using {0}".format(self.fqdn))
+            logging.debug("No hostname specified. Using " + self.fqdn)
             self.hostname = self.fqdn
 
         if self.params["displayname"]:
-            logging.debug("Display name is {0}"
-                          .format(self.params["displayname"]))
+            logging.debug("Display name is " + self.params["displayname"])
             self.displayname = self.params['displayname']
         else:
-            logging.debug("No display name specified. Using {0}"
-                          .format(self.fqdn))
+            logging.debug("No display name specified. Using " + self.fqdn)
             self.displayname = self.fqdn
 
         # Attempt to host information via display name of host name
-        logging.debug("Attempting to find host by displayname {0}"
-                      .format(self.displayname))
+        logging.debug("Attempting to find host by displayname " +
+                      self.displayname)
         info = self.get_host_by_displayname(self.displayname)
 
         if info is not None:
@@ -46,7 +44,7 @@ class Host(LogicMonitor):
             if (not hasattr(self.params, "collector") and
                "agentDescription" in info):
                 logging.debug("Setting collector from host response. " +
-                              "Collector {0}".format(info["agentDescription"]))
+                              "Collector " + info["agentDescription"])
                 self.params["collector"] = info["agentDescription"]
         else:
             logging.debug("Host not found by displayname")
@@ -54,8 +52,8 @@ class Host(LogicMonitor):
         # At this point, a valid collector description is required for success
         # Check that the description exists or fail
         if self.params["collector"]:
-            logging.debug("Collector specified is {0}"
-                          .format(self.params["collector"]))
+            logging.debug("Collector specified is " +
+                          self.params["collector"])
             self.collector = (self.get_collector_by_description(
                               self.params["collector"]))
         else:
@@ -63,8 +61,8 @@ class Host(LogicMonitor):
 
         # If the host wasn't found via displayname, attempt by hostname
         if info is None:
-            logging.debug("Attempting to find host by hostname {0}"
-                          .format(self.hostname))
+            logging.debug("Attempting to find host by hostname " +
+                          self.hostname)
             info = self.get_host_by_hostname(self.hostname, self.collector)
 
         self.info = info
@@ -107,8 +105,8 @@ class Host(LogicMonitor):
                 self.fail(msg=properties_json["status"])
         else:
             logging.debug("Unable to find LogicMonitor host which " +
-                          "matches {0} ({1})"
-                          .format(self.displayname, self.hostname))
+                          "matches " + self.displayname +
+                          " (" + self.hostname + ")")
             return None
 
     def set_properties(self, propertyhash):
@@ -401,8 +399,8 @@ class Host(LogicMonitor):
             logging.debug("Properties hash exists")
             propnum = 0
             for key, value in properties.iteritems():
-                h["propName{0}".format(str(propnum))] = key
-                h["propValue{0}".format(str(propnum))] = value
+                h["propName" + str(propnum)] = key
+                h["propValue" + str(propnum)] = value
                 propnum = propnum + 1
 
         return h
@@ -415,10 +413,10 @@ class Host(LogicMonitor):
         if self.info:
             logging.debug("Host is registered")
             if propname not in self.properties:
-                logging.debug("Property {0} does not exist".format(propname))
+                logging.debug("Property " + propname + " does not exist")
                 return False
             else:
-                logging.debug("Property {0} exists".format(propname))
+                logging.debug("Property " + propname + " exists")
                 h = {"hostId": self.info["id"],
                      "propName0": propname,
                      "propValue0": self.properties[propname]}
