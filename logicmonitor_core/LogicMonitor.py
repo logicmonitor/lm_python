@@ -4,7 +4,6 @@ import json
 import logging
 import socket
 import sys
-import urllib2
 import urllib
 
 
@@ -29,8 +28,10 @@ class LogicMonitor(object):
             self.__version__ = self.__version__ + "-ansible-module"
             logging.basicConfig(level=logging.DEBUG)
         except:
+            import urllib2
             self.module = None
             self.urlopen = urllib2.urlopen
+
 
     def rpc(self, action, params):
         """Make a call to the LogicMonitor RPC library
