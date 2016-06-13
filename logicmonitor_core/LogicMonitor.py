@@ -42,9 +42,6 @@ class LogicMonitor(object):
             url = ("https://" + self.company + ". " + self.lm_url +
                    "/rpc/" + action + "?" + param_str)
 
-            # Set custom LogicMonitor header with version
-            headers = {"X-LM-User-Agent": self.__version__}
-
             # Set headers
             req = urllib2.Request(url)
             req.add_header("X-LM-User-Agent", self.__version__)
