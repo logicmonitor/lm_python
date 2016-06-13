@@ -14,14 +14,14 @@ from Service import Service
 
 class Collector(LogicMonitor):
 
-    def __init__(self, params, module=None):
+    def __init__(self, params):
         """Initializor for the LogicMonitor Collector object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating Collector object")
         self.change = False
         self.params = params
 
-        LogicMonitor.__init__(self, module, **params)
+        LogicMonitor.__init__(self, **params)
 
         if "description" in self.params:
             self.description = self.params['description']
@@ -149,16 +149,10 @@ class Collector(LogicMonitor):
                 os.chmod(installer, 0744)
 
                 logging.debug("Executing installer")
-                cmd_result = -1
-                if self.module is not None:
-                    # TODO TEST
-                    rc, out, err = module.run_command([installer, "-y"])
-                    cmd_result = rc
-                else:
-                    p = (Popen([installer, "-y"],
-                               stdout=subprocess.PIPE))
-                    ret, err = p.communicate()
-                    cmd_result = p.returncode
+                p = (Popen([installer, "-y"],
+                           stdout=subprocess.PIPE))
+                ret, err = p.communicate()
+                cmd_result = p.returncode
 
                 if cmd_result != 0:
                     self.fail(

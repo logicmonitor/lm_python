@@ -8,14 +8,14 @@ from LogicMonitor import LogicMonitor
 
 class Hostgroup(LogicMonitor):
 
-    def __init__(self, params, module=None):
+    def __init__(self, params):
         """Initializor for the LogicMonitor host object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating Hostgroup object")
         self.change = False
         self.params = params
 
-        LogicMonitor.__init__(self, module, **self.params)
+        LogicMonitor.__init__(self, **self.params)
 
         self.fullpath = self.params["fullpath"]
         self.info = self.get_group(self.fullpath)

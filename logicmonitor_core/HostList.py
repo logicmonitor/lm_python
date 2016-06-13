@@ -7,14 +7,14 @@ from LogicMonitor import LogicMonitor
 
 class HostList(LogicMonitor):
 
-    def __init__(self, params, module=None):
+    def __init__(self, params):
         """Initializor for the LogicMonitor host list object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating HostList")
         self.params = params
         self.groupId = None
 
-        LogicMonitor.__init__(self, module, **self.params)
+        LogicMonitor.__init__(self, **self.params)
 
         if self.params["group"]:
             logging.debug("Group is " + self.params["group"])

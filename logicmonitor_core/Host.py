@@ -8,7 +8,7 @@ from LogicMonitor import LogicMonitor
 
 class Host(LogicMonitor):
 
-    def __init__(self, params, module=None):
+    def __init__(self, params):
         """Initializor for the LogicMonitor host object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating Host object")
@@ -16,7 +16,7 @@ class Host(LogicMonitor):
         self.params = params
         self.collector = None
 
-        LogicMonitor.__init__(self, module, **self.params)
+        LogicMonitor.__init__(self, **self.params)
 
         if self.params["hostname"]:
             logging.debug("Hostname is " + self.params["hostname"])

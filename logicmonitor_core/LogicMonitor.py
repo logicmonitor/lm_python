@@ -5,11 +5,12 @@ import logging
 import socket
 import sys
 import urllib
+import urllib2
 
 
 class LogicMonitor(object):
 
-    def __init__(self, module, **params):
+    def __init__(self, **params):
         self.__version__ = "1.0-python"
         logging.debug("Instantiating LogicMonitor object")
 
@@ -19,18 +20,7 @@ class LogicMonitor(object):
         self.password = params["password"]
         self.fqdn = socket.getfqdn()
         self.lm_url = "logicmonitor.com/santaba"
-
-        # Grab the Ansible module if provided
-        try:
-            from ansible.module_utils.urls import open_url
-            self.module = module
-            self.urlopen = open_url  # use the ansible provided open_url
-            self.__version__ = self.__version__ + "-ansible-module"
-            logging.basicConfig(level=logging.DEBUG)
-        except:
-            import urllib2
-            self.module = None
-            self.urlopen = urllib2.urlopen
+        self.urlopen = urllib2.urlopen
 
     def rpc(self, action, params):
         """Make a call to the LogicMonitor RPC library
@@ -55,13 +45,10 @@ class LogicMonitor(object):
             # Set custom LogicMonitor header with version
             headers = {"X-LM-User-Agent": self.__version__}
 
-            # Set headers dependent on Ansible or normal usage
-            if self.module is not None:
-                f = self.urlopen(url, headers=headers)
-            else:
-                req = urllib2.Request(url)
-                req.add_header("X-LM-User-Agent", self.__version__)
-                f = self.urlopen(req)
+            # Set headers
+            req = urllib2.Request(url)
+            req.add_header("X-LM-User-Agent", self.__version__)
+            f = self.urlopen(req)
 
             raw = f.read()
             resp = json.loads(raw)
@@ -70,7 +57,7 @@ class LogicMonitor(object):
                 self.fail(msg="Error: " + resp["errmsg"])
             else:
                 return raw
-        except IOError, ioe:
+        except IOError as ioe:
             logging.debug(ioe)
             self.fail(msg="Error: Unknown exception making RPC call")
 
@@ -98,7 +85,7 @@ class LogicMonitor(object):
                 "https://" + self.company + "." + self.lm_url +
                 "/do/" + action + "?" + param_cred_str)
             return f.read()
-        except IOError, ioe:
+        except IOError as ioe:
             logging.debug("Error opening URL. " + ioe)
             self.fail("Unknown exception opening URL")
 
@@ -280,27 +267,13 @@ class LogicMonitor(object):
 
     def fail(self, msg):
         logging.warning(msg)
-
-        # Use Ansible module functions if provided
-        try:
-            self.module.fail_json(msg=msg, changed=self.change, failed=True)
-        except:
-            print(msg)
-            sys.exit(1)
+        print(msg)
+        sys.exit(1)
 
     def exit(self, changed):
         print("Changed: " + changed)
-
-        # Use Ansible module functions if provided
-        try:
-            self.module.exit_json(changed=changed, success=True)
-        except:
-            print("Changed: " + changed)
-            sys.exit(0)
+        print("Changed: " + changed)
+        sys.exit(0)
 
     def output_info(self, info):
-        try:
-            logging.debug("Registering properties as Ansible facts")
-            self.module.exit_json(changed=False, ansible_facts=info)
-        except:
-            print("Properties: " + info)
+        print("Properties: " + info)
