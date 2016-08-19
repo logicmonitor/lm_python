@@ -78,7 +78,7 @@ class Collector(LogicMonitor):
 
         if self.platform == "Linux" and self.id is not None:
             logging.debug("Platform is Linux")
-            logging.debug("Agent ID is " + self.id)
+            logging.debug("Agent ID is " + str(self.id))
 
             installfilepath = (self.installdir +
                                "/logicmonitorsetup" +
