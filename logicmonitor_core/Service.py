@@ -10,7 +10,7 @@ class Service(object):
     @staticmethod
     def getStatus(name):
         logging.basicConfig(level=logging.DEBUG)
-        logging.debug("Retrieving status of service {0}".format(name))
+        logging.debug("Retrieving status of service " + name)
 
         ret = -1
 
@@ -18,7 +18,7 @@ class Service(object):
 
         # Determine how to get the status of the service
         if startType == "init.d":
-            p = (Popen(["/etc/init.d/{0}".format(name), "status"],
+            p = (Popen(["/etc/init.d/" + name, "status"],
                        stdout=subprocess.PIPE))
             ret, err = p.communicate()
         elif startType == "service":
@@ -26,13 +26,13 @@ class Service(object):
                        stdout=subprocess.PIPE))
             ret, err = p.communicate()
         else:
-            ret = "Unknown error getting status for service {0}".format(name)
+            ret = "Unknown error getting status for service " + name
 
         return ret
 
     @staticmethod
     def doAction(name, action):
-        logging.debug("Performing {0} on service {1}".format(action, name))
+        logging.debug("Performing " + action + " on service " + name)
 
         startType = Service._getType(name)
 
@@ -40,7 +40,7 @@ class Service(object):
 
         # Determine how to perform the action on the service
         if startType == "init.d":
-            p = (Popen(["/etc/init.d/{0}".format(name), action],
+            p = (Popen(["/etc/init.d/" + name, action],
                        stdout=subprocess.PIPE))
             msg = p.communicate()
             ret = p.returncode
@@ -51,15 +51,15 @@ class Service(object):
             ret = p.returncode
 
         else:
-            msg = ("Unknown error performing '{0}' on service {1}"
-                   .format(action, name))
+            msg = ("Unknown error performing '" + action +
+                   "' on service " + name + "")
             ret = msg
 
         return (ret, msg)
 
     @staticmethod
     def _getType(name):
-        logging.debug("Getting service {0} control type".format(name))
+        logging.debug("Getting service " + name + " control type")
 
         if os.path.isdir("/etc/init.d"):
             logging.debug("Service control is via init.d")

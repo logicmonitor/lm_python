@@ -8,14 +8,14 @@ from LogicMonitor import LogicMonitor
 
 class Datasource(LogicMonitor):
 
-    def __init__(self, params, module=None):
+    def __init__(self, params):
         """Initializor for the LogicMonitor Datasource object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating Datasource object")
         self.change = False
         self.params = params
 
-        LogicMonitor.__init__(self, module, **params)
+        LogicMonitor.__init__(self, **params)
 
         self.id = self.params["id"]
         self.starttime = self.params["starttime"]

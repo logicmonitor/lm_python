@@ -8,14 +8,14 @@ from LogicMonitor import LogicMonitor
 
 class Hostgroup(LogicMonitor):
 
-    def __init__(self, params, module=None):
+    def __init__(self, params):
         """Initializor for the LogicMonitor host object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating Hostgroup object")
         self.change = False
         self.params = params
 
-        LogicMonitor.__init__(self, module, **self.params)
+        LogicMonitor.__init__(self, **self.params)
 
         self.fullpath = self.params["fullpath"]
         self.info = self.get_group(self.fullpath)
@@ -123,7 +123,7 @@ class Hostgroup(LogicMonitor):
                     logging.debug("RPC call failed")
                     self.fail(
                         msg="Error: Unable to update the " +
-                            "host.\n{0}".format(resp["errmsg"]))
+                            "host.\n" + resp["errmsg"])
             else:
                 logging.debug("Group properties match supplied properties. " +
                               "No changes to make")
@@ -301,7 +301,7 @@ class Hostgroup(LogicMonitor):
             h["name"] = name
 
             if parent:
-                logging.debug("Parent group {0} found.".format(parent["id"]))
+                logging.debug("Parent group " + parent["id"] + " found.")
                 h["parentID"] = parent["id"]
             else:
                 logging.debug("No parent group found. Using root.")
@@ -315,8 +315,8 @@ class Hostgroup(LogicMonitor):
             logging.debug("Properties hash exists")
             propnum = 0
             for key, value in properties.iteritems():
-                h["propName{0}".format(str(propnum))] = key
-                h["propValue{0}".format(str(propnum))] = value
+                h["propName" + str(propnum)] = key
+                h["propValue" + str(propnum)] = value
                 propnum = propnum + 1
 
         return h
@@ -329,10 +329,10 @@ class Hostgroup(LogicMonitor):
         if self.info:
             logging.debug("Group exists")
             if propname not in self.properties:
-                logging.debug("Property {0} does not exist".format(propname))
+                logging.debug("Property " + propname + " does not exist")
                 return False
             else:
-                logging.debug("Property {0} exists".format(propname))
+                logging.debug("Property " + propname + " exists")
                 h = {"hostGroupId": self.info["id"],
                      "propName0": propname,
                      "propValue0": self.properties[propname]}

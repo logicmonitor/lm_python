@@ -14,19 +14,24 @@ from Service import Service
 
 class Collector(LogicMonitor):
 
-    def __init__(self, params, module=None):
+    def __init__(self, params):
         """Initializor for the LogicMonitor Collector object"""
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("Instantiating Collector object")
         self.change = False
         self.params = params
 
-        LogicMonitor.__init__(self, module, **params)
+        LogicMonitor.__init__(self, **params)
 
         if "description" in self.params:
             self.description = self.params['description']
         else:
             self.description = self.fqdn
+
+        if "collector_id" in self.params:
+            self.collector_id = self.params["collector_id"]
+        else:
+            self.collector_id = None
 
         self.info = self._get()
         self.installdir = "/usr/local/logicmonitor"
@@ -78,15 +83,15 @@ class Collector(LogicMonitor):
 
         if self.platform == "Linux" and self.id is not None:
             logging.debug("Platform is Linux")
-            logging.debug("Agent ID is {0}".format(self.id))
+            logging.debug("Agent ID is " + str(self.id))
 
             installfilepath = (self.installdir +
                                "/logicmonitorsetup" +
                                str(self.id) + "_" + str(arch) +
                                ".bin")
 
-            logging.debug("Looking for existing installer at {0}"
-                          .format(installfilepath))
+            logging.debug("Looking for existing installer at " +
+                          installfilepath)
             if not os.path.isfile(installfilepath):
                 logging.debug("No previous installer found")
                 logging.debug("System changed")
@@ -152,11 +157,11 @@ class Collector(LogicMonitor):
                 p = (Popen([installer, "-y"],
                            stdout=subprocess.PIPE))
                 ret, err = p.communicate()
+                cmd_result = p.returncode
 
-                if p.returncode != 0:
-                    (self.fail(
-                        msg="Error: Unable to install collector: {0}"
-                            .format(err)))
+                if cmd_result != 0:
+                    self.fail(
+                        msg="Error: Unable to install collector: " + err)
                 else:
                     logging.debug("Collector installed successfully")
             else:
@@ -186,9 +191,7 @@ class Collector(LogicMonitor):
             ret, err = p.communicate()
 
             if p.returncode != 0:
-                self.fail(
-                    msg="Error: Unable to uninstall collector: {0}"
-                    .format(err))
+                self.fail(msg="Error: Unable to uninstall collector: " + err)
             else:
                 logging.debug("Collector successfully uninstalled")
         else:
@@ -220,7 +223,7 @@ class Collector(LogicMonitor):
                 if output != 0:
                     self.fail(
                         msg="Error: Failed starting logicmonitor-agent " +
-                            "service. {0}".format(err))
+                            "service. " + err)
 
             output = Service.getStatus("logicmonitor-watchdog")
 
@@ -239,7 +242,7 @@ class Collector(LogicMonitor):
                 if output != 0:
                     self.fail(
                         msg="Error: Failed starting logicmonitor-watchdog " +
-                            "service. {0}".format(err))
+                            "service. " + err)
         else:
             self.fail(
                 msg="Error: LogicMonitor Collector must be " +
@@ -258,7 +261,7 @@ class Collector(LogicMonitor):
             if output != 0:
                 self.fail(
                     msg="Error: Failed starting logicmonitor-agent " +
-                        "service. {0}".format(err))
+                        "service. " + err)
 
             logging.debug("Restarting logicmonitor-watchdog service")
             (output, err) = Service.doAction("logicmonitor-watchdog",
@@ -267,7 +270,7 @@ class Collector(LogicMonitor):
             if output != 0:
                 self.fail(
                     msg="Error: Failed starting logicmonitor-watchdog " +
-                        "service. {0}".format(err))
+                        "service. " + err)
         else:
             (self.fail(
                 msg="Error: LogicMonitor Collector must be installed " +
@@ -296,7 +299,7 @@ class Collector(LogicMonitor):
                 if output != 0:
                     self.fail(
                         msg="Error: Failed stopping logicmonitor-agent " +
-                            "service. {0}".format(err))
+                            "service. " + err)
 
             output = Service.getStatus("logicmonitor-watchdog")
 
@@ -315,7 +318,7 @@ class Collector(LogicMonitor):
                 if output != 0:
                     self.fail(
                         msg="Error: Failed stopping logicmonitor-watchdog " +
-                            "service. {0}".format(err))
+                            "service. " + err)
         else:
             self.fail(
                 msg="Error: LogicMonitor Collector must be " +
@@ -397,16 +400,33 @@ class Collector(LogicMonitor):
     def _get(self):
         """Returns a JSON object representing this collector"""
         logging.debug("Running Collector._get...")
+
+        ret = None
+
         collector_list = self.get_collectors()
 
         if collector_list is not None:
             logging.debug("Collectors returned")
             for collector in collector_list:
-                if collector["description"] == self.description:
-                    return collector
+                if (
+                    collector["description"] == self.description and
+                    collector["description"] != ""
+                ):
+                    logging.debug(
+                        "Collector matching description " +
+                        self.description + " found."
+                    )
+                    ret = collector
+                elif str(collector["id"]) == str(self.collector_id):
+                    logging.debug(
+                        "Collector id " + self.collector_id + " found."
+                    )
+                    ret = collector
+
         else:
             logging.debug("No collectors returned")
-            return None
+            ret = None
+        return ret
 
     def _create(self):
         """Create a new collector in the associated
@@ -472,8 +492,8 @@ class Collector(LogicMonitor):
                 return delete
             else:
                 # The collector couldn't unregister. Start the service again
-                logging.debug("Error unregistering collecting. {0}"
-                              .format(delete["errmsg"]))
+                logging.debug("Error unregistering collecting. " +
+                              delete["errmsg"])
                 logging.debug("The collector service will be restarted")
 
                 self.start()

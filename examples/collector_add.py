@@ -18,6 +18,8 @@ def main():
     parser.add_argument("-p", "--password",
                         help="LogicMonitor password",
                         required=True)
+    parser.add_argument("-i", "--collector_id",
+                        help="ID of an existing collector to add")
     args = parser.parse_args()
 
     params = {}
@@ -36,6 +38,10 @@ def main():
     params["company"] = args.company
     params["user"] = args.user
     params["password"] = args.password
+
+    # Optional params
+    if args.collector_id is not None:
+        params["collector_id"] = args.collector_id
 
     col = Collector(params)
 
