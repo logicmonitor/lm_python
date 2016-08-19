@@ -28,6 +28,11 @@ class Collector(LogicMonitor):
         else:
             self.description = self.fqdn
 
+        if "collector_id" in self.params:
+            self.collector_id = self.params["collector_id"]
+        else:
+            self.collector_id = None
+
         self.info = self._get()
         self.installdir = "/usr/local/logicmonitor"
         self.platform = platform.system()
@@ -78,7 +83,7 @@ class Collector(LogicMonitor):
 
         if self.platform == "Linux" and self.id is not None:
             logging.debug("Platform is Linux")
-            logging.debug("Agent ID is " + self.id)
+            logging.debug("Agent ID is " + str(self.id))
 
             installfilepath = (self.installdir +
                                "/logicmonitorsetup" +
@@ -395,16 +400,30 @@ class Collector(LogicMonitor):
     def _get(self):
         """Returns a JSON object representing this collector"""
         logging.debug("Running Collector._get...")
+
+        ret = None
+
         collector_list = self.get_collectors()
 
         if collector_list is not None:
             logging.debug("Collectors returned")
             for collector in collector_list:
                 if collector["description"] == self.description:
-                    return collector
+                    logging.debug(
+                        "Collector matching description " +
+                        self.description + " found."
+                    )
+                    ret = collector
+                elif collector["id"] == self.collector_id:
+                    logging.debug(
+                        "Collector matching id " + self.id + " found."
+                    )
+                    ret = collector
+
         else:
             logging.debug("No collectors returned")
-            return None
+            ret = None
+        return ret
 
     def _create(self):
         """Create a new collector in the associated
