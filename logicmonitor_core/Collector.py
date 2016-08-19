@@ -408,15 +408,18 @@ class Collector(LogicMonitor):
         if collector_list is not None:
             logging.debug("Collectors returned")
             for collector in collector_list:
-                if collector["description"] == self.description:
+                if (
+                    collector["description"] == self.description and
+                    collector["description"] != ""
+                ):
                     logging.debug(
                         "Collector matching description " +
                         self.description + " found."
                     )
                     ret = collector
-                elif collector["id"] == self.collector_id:
+                elif str(collector["id"]) == str(self.collector_id):
                     logging.debug(
-                        "Collector matching id " + self.id + " found."
+                        "Collector id " + self.collector_id + " found."
                     )
                     ret = collector
 
