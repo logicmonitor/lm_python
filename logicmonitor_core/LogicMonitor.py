@@ -39,7 +39,7 @@ class LogicMonitor(object):
         param_str = param_str + creds
 
         try:
-            url = ("https://" + self.company + ". " + self.lm_url +
+            url = ("https://" + self.company + "." + self.lm_url +
                    "/rpc/" + action + "?" + param_str)
 
             # Set headers
