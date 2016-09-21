@@ -118,7 +118,7 @@ class LogicMonitor(object):
 
                 logging.debug(
                     "Looking for host matching: hostname " + hostname +
-                    " and collector " + collector["id"])
+                    " and collector " + str(collector["id"]))
 
                 for host in hosts:
                     if (host["hostName"] == hostname and
