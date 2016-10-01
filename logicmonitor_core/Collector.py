@@ -85,6 +85,10 @@ class Collector(LogicMonitor):
             logging.debug("Platform is Linux")
             logging.debug("Agent ID is " + str(self.id))
 
+            if not os.path.exists(self.installdir):
+                os.makedirs(self.installdir)
+                logging.debug("Created installdir at `{dir}`".format(dir=self.installdir))
+
             installfilepath = (self.installdir +
                                "/logicmonitorsetup" +
                                str(self.id) + "_" + str(arch) +
