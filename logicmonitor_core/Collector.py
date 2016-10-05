@@ -87,7 +87,8 @@ class Collector(LogicMonitor):
 
             if not os.path.exists(self.installdir):
                 os.makedirs(self.installdir)
-                logging.debug("Created installdir at `{dir}`".format(dir=self.installdir))
+                logging.debug("Created installdir at " +
+                              self.installdir)
 
             installfilepath = (self.installdir +
                                "/logicmonitorsetup" +
