@@ -62,7 +62,7 @@ You will also need to identify the Collector description that you want to use, i
 ```
 $> python ./examples/lm_itop_sync.py -h
 usage: Synchronize LogicMonitor devices to iTop CMDB (federation)
-       [-h] -c CUSTOMER_PORTAL -i ACCESSIDNAME -k ACCESSKEY -ih ITOP_HOST -iu
+       [-h] -c CUSTOMER_PORTAL -t ACCESSID -k ACCESSKEY -ih ITOP_HOST -iu
        ITOP_USERNAME -ip ITOP_PASSWORD -io ITOP_ORG_ID [-mh MYSQL_HOST] -mu
        MYSQL_USERNAME -mp MYSQL_PASSWORD -md MYSQL_DATABASE -st SERVER_TABLE
        -pt PRINTER_TABLE -ht HYPERVISOR_TABLE
@@ -70,7 +70,7 @@ usage: Synchronize LogicMonitor devices to iTop CMDB (federation)
 optional arguments:
   -h, --help            show this help message and exit
   -c CUSTOMER_PORTAL, --company CUSTOMER_PORTAL LogicMonitor account
-  -i ACCESSID, --accessid ACCESSID API Token Access Id
+  -t ACCESSID, --accessid ACCESSID API Token Access Id
   -k ACCESSKEY, --accesskey ACCESSKEY API Token Access Key
                         API Token Access Key
   -ih ITOP_HOST         iTop server hostname
@@ -101,7 +101,7 @@ usage: Synchronize iTop CMDB CIs to LogicMonitor [-h] -c CUSTOMER_PORTAL -i
 optional arguments:
   -h, --help            show this help message and exit
   -c CUSTOMER_PORTAL, --company CUSTOMER_PORTAL LogicMonitor account
-  -i ACCESSID, --accessid ACCESSID API Token Access Id
+  -t ACCESSID, --accessid ACCESSID API Token Access Id
   -k ACCESSKEY, --accesskey ACCESSKEY API Token Access Key
                         API Token Access Key
   -cn COLLECTOR_NAME    LogicMonitor collector description

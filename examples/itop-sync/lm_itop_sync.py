@@ -27,7 +27,7 @@ def main():
     parser = argparse.ArgumentParser(description)
     parser.add_argument("-c", "--company", metavar="CUSTOMER_PORTAL",
                         help="LogicMonitor account", required=True)
-    parser.add_argument('-i', '--accessid', metavar="ACCESSID",
+    parser.add_argument('-t', '--accessid', metavar="ACCESSID",
                         help="API Token Access Id", required=True)
     parser.add_argument('-k', '--accesskey', metavar="ACCESSID",
                         help="API Token Access Key", required=True)

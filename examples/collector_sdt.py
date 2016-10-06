@@ -9,7 +9,7 @@ def main():
     parser.add_argument("-c", "--company",
                         help="LogicMonitor account",
                         required=True)
-    parser.add_argument('-i', '--accessid',
+    parser.add_argument('-t', '--accessid',
                         help="API Token Access Id",
                         required=True)
     parser.add_argument('-k', '--accesskey',
