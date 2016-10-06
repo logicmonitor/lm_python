@@ -101,13 +101,12 @@ class LogicMonitor(object):
              method == 'PATCH' or
              method == 'POST') and
            data is None):
-            # TODO better error message
-            self.fail("No payload specified")
+            self.fail('Message body required for method ' + method)
         try:
             url = ('https://' + self.company + '.' +
                    self.lm_url + '/rest' + path)
 
-            logging.debug("Sending " + method + " to: " + url)
+            logging.debug('Sending ' + method + ' to: ' + url)
             auth_header = self.get_auth_header(
                             path, method, data)
             headers = {'Content-Type': 'application/json',
@@ -135,16 +134,18 @@ class LogicMonitor(object):
                           method + 'specified')
 
             if resp.status_code != 200:
-                self.fail('HTTP response ' +
-                          str(resp.status_code) +
-                          ' from API while making ' + method +
-                          ' request to ' + url)
+                logging.error('HTTP response ' +
+                              str(resp.status_code) +
+                              ' from API while making ' +
+                              method +
+                              ' request to ' + url)
             else:
                 logging.debug('Successful API call to ' + url)
             return resp
         except Exception as e:
-            self.fail('Unknown error making API request: ' +
-                      e.message)
+            logging.error('Error making API request: '
+                          + e.message)
+            return None
 
     def get_auth_header(self, path, method, data):
         '''Construct an REST API authentication header'''
