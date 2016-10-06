@@ -141,7 +141,7 @@ class LogicMonitor(object):
                               ' request to ' + url)
             else:
                 logging.debug('Successful API call to ' + url)
-            return resp
+                return resp
         except Exception as e:
             logging.error('Error making API request: '
                           + e.message)
