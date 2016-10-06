@@ -21,8 +21,8 @@ class LogicMonitor(object):
 
         self.check_mode = False
         self.company = params["company"]
-        self.access_id = params["access_id"]
-        self.access_key = params["access_key"]
+        self.accessid = params['accessid']
+        self.accesskey = params['accesskey']
         self.fqdn = socket.getfqdn()
         self.lm_url = "logicmonitor.com/santaba"
         self.urlopen = urllib2.urlopen
@@ -146,7 +146,7 @@ class LogicMonitor(object):
         '''Construct an REST API authentication header'''
         logging.debug("Running LogicMonitor.get_auth_header...")
 
-        if self.access_key is None or self.access_id is None:
+        if self.accesskey is None or self.accessid is None:
             self.fail('Must specify Access Key and ' +
                       'Access ID for authenticating')
 
@@ -162,7 +162,7 @@ class LogicMonitor(object):
         # construct signature
         signature = base64.b64encode(
                         hmac.new(
-                            self.access_key,
+                            self.accesskey,
                             msg=msg,
                             digestmod=hashlib.sha256
                         ).hexdigest()
@@ -170,7 +170,7 @@ class LogicMonitor(object):
 
         # construct header
         auth = ('LMv1 ' +
-                self.access_id + ':' +
+                self.accessid + ':' +
                 signature + ':' +
                 epoch)
 
