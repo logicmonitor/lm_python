@@ -1,9 +1,14 @@
 #!/usr/bin/python
 
+import base64
+import hashlib
+import hmac
 import json
 import logging
+import requests
 import socket
 import sys
+import time
 import urllib
 import urllib2
 
@@ -16,8 +21,8 @@ class LogicMonitor(object):
 
         self.check_mode = False
         self.company = params["company"]
-        self.user = params["user"]
-        self.password = params["password"]
+        self.access_id = params["access_id"]
+        self.access_key = params["access_key"]
         self.fqdn = socket.getfqdn()
         self.lm_url = "logicmonitor.com/santaba"
         self.urlopen = urllib2.urlopen
@@ -77,7 +82,8 @@ class LogicMonitor(object):
         try:
             # log param string without credentials
             logging.debug("Attempting to open URL: " +
-                          "https://" + self.company + "." + self.lm_url +
+                          "https://" + self.company + "." +
+                          self.lm_url +
                           "/do/" + action + "?" + param_str)
             f = self.urlopen(
                 "https://" + self.company + "." + self.lm_url +
@@ -86,6 +92,89 @@ class LogicMonitor(object):
         except IOError as ioe:
             logging.debug("Error opening URL. " + ioe)
             self.fail("Unknown exception opening URL")
+
+    def rest(self, method, path, data=None):
+        '''Make a call to the LogicMonitor server REST API'''
+        logging.debug("Running LogicMonitor.rest...")
+
+        if ((method == 'DELETE' or
+             method == 'PATCH' or
+             method == 'POST') and
+           data is None):
+            # TODO better error message
+            self.fail("No payload specified")
+        try:
+            url = ('https://' + self.company + '.' +
+                   self.lm_url + '/rest/' + path)
+
+            logging.debug("Sending " + method + " to: " + url)
+            auth_header = self.get_auth_header(
+                            method, path, data)
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': auth_header}
+
+            resp = None
+            if method == 'DELETE':
+                resp = requests.delete(url, headers=headers)
+            elif method == 'GET':
+                resp = requests.get(url, headers=headers)
+            elif method == 'PATCH':
+                resp = requests.patch(url,
+                                      data=data,
+                                      headers=headers)
+            elif method == 'POST':
+                resp = requests.post(url,
+                                     data=data,
+                                     headers=headers)
+            elif method == 'PUT':
+                resp = requests.put(url,
+                                    data=data,
+                                    headers=headers)
+
+            if resp.status_code != '200':
+                self.fail('HTTP response ' + resp.status_code +
+                          ' from API while making ' + method +
+                          ' request to ' + url)
+            else:
+                self.debug('Successful API call to ' + url)
+                return resp
+        except Exception as e:
+            self.fail('Unknown error making API request: ' +
+                      e.message)
+
+    def get_auth_header(self, method, path, data):
+        '''Construct an REST API authentication header'''
+        logging.debug("Running LogicMonitor.get_auth_header...")
+
+        if self.access_key is None or self.access_id is None:
+            self.fail('Must specify Access Key and ' +
+                      'Access ID for authenticating')
+
+        epoch = str(int(time.time() * 1000))
+
+        # concatenate request details
+        msg = ''
+        if data is None:
+            msg = method + epoch + path
+        else:
+            msg = method + epoch + data + path
+
+        # construct signature
+        signature = base64.b64encode(
+                        hmac.new(
+                            self.access_key,
+                            msg=msg,
+                            digestmod=hashlib.sha256
+                        ).hexdigest()
+                    )
+
+        # construct header
+        auth = ('LMv1 ' +
+                self.access_id + ':' +
+                signature + ':' +
+                epoch)
+
+        return auth
 
     def get_collectors(self):
         """Returns a JSON object containing a list of
