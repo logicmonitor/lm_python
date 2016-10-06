@@ -134,15 +134,18 @@ class LogicMonitor(object):
                           method + 'specified')
 
             if resp.status_code != 200:
-                self.fail('HTTP response ' +
-                          str(resp.status_code) +
-                          ' from API while making ' + method +
-                          ' request to ' + url)
+                logging.error('HTTP response ' +
+                              str(resp.status_code) +
+                              ' from API while making ' +
+                              method +
+                              ' request to ' + url)
             else:
                 logging.debug('Successful API call to ' + url)
             return resp
         except Exception as e:
-            self.fail('Error making API request: ' + e.message)
+            logging.error('Error making API request: '
+                          + e.message)
+            return None
 
     def get_auth_header(self, path, method, data):
         '''Construct an REST API authentication header'''
