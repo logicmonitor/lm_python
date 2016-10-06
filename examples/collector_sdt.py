@@ -36,8 +36,8 @@ def main():
 
     # Required params
     params["company"] = args.company
-    params['access_id'] = args.accessid
-    params['access_key'] = args.accesskey
+    params['accessid'] = args.accessid
+    params['accesskey'] = args.accesskey
 
     # Optional params
     if args.duration is not None:

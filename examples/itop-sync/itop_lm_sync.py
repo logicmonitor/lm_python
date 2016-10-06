@@ -91,8 +91,8 @@ def main():
     params["duration"] = 30
     params["properties"] = {}
     params["company"] = args.company
-    params['access_id'] = args.accessid
-    params['access_key'] = args.accesskey
+    params['accessid'] = args.accessid
+    params['accesskey'] = args.accesskey
 
     group = Hostgroup(params)
     group.add()

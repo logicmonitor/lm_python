@@ -86,8 +86,8 @@ def main():
     params = {}
     params["group"] = None
     params["company"] = args.company
-    params['access_id'] = args.accessid
-    params['access_key'] = args.accesskey
+    params['accessid'] = args.accessid
+    params['accesskey'] = args.accesskey
 
     # Get JSON of all devices
     host_list = HostList(params)
