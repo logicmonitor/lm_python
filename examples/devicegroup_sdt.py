@@ -9,11 +9,11 @@ def main():
     parser.add_argument("-c", "--company",
                         help="LogicMonitor account",
                         required=True)
-    parser.add_argument("-u", "--user",
-                        help="LogicMonitor user name",
+    parser.add_argument('-i', '--accessid',
+                        help="API Token Access Id",
                         required=True)
-    parser.add_argument("-p", "--password",
-                        help="LogicMonitor password",
+    parser.add_argument('-k', '--accesskey',
+                        help="API Token Access Key",
                         required=True)
     parser.add_argument("-f", "--fullpath",
                         help="Full path of the device group",
@@ -39,8 +39,8 @@ def main():
 
     # Required params
     params["company"] = args.company
-    params["user"] = args.user
-    params["password"] = args.password
+    params['access_id'] = args.accessid
+    params['access_key'] = args.accesskey
     params["fullpath"] = args.fullpath
 
     # Optional params

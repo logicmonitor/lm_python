@@ -63,11 +63,11 @@ management [click here](http://help.logicmonitor.com/the-new-ui/settings/collect
 
 ```
 $> python ./examples/collector_add.py -h
-usage: collector_add.py [-h] -c COMPANY -u USER -p PASSWORD
+usage: collector_add.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
-    -u USER,     --user USER            LogicMonitor user name
-    -p PASSWORD, --password PASSWORD    LogicMonitor password
+    -i ACCESSID  --accessid ACCESSID    API Token Access Id
+    -k ACCESSKEY --accesskey ACCESSKEY  API Token Access Key
 optional arguments:
     -h,          --help                 Show this help message and exit
 ```
@@ -81,11 +81,11 @@ collector management
 
 ```
 $> python ./examples/collector_remove.py -h
-usage: collector_remove.py [-h] -c COMPANY -u USER -p PASSWORD
+usage: collector_remove.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
-    -u USER,     --user USER            LogicMonitor user name
-    -p PASSWORD, --password PASSWORD    LogicMonitor password
+    -i ACCESSID  --accessid ACCESSID    API Token Access Id
+    -k ACCESSKEY --accesskey ACCESSKEY  API Token Access Key
 optional arguments:
     -h,          --help                 Show this help message and exit
 ```
@@ -100,11 +100,11 @@ For more information about collector management
 
 ```
 $> python ./examples/collector_sdt.py -h
-usage: collector_sdt.py [-h] -c COMPANY -u USER -p PASSWORD [-d DURATION] [-s STARTTIME]
+usage: collector_sdt.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY [-d DURATION] [-s STARTTIME]
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
-    -u USER,     --user USER            LogicMonitor user name
-    -p PASSWORD, --password PASSWORD    LogicMonitor password
+    -i ACCESSID  --accessid ACCESSID    API Token Access Id
+    -k ACCESSKEY --accesskey ACCESSKEY  API Token Access Key
 optional arguments:
     -h,           --help                Show this help message and exit
     -d DURATION,  --duration DURATION   SDT duration
@@ -120,13 +120,13 @@ be created. For more information on managing devices
 
 ```
 $> python ./examples/device_add.py -h
-usage: device_add.py [-h] -c COMPANY -u USER -p PASSWORD -C COLLECTOR
+usage: device_add.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY -C COLLECTOR
                    [-H HOSTNAME] [-d DISPLAYNAME] [--description DESCRIPTION]
                    [-P PROPERTIES] [-g GROUPS [GROUPS ...]] [-a ALERTENABLE]
 required arguments:
     -c COMPANY,   --company COMPANY                     LogicMonitor account
-    -u USER,      --user USER                           LogicMonitor user name
-    -p PASSWORD,  --password PASSWORD                   LogicMonitor password
+    -i ACCESSID,  --accessid ACCESSID                   API Token Access Id
+    -k ACCESSKEY, --accesskey ACCESSKEY                 API Token Access Key
     -C COLLECTOR, --collector COLLECTOR                 Collector FQDN
 optional arguments:
   -h,             --help                                Show this help message and exit
@@ -146,12 +146,12 @@ if they were created by adding this device. For more information on managing dev
 
 ```
 $> python ./examples/device_remove.py -h
-usage: device_remove.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
+usage: device_remove.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY [-C COLLECTOR]
                       [-H HOSTNAME] [-d DISPLAYNAME]
 required arguments:
     -c COMPANY,     --company COMPANY             LogicMonitor account
-    -u USER,        --user USER                   LogicMonitor user name
-    -p PASSWORD,    --password PASSWORD           LogicMonitor password
+    -i ACCESSID,        --accessid ACCESSID       API Token Access Id
+    -k ACCESSKEY,    --accesskey ACCESSKEY        API Token Access Key
 optional arguments:
     -h, --help                                    Show this help message and exit
     -C COLLECTOR,   --collector COLLECTOR         Collector FQDN
@@ -165,14 +165,14 @@ This idempotent script updates a device already being monitored by your LogicMon
 
 ```
 $> python ./examples/device_update.py -h
-usage: device_update.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
+usage: device_update.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY [-C COLLECTOR]
                       [-H HOSTNAME] [-d DISPLAYNAME]
                       [--description DESCRIPTION] [-P PROPERTIES]
                       [-g GROUPS [GROUPS ...]] [-a ALERTENABLE]
 required arguments:
     -c COMPANY,     --company COMPANY                       LogicMonitor account
-    -u USER,        --user USER                             LogicMonitor user name
-    -p PASSWORD,    --password PASSWORD                     LogicMonitor password
+    -i ACCESSID,        --accessid ACCESSID                 API Token Access Id
+    -k ACCESSKEY,    --accesskey ACCESSKEY                  API Token Access Key
 optional arguments:
     -h,             --help                                  Show this help message and exit
     -C COLLECTOR,   --collector COLLECTOR                   Collector FQDN
@@ -194,12 +194,12 @@ information on managing devices
 
 ```
 $> python ./examples/device_sdt.py  -h
-usage: device_sdt.py [-h] -c COMPANY -u USER -p PASSWORD [-C COLLECTOR]
+usage: device_sdt.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY [-C COLLECTOR]
                    [-H HOSTNAME] [-d DISPLAYNAME] [-D DURATION] [-s STARTTIME]
 required arguments:
     -c COMPANY,   --company COMPANY               LogicMonitor account
-    -u USER,      --user USER                     LogicMonitor user name
-    -p PASSWORD,  --password PASSWORD             LogicMonitor password
+    -i ACCESSID,      --accessid ACCESSID         API Token Access Id
+    -k ACCESSKEY,  --accesskey ACCESSKEY          API Token Access Key
 optional arguments:
     -h,             --help                        Show this help message and exit
     -C COLLECTOR,   --collector COLLECTOR         Collector FQDN
@@ -216,12 +216,12 @@ monitored by your LogicMonitor account. For more information on managing devices
 
 ```
 $> python ./examples/device_info.py -h
-usage: device_info.py [-h] -c COMPANY -u USER -p PASSWORD -C COLLECTOR
+usage: device_info.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY -C COLLECTOR
                     [-H HOSTNAME] [-d DISPLAYNAME]
 required arguments:
     -c COMPANY,     --company COMPANY           LogicMonitor account
-    -u USER,        --user USER                 LogicMonitor user name
-    -p PASSWORD,    --password PASSWORD         LogicMonitor password
+    -i ACCESSID,        --accessid ACCESSID     API Token Access Id
+    -k ACCESSKEY,    --accesskey ACCESSKEY      API Token Access Key
 optional arguments:
     -h, --help                                  Show this help message and exit
     -C COLLECTOR,   --collector COLLECTOR       Collector FQDN
@@ -239,11 +239,11 @@ information on managing datasources
 
 ```
 $> python ./examples/datasource_sdt.py  -h
-usage: device_sdt.py [-h] -c COMPANY -u USER -p PASSWORD -i ID
+usage: device_sdt.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY -i ID
     required arguments:
        -c COMPANY,     --company COMPANY           LogicMonitor account
-       -u USER,        --user USER                 LogicMonitor user name
-       -p PASSWORD,    --password PASSWORD         LogicMonitor password
+       -i ACCESSID,        --accessid ACCESSID     API Token Access Id
+       -k ACCESSKEY,    --accesskey ACCESSKEY      API Token Access Key
     optional arguments:
        -h, --help                                  Show this help message and exit
        -i ID,          --id ID                     Datasource ID
@@ -254,15 +254,15 @@ This script list all devices being monitored in your LogicMonitor account.
 
 ```
 $> python ./examples/list_devices.py -h
-usage: device_add.py [-h] -c COMPANY -u USER -p PASSWORD
+usage: device_add.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY
                    [-g GROUP]
 required arguments:
-    -c COMPANY,   --company COMPANY                     LogicMonitor account
-    -u USER,      --user USER                           LogicMonitor user name
-    -p PASSWORD,  --password PASSWORD                   LogicMonitor password
+    -c COMPANY,   --company COMPANY            LogicMonitor account
+    -i ACCESSID,      --accessid ACCESSID      API Token Access Id
+    -k ACCESSKEY,  --accesskey ACCESSKEY       API Token Access Key
 
 optional arguments:
-  -h,             --help                                Show this help message and exit
+  -h,             --help                       Show this help message and exit
   -g GROUP,    --group GROUP                   Limit the results to hosts in the group path specified. Example: /Servers
 
 ```
@@ -276,13 +276,13 @@ be created. For more information on managing device groups
 
 ```
 $> python ./examples/devicegroup_add.py -h
-usage: devicegroup_add.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+usage: devicegroup_add.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY -f FULLPATH
                         [--description DESCRIPTION] [-P PROPERTIES]
                         [-a ALERTENABLE]
 required arguments:
     -c COMPANY,     --company COMPANY               LogicMonitor account
-    -u USER,        --user USER                     LogicMonitor user name
-    -p PASSWORD,    --password PASSWORD             LogicMonitor password
+    -i ACCESSID,        --accessid ACCESSID         API Token Access Id
+    -k ACCESSKEY,    --accesskey ACCESSKEY          API Token Access Key
     -f FULLPATH,    --fullpath FULLPATH             Full path of the device group
 optional arguments:
     -h,             --help                          Show this help message and exit
@@ -298,11 +298,11 @@ For more information on managing device groups
 
 ```
 $> python ./examples/devicegroup_remove.py -h
-usage: devicegroup_remove.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+usage: devicegroup_remove.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY -f FULLPATH
 required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
-    -u USER,     --user USER            LogicMonitor user name
-    -p PASSWORD, --password PASSWORD    LogicMonitor password
+    -i ACCESSID  --accessid ACCESSID    API Token Access Id
+    -k ACCESSKEY --accesskey ACCESSKEY  API Token Access Key
     -f FULLPATH, --fullpath FULLPATH    Full path of the device group
 optional arguments:
     -h,          --help                 Show this help message and exit
@@ -315,13 +315,13 @@ managing device groups
 
 ```
 $> python ./examples/devicegroup_update.py -h
-usage: devicegroup_update.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+usage: devicegroup_update.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY -f FULLPATH
                            [--description DESCRIPTION] [-P PROPERTIES]
                            [-a ALERTENABLE]
 required arguments:
     -c COMPANY,     --company COMPANY           LogicMonitor account
-    -u USER,        --user USER                 LogicMonitor user name
-    -p PASSWORD,    --password PASSWORD         LogicMonitor password
+    -i ACCESSID,        --accessid ACCESSID     API Token Access Id
+    -k ACCESSKEY,    --accesskey ACCESSKEY      API Token Access Key
     -f FULLPATH,    --fullpath FULLPATH         Full path of the device group
 optional arguments:
     -h,             --help                      Show this help message and exit
@@ -339,12 +339,12 @@ For more information on managing device groups
 
 ```
 $> python ./examples/devicegroup_sdt.py -h
-usage: devicegroup_sdt.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+usage: devicegroup_sdt.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY -f FULLPATH
                         [-D DURATION] [-s STARTTIME]
 required arguments:
     -c COMPANY,   --company COMPANY       LogicMonitor account
-    -u USER,      --user USER             LogicMonitor user name
-    -p PASSWORD,  --password PASSWORD     LogicMonitor password
+    -i ACCESSID,      --accessid ACCESSID API Token Access Id
+    -k ACCESSKEY,  --accesskey ACCESSKEY  API Token Access Key
     -f FULLPATH,  --fullpath FULLPATH     Full path of the device group
 optional arguments:
     -h,           --help                  Show this help message and exit
@@ -358,11 +358,11 @@ This script retrieves and displays information about a device group in your Logi
 
 ```
 $> python ./examples/devicegroup_info.py -h
-usage: devicegroup_info.py [-h] -c COMPANY -u USER -p PASSWORD -f FULLPATH
+usage: devicegroup_info.py [-h] -c COMPANY -i ACCESSID -k ACCESSKEY -f FULLPATH
 required arguments:
     -c COMPANY,  --company COMPANY        LogicMonitor account
-    -u USER,     --user USER              LogicMonitor user name
-    -p PASSWORD, --password PASSWORD      LogicMonitor password
+    -i ACCESSID  --accessid ACCESSID      API Token Access Id
+    -k ACCESSKEY --accesskey ACCESSKEY    API Token Access Key
     -f FULLPATH, --fullpath FULLPATH      Full path of the device group
 optional arguments:
     -h,          --help                   Show this help message and exit
