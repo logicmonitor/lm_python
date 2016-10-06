@@ -15,6 +15,7 @@ class Host(LogicMonitor):
         self.change = False
         self.params = params
         self.collector = None
+        self.api = self.rpc
 
         LogicMonitor.__init__(self, **self.params)
 
@@ -89,13 +90,13 @@ class Host(LogicMonitor):
         logging.debug("Running Host.get_properties...")
 
         if self.info:
-            logging.debug("Making RPC call to 'getHostProperties'")
-            properties_json = (json.loads(self.rpc("getHostProperties",
+            logging.debug("Making API call to 'getHostProperties'")
+            properties_json = (json.loads(self.api("getHostProperties",
                                           {'hostId': self.info["id"],
                                            "filterSystemProperties": True})))
 
             if properties_json["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
                 return properties_json["data"]
             else:
                 logging.debug("Error: there was an issue retrieving the " +
@@ -144,14 +145,14 @@ class Host(LogicMonitor):
                 self.properties,
                 self.alertenable)
 
-            logging.debug("Making RPC call to 'addHost'")
-            resp = json.loads(self.rpc("addHost", h))
+            logging.debug("Making API call to 'addHost'")
+            resp = json.loads(self.api("addHost", h))
 
             if resp["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
                 return resp["data"]
             else:
-                logging.debug("RPC call failed")
+                logging.debug("API call failed")
                 logging.debug(resp)
                 return resp["errmsg"]
         elif self.collector is None:
@@ -185,13 +186,13 @@ class Host(LogicMonitor):
                 h["id"] = self.info["id"]
                 h["opType"] = "replace"
 
-                logging.debug("Making RPC call to 'updateHost'")
-                resp = json.loads(self.rpc("updateHost", h))
+                logging.debug("Making API call to 'updateHost'")
+                resp = json.loads(self.api("updateHost", h))
 
                 if resp["status"] == 200:
-                    logging.debug("RPC call succeeded")
+                    logging.debug("API call succeeded")
                 else:
-                    logging.debug("RPC call failed")
+                    logging.debug("API call failed")
                     self.fail(msg="Error: unable to update the host.")
             else:
                 logging.debug("Host properties match supplied properties. " +
@@ -219,18 +220,18 @@ class Host(LogicMonitor):
             if self.check_mode:
                 self.exit(changed=True)
 
-            logging.debug("Making RPC call to 'deleteHost'")
-            resp = json.loads(self.rpc("deleteHost",
+            logging.debug("Making API call to 'deleteHost'")
+            resp = json.loads(self.api("deleteHost",
                                        {"hostId": self.info["id"],
                                         "deleteFromSystem": True,
                                         "hostGroupId": 1}))
 
             if resp["status"] == 200:
                 logging.debug(resp)
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
                 return resp
             else:
-                logging.debug("RPC call failed")
+                logging.debug("API call failed")
                 logging.debug(resp)
                 self.fail(msg=resp["errmsg"])
 
@@ -308,11 +309,11 @@ class Host(LogicMonitor):
                 start = datetime.utcnow()
 
                 # Use user UTC offset
-                logging.debug("Making RPC call to 'getTimeZoneSetting'")
-                accountresp = (json.loads(self.rpc("getTimeZoneSetting", {})))
+                logging.debug("Making API call to 'getTimeZoneSetting'")
+                accountresp = (json.loads(self.api("getTimeZoneSetting", {})))
 
                 if accountresp["status"] == 200:
-                    logging.debug("RPC call succeeded")
+                    logging.debug("API call succeeded")
 
                     offset = accountresp["data"]["offset"]
                     offsetstart = start + timedelta(0, offset)
@@ -335,14 +336,14 @@ class Host(LogicMonitor):
                  "endHour": offsetend.hour,
                  "endMinute": offsetend.minute}
 
-            logging.debug("Making RPC call to 'setHostSDT'")
-            resp = (json.loads(self.rpc("setHostSDT", h)))
+            logging.debug("Making API call to 'setHostSDT'")
+            resp = (json.loads(self.api("setHostSDT", h)))
 
             if resp["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
                 return resp["data"]
             else:
-                logging.debug("RPC call failed")
+                logging.debug("API call failed")
                 self.fail(msg=resp["errmsg"])
         else:
             self.fail(msg="Error: Host doesn't exit.")
@@ -422,10 +423,10 @@ class Host(LogicMonitor):
                      "propValue0": self.properties[propname]}
 
                 logging.debug("Making RCP call to 'verifyProperties'")
-                resp = json.loads(self.rpc('verifyProperties', h))
+                resp = json.loads(self.api('verifyProperties', h))
 
                 if resp["status"] == 200:
-                    logging.debug("RPC call succeeded")
+                    logging.debug("API call succeeded")
                     return resp["data"]["match"]
                 else:
                     self.fail(
@@ -447,7 +448,7 @@ class Host(LogicMonitor):
             if path != []:
                 h = {'hostGroupId': path[-1]}
 
-                hgresp = json.loads(self.rpc("getHostGroup", h))
+                hgresp = json.loads(self.api("getHostGroup", h))
 
                 if (hgresp["status"] == 200 and
                    hgresp["data"]["appliesTo"] == ""):

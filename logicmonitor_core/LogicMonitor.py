@@ -21,9 +21,10 @@ class LogicMonitor(object):
         self.fqdn = socket.getfqdn()
         self.lm_url = "logicmonitor.com/santaba"
         self.urlopen = urllib2.urlopen
+        self.api = self.rpc
 
     def rpc(self, action, params):
-        """Make a call to the LogicMonitor RPC library
+        """Make a call to the LogicMonitor API library
         and return the response"""
         logging.debug("Running LogicMonitor.rpc")
 
@@ -56,7 +57,7 @@ class LogicMonitor(object):
                 return raw
         except IOError as ioe:
             logging.debug(ioe)
-            self.fail(msg="Error: Unknown exception making RPC call")
+            self.fail(msg="Error: Unknown exception making API call")
 
     def do(self, action, params):
         """Make a call to the LogicMonitor
@@ -91,12 +92,12 @@ class LogicMonitor(object):
         LogicMonitor collectors"""
         logging.debug("Running LogicMonitor.get_collectors...")
 
-        logging.debug("Making RPC call to 'getAgents'")
-        resp = self.rpc("getAgents", {})
+        logging.debug("Making API call to 'getAgents'")
+        resp = self.api("getAgents", {})
         resp_json = json.loads(resp)
 
         if resp_json["status"] is 200:
-            logging.debug("RPC call succeeded")
+            logging.debug("API call succeeded")
             return resp_json["data"]
         else:
             self.fail(msg=resp)
@@ -107,12 +108,12 @@ class LogicMonitor(object):
         logging.debug("Running LogicMonitor.get_host_by_hostname...")
 
         logging.debug("Looking for hostname " + hostname)
-        logging.debug("Making RPC call to 'getHosts'")
-        hostlist_json = json.loads(self.rpc("getHosts", {"hostGroupId": 1}))
+        logging.debug("Making API call to 'getHosts'")
+        hostlist_json = json.loads(self.api("getHosts", {"hostGroupId": 1}))
 
         if collector:
             if hostlist_json["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
 
                 hosts = hostlist_json["data"]["hosts"]
 
@@ -129,7 +130,7 @@ class LogicMonitor(object):
                 logging.debug("No host match found")
                 return None
             else:
-                logging.debug("RPC call failed")
+                logging.debug("API call failed")
                 logging.debug(hostlist_json)
         else:
             logging.debug("No collector specified")
@@ -141,15 +142,15 @@ class LogicMonitor(object):
         logging.debug("Running LogicMonitor.get_host_by_displayname...")
 
         logging.debug("Looking for displayname " + displayname)
-        logging.debug("Making RPC call to 'getHost'")
-        host_json = (json.loads(self.rpc("getHost",
+        logging.debug("Making API call to 'getHost'")
+        host_json = (json.loads(self.api("getHost",
                                 {"displayName": displayname})))
 
         if host_json["status"] == 200:
-            logging.debug("RPC call succeeded")
+            logging.debug("API call succeeded")
             return host_json["data"]
         else:
-            logging.debug("RPC call failed")
+            logging.debug("API call failed")
             logging.debug(host_json)
             return None
 
@@ -174,11 +175,11 @@ class LogicMonitor(object):
         specified path"""
         logging.debug("Running LogicMonitor.get_group...")
 
-        logging.debug("Making RPC call to getHostGroups")
-        resp = json.loads(self.rpc("getHostGroups", {}))
+        logging.debug("Making API call to getHostGroups")
+        resp = json.loads(self.api("getHostGroups", {}))
 
         if resp["status"] == 200:
-            logging.debug("RPC called succeeded")
+            logging.debug("API called succeeded")
             groups = resp["data"]
 
             logging.debug("Looking for group matching " + fullpath)
@@ -190,7 +191,7 @@ class LogicMonitor(object):
             logging.debug("No group match found")
             return None
         else:
-            logging.debug("RPC call failed")
+            logging.debug("API call failed")
             logging.debug(resp)
 
         return None
@@ -245,19 +246,19 @@ class LogicMonitor(object):
                      "alertEnable": True,
                      "description": ""}
 
-            logging.debug("Making RPC call to 'addHostGroup'")
+            logging.debug("Making API call to 'addHostGroup'")
             resp = json.loads(
-                self.rpc("addHostGroup", h))
+                self.api("addHostGroup", h))
 
             if resp["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
                 return resp["data"]["id"]
             elif resp["errmsg"] == "The record already exists":
                 logging.debug("The hostgroup already exists")
                 group = self.get_group(fullpath)
                 return group["id"]
             else:
-                logging.debug("RPC call failed")
+                logging.debug("API call failed")
                 self.fail(
                     msg="Error: unable to create new hostgroup \"" + name +
                         "\".\n" + resp["errmsg"])

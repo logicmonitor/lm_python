@@ -34,13 +34,13 @@ class HostList(LogicMonitor):
         associated with this LogicMonitor account"""
         logging.debug("Running HostList.get_hosts...")
 
-        logging.debug("Making RPC call to 'getHosts'")
-        properties_json = (json.loads(self.rpc("getHosts",
+        logging.debug("Making API call to 'getHosts'")
+        properties_json = (json.loads(self.api("getHosts",
                                                {"hostGroupId":
                                                 self.groupId or 1})))
 
         if properties_json["status"] == 200:
-            logging.debug("RPC call succeeded")
+            logging.debug("API call succeeded")
             return properties_json["data"]
         else:
             logging.debug("Error: there was an issue retrieving the " +
