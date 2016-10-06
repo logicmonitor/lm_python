@@ -93,7 +93,7 @@ class LogicMonitor(object):
             logging.debug("Error opening URL. " + ioe)
             self.fail("Unknown exception opening URL")
 
-    def rest(self, method, path, data=None):
+    def rest(self, path, method, data=None):
         '''Make a call to the LogicMonitor server REST API'''
         logging.debug("Running LogicMonitor.rest...")
 
@@ -105,15 +105,15 @@ class LogicMonitor(object):
             self.fail("No payload specified")
         try:
             url = ('https://' + self.company + '.' +
-                   self.lm_url + '/rest/' + path)
+                   self.lm_url + '/rest' + path)
 
             logging.debug("Sending " + method + " to: " + url)
             auth_header = self.get_auth_header(
-                            method, path, data)
+                            path, method, data)
             headers = {'Content-Type': 'application/json',
                        'Authorization': auth_header}
 
-            resp = None
+            resp = ''
             if method == 'DELETE':
                 resp = requests.delete(url, headers=headers)
             elif method == 'GET':
@@ -130,19 +130,23 @@ class LogicMonitor(object):
                 resp = requests.put(url,
                                     data=data,
                                     headers=headers)
+            else:
+                self.fail('Invalid method ' +
+                          method + 'specified')
 
-            if resp.status_code != '200':
-                self.fail('HTTP response ' + resp.status_code +
+            if resp.status_code != 200:
+                self.fail('HTTP response ' +
+                          str(resp.status_code) +
                           ' from API while making ' + method +
                           ' request to ' + url)
             else:
-                self.debug('Successful API call to ' + url)
-                return resp
+                logging.debug('Successful API call to ' + url)
+            return resp
         except Exception as e:
             self.fail('Unknown error making API request: ' +
                       e.message)
 
-    def get_auth_header(self, method, path, data):
+    def get_auth_header(self, path, method, data):
         '''Construct an REST API authentication header'''
         logging.debug("Running LogicMonitor.get_auth_header...")
 
@@ -160,14 +164,11 @@ class LogicMonitor(object):
             msg = method + epoch + data + path
 
         # construct signature
-        signature = base64.b64encode(
-                        hmac.new(
-                            self.accesskey,
-                            msg=msg,
-                            digestmod=hashlib.sha256
-                        ).hexdigest()
-                    )
+        digest = hmac.new(self.accesskey,
+                          msg=msg,
+                          digestmod=hashlib.sha256).hexdigest()
 
+        signature = base64.b64encode(digest)
         # construct header
         auth = ('LMv1 ' +
                 self.accessid + ':' +
