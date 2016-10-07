@@ -14,6 +14,7 @@ class Datasource(LogicMonitor):
         logging.debug("Instantiating Datasource object")
         self.change = False
         self.params = params
+        self.api = self.rpc
 
         LogicMonitor.__init__(self, **params)
 
@@ -45,11 +46,11 @@ class Datasource(LogicMonitor):
             start = datetime.utcnow()
 
             # Use user UTC offset
-            logging.debug("Making RPC call to 'getTimeZoneSetting'")
-            accountresp = json.loads(self.rpc("getTimeZoneSetting", {}))
+            logging.debug("Making API call to 'getTimeZoneSetting'")
+            accountresp = json.loads(self.api("getTimeZoneSetting", {}))
 
             if accountresp["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
 
                 offset = accountresp["data"]["offset"]
                 offsetstart = start + timedelta(0, offset)
@@ -72,12 +73,12 @@ class Datasource(LogicMonitor):
              "endHour": offsetend.hour,
              "endMinute": offsetend.minute}
 
-        logging.debug("Making RPC call to 'setHostDataSourceSDT'")
-        resp = json.loads(self.rpc("setHostDataSourceSDT", h))
+        logging.debug("Making API call to 'setHostDataSourceSDT'")
+        resp = json.loads(self.api("setHostDataSourceSDT", h))
 
         if resp["status"] == 200:
-            logging.debug("RPC call succeeded")
+            logging.debug("API call succeeded")
             return resp["data"]
         else:
-            logging.debug("RPC call failed")
+            logging.debug("API call failed")
             self.fail(msg=resp["errmsg"])

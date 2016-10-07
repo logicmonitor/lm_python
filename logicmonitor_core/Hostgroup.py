@@ -24,6 +24,7 @@ class Hostgroup(LogicMonitor):
         self.starttime = self.params["starttime"]
         self.duration = self.params["duration"]
         self.alertenable = self.params["alertenable"]
+        self.api = self.rpc
 
     def create(self):
         """Wrapper for self.update()"""
@@ -38,17 +39,17 @@ class Hostgroup(LogicMonitor):
         if self.info:
             logging.debug("Group found")
 
-            logging.debug("Making RPC call to 'getHostGroupProperties'")
-            properties_json = json.loads(self.rpc(
+            logging.debug("Making API call to 'getHostGroupProperties'")
+            properties_json = json.loads(self.api(
                 "getHostGroupProperties",
                 {'hostGroupId': self.info["id"],
                  "finalResult": final}))
 
             if properties_json["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
                 return properties_json["data"]
             else:
-                logging.debug("RPC call failed")
+                logging.debug("API call failed")
                 self.fail(msg=properties_json["status"])
         else:
             logging.debug("Group not found")
@@ -113,14 +114,14 @@ class Hostgroup(LogicMonitor):
                 if self.fullpath != "/":
                     h["id"] = self.info["id"]
 
-                logging.debug("Making RPC call to 'updateHostGroup'")
-                resp = json.loads(self.rpc("updateHostGroup", h))
+                logging.debug("Making API call to 'updateHostGroup'")
+                resp = json.loads(self.api("updateHostGroup", h))
 
                 if resp["status"] == 200:
-                    logging.debug("RPC call succeeded")
+                    logging.debug("API call succeeded")
                     return resp["data"]
                 else:
-                    logging.debug("RPC call failed")
+                    logging.debug("API call failed")
                     self.fail(
                         msg="Error: Unable to update the " +
                             "host.\n" + resp["errmsg"])
@@ -152,18 +153,18 @@ class Hostgroup(LogicMonitor):
             if self.check_mode:
                 self.exit(changed=True)
 
-            logging.debug("Making RPC call to 'deleteHostGroup'")
-            resp = json.loads(self.rpc("deleteHostGroup",
+            logging.debug("Making API call to 'deleteHostGroup'")
+            resp = json.loads(self.api("deleteHostGroup",
                                        {"hgId": self.info["id"]}))
 
             if resp["status"] == 200:
                 logging.debug(resp)
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
                 return resp
             elif resp["errmsg"] == "No such group":
                 logging.debug("Group doesn't exist")
             else:
-                logging.debug("RPC call failed")
+                logging.debug("API call failed")
                 logging.debug(resp)
                 self.fail(msg=resp["errmsg"])
         else:
@@ -229,11 +230,11 @@ class Hostgroup(LogicMonitor):
             start = datetime.utcnow()
 
             # Use user UTC offset
-            logging.debug("Making RPC call to 'getTimeZoneSetting'")
-            accountresp = json.loads(self.rpc("getTimeZoneSetting", {}))
+            logging.debug("Making API call to 'getTimeZoneSetting'")
+            accountresp = json.loads(self.api("getTimeZoneSetting", {}))
 
             if accountresp["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
 
                 offset = accountresp["data"]["offset"]
                 offsetstart = start + timedelta(0, offset)
@@ -256,14 +257,14 @@ class Hostgroup(LogicMonitor):
              "endHour": offsetend.hour,
              "endMinute": offsetend.minute}
 
-        logging.debug("Making RPC call to setHostGroupSDT")
-        resp = json.loads(self.rpc("setHostGroupSDT", h))
+        logging.debug("Making API call to setHostGroupSDT")
+        resp = json.loads(self.api("setHostGroupSDT", h))
 
         if resp["status"] == 200:
-            logging.debug("RPC call succeeded")
+            logging.debug("API call succeeded")
             return resp["data"]
         else:
-            logging.debug("RPC call failed")
+            logging.debug("API call failed")
             self.fail(msg=resp["errmsg"])
 
     def site_facts(self):
@@ -338,10 +339,10 @@ class Hostgroup(LogicMonitor):
                      "propValue0": self.properties[propname]}
 
                 logging.debug("Making RCP call to 'verifyProperties'")
-                resp = json.loads(self.rpc('verifyProperties', h))
+                resp = json.loads(self.api('verifyProperties', h))
 
                 if resp["status"] == 200:
-                    logging.debug("RPC call succeeded")
+                    logging.debug("API call succeeded")
                     return resp["data"]["match"]
                 else:
                     self.fail(

@@ -20,6 +20,7 @@ class Collector(LogicMonitor):
         logging.debug("Instantiating Collector object")
         self.change = False
         self.params = params
+        self.api = self.rpc
 
         LogicMonitor.__init__(self, **params)
 
@@ -353,11 +354,11 @@ class Collector(LogicMonitor):
             start = datetime.utcnow()
 
             # Use user UTC offset
-            logging.debug("Making RPC call to 'getTimeZoneSetting'")
-            accountresp = json.loads(self.rpc("getTimeZoneSetting", {}))
+            logging.debug("Making API call to 'getTimeZoneSetting'")
+            accountresp = json.loads(self.api("getTimeZoneSetting", {}))
 
             if accountresp["status"] == 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
 
                 offset = accountresp["data"]["offset"]
                 offsetstart = start + timedelta(0, offset)
@@ -380,14 +381,14 @@ class Collector(LogicMonitor):
              "endHour": offsetend.hour,
              "endMinute": offsetend.minute}
 
-        logging.debug("Making RPC call to 'setAgentSDT'")
-        resp = json.loads(self.rpc("setAgentSDT", h))
+        logging.debug("Making API call to 'setAgentSDT'")
+        resp = json.loads(self.api("setAgentSDT", h))
 
         if resp["status"] == 200:
-            logging.debug("RPC call succeeded")
+            logging.debug("API call succeeded")
             return resp["data"]
         else:
-            logging.debug("RPC call failed")
+            logging.debug("API call failed")
             self.fail(msg=resp["errmsg"])
 
     def site_facts(self):
@@ -452,11 +453,11 @@ class Collector(LogicMonitor):
                 h = {"autogen": True,
                      "description": self.description}
 
-                logging.debug("Making RPC call to 'addAgent'")
-                create = (json.loads(self.rpc("addAgent", h)))
+                logging.debug("Making API call to 'addAgent'")
+                create = (json.loads(self.api("addAgent", h)))
 
                 if create["status"] is 200:
-                    logging.debug("RPC call succeeded")
+                    logging.debug("API call succeeded")
                     self.info = create["data"]
                     self.id = create["data"]["id"]
                     return create["data"]
@@ -488,12 +489,12 @@ class Collector(LogicMonitor):
             if self.check_mode:
                 self.exit(changed=True)
 
-            logging.debug("Making RPC call to 'deleteAgent'")
-            delete = json.loads(self.rpc("deleteAgent",
+            logging.debug("Making API call to 'deleteAgent'")
+            delete = json.loads(self.api("deleteAgent",
                                          {"id": self.id}))
 
             if delete["status"] is 200:
-                logging.debug("RPC call succeeded")
+                logging.debug("API call succeeded")
                 return delete
             else:
                 # The collector couldn't unregister. Start the service again
