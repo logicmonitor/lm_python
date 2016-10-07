@@ -97,8 +97,7 @@ class LogicMonitor(object):
         '''Make a call to the LogicMonitor server REST API'''
         logging.debug("Running LogicMonitor.rest...")
 
-        if ((method == 'DELETE' or
-             method == 'PATCH' or
+        if ((method == 'PATCH' or
              method == 'POST') and
            data is None):
             self.fail('Message body required for method ' + method)
