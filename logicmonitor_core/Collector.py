@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-import json
+import datetime
 import logging
 import os
 import platform
 import subprocess
 import sys
-from datetime import datetime, timedelta
+import time
 from subprocess import Popen
 from LogicMonitor import LogicMonitor
 from Service import Service
@@ -141,7 +141,7 @@ class Collector(LogicMonitor):
         self._changed(True)
 
         logging.debug('Setting installer file permissions')
-        os.chmod(self.installer, 484)  # decimal for 0o744
+        os.chmod(self.installer, 0o744)
 
         try:
             logging.debug('Executing installer')
@@ -161,7 +161,7 @@ class Collector(LogicMonitor):
         '''Uninstall LogicMontitor collector from the system'''
         logging.debug('Running Collector.uninstall...')
 
-        uninstallfile = (self.installdir + '/agent/bin/uninstall.pl')
+        uninstallfile = self.installdir + '/agent/bin/uninstall.pl'
 
         if os.path.isfile(uninstallfile):
             logging.debug('Collector uninstall file exists')
@@ -176,7 +176,7 @@ class Collector(LogicMonitor):
                 cmd_result = p.returncode
                 if cmd_result != 0:
                     self.fail(msg='Error: Unable to uninstall collector: ' +
-                              e.message)
+                              str(err))
 
                 logging.debug('Collector successfully uninstalled')
             except Exception as e:
@@ -245,65 +245,38 @@ class Collector(LogicMonitor):
                 self.fail(msg=str(output))
 
     def sdt(self):
-        """Create a scheduled down time
-        (maintenance window) for this host"""
-        logging.debug("Running Collector.sdt...")
+        '''Create a scheduled down time (maintenance window) for this host'''
+        logging.debug('Running Collector.sdt...')
 
-        logging.debug("System changed")
-        self.change = True
+        self._changed(True)
 
-        if self.check_mode:
-            self.exit(changed=True)
-
-        duration = self.duration
         starttime = self.starttime
-        offsetstart = starttime
 
         if starttime:
-            logging.debug("Start time specified")
-            start = datetime.strptime(starttime, '%Y-%m-%d %H:%M')
-            offsetstart = start
+            logging.debug('Start time specified')
+            pattern = '%Y-%m-%d %H:%M'
+            starttime = int(time.mktime(time.strptime(starttime, pattern)) *
+                            1000)
         else:
-            logging.debug("No start time specified. Using default.")
-            start = datetime.utcnow()
+            logging.debug('No start time specified. Using now.')
+            starttime = int(time.time() * 1000)
 
-            # Use user UTC offset
-            logging.debug("Making API call to 'getTimeZoneSetting'")
-            accountresp = json.loads(self.api("getTimeZoneSetting", {}))
+        endtime = starttime + (int(self.duration) * 1000 * 60)
 
-            if accountresp["status"] == 200:
-                logging.debug("API call succeeded")
+        data = {
+            'collectorId': self.id,
+            'type': 'CollectorSDT',
+            'sdtType': 1,
+            'startDateTime': starttime,
+            'endDateTime': endtime
+        }
 
-                offset = accountresp["data"]["offset"]
-                offsetstart = start + timedelta(0, offset)
-            else:
-                self.fail(msg="Error: Unable to retrieve timezone offset")
+        resp = self.api('/sdt/sdts', 'POST', data)
+        if resp.status_code != 200:
+            self.fail('Error: Invalid API response')
 
-        offsetend = offsetstart + timedelta(0, int(duration)*60)
-
-        h = {"agentId": self.id,
-             "type": 1,
-             "notifyCC": True,
-             "year": offsetstart.year,
-             "month": offsetstart.month-1,
-             "day": offsetstart.day,
-             "hour": offsetstart.hour,
-             "minute": offsetstart.minute,
-             "endYear": offsetend.year,
-             "endMonth": offsetend.month-1,
-             "endDay": offsetend.day,
-             "endHour": offsetend.hour,
-             "endMinute": offsetend.minute}
-
-        logging.debug("Making API call to 'setAgentSDT'")
-        resp = json.loads(self.api("setAgentSDT", h))
-
-        if resp["status"] == 200:
-            logging.debug("API call succeeded")
-            return resp["data"]
-        else:
-            logging.debug("API call failed")
-            self.fail(msg=resp["errmsg"])
+        resp = resp.json()
+        return resp['data']
 
     def site_facts(self):
         '''Output current properties information for the Collector'''
@@ -372,7 +345,7 @@ class Collector(LogicMonitor):
             return resp['data']
 
     def get_collectors(self):
-        '''Returns a JSON object containing a list of LogicMonitor collectors'''
+        '''Returns JSON object containing a list of LogicMonitor collectors'''
         logging.debug('Running LogicMonitor.get_collectors...')
 
         resp = self.api(self.resource, 'GET')
