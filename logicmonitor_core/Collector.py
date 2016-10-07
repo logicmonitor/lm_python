@@ -204,7 +204,7 @@ class Collector(LogicMonitor):
 
             output, err = Service.start('logicmonitor-agent')
             if output != 0:
-                self.fail(err)
+                self.fail(msg=str(err))
 
         output = Service.getStatus('logicmonitor-watchdog')
         if 'is running' not in output:
@@ -214,7 +214,7 @@ class Collector(LogicMonitor):
                 'logicmonitor-watchdog')
 
             if output != 0:
-                self.fail(msg=err)
+                self.fail(msg=str(err))
 
     def restart(self):
         '''Restart the LogicMonitor collector'''
@@ -224,11 +224,11 @@ class Collector(LogicMonitor):
 
         output, err = Service.restart('logicmonitor-agent')
         if output != 0:
-            self.fail(msg=err)
+            self.fail(msg=str(err))
 
         output, err = Service.restart('logicmonitor-watchdog')
         if output != 0:
-            self.fail(msg=err)
+            self.fail(msg=str(err))
 
     def stop(self):
         '''Stop the LogicMonitor collector'''
@@ -242,7 +242,7 @@ class Collector(LogicMonitor):
 
             output, err = Service.stop('logicmonitor-agent')
             if output != 0:
-                self.fail(msg=err)
+                self.fail(msg=str(err))
 
         output = Service.getStatus('logicmonitor-watchdog')
         if 'is running' in output:
@@ -250,7 +250,7 @@ class Collector(LogicMonitor):
 
             output, err = Service.stop('logicmonitor-watchdog')
             if output != 0:
-                self.fail(msg=err)
+                self.fail(msg=str(err))
 
     def sdt(self):
         """Create a scheduled down time
