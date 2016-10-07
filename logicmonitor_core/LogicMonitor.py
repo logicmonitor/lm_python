@@ -110,12 +110,12 @@ class LogicMonitor(object):
             url = ('https://' + self.company + '.' +
                    self.lm_url + '/rest' + path)
 
-            logging.debug('Sending ' + method + ' to: ' + url)
             auth_header = self.get_auth_header(
                             path, method, data)
             headers = {'Content-Type': 'application/json',
                        'Authorization': auth_header}
 
+            logging.debug('Sending ' + method + ' to: ' + url)
             resp = ''
             if method == 'DELETE':
                 resp = requests.delete(url, headers=headers)
