@@ -53,10 +53,10 @@ def main():
     parser = argparse.ArgumentParser(description)
     parser.add_argument("-c", "--company", metavar="CUSTOMER_PORTAL",
                         help="LogicMonitor account", required=True)
-    parser.add_argument("-u", "--user", metavar="USERNAME",
-                        help="LogicMonitor username", required=True)
-    parser.add_argument("-p", "--password", metavar="PASSWORD",
-                        help="LogicMonitor password", required=True)
+    parser.add_argument('-t', '--accessid', metavar="USERNAME",
+                        help="API Token Access Id", required=True)
+    parser.add_argument('-k', '--accesskey', metavar="PASSWORD",
+                        help="API Token Access Key", required=True)
     parser.add_argument("-cn", metavar="COLLECTOR_NAME",
                         help="LogicMonitor collector description",
                         required=True)
@@ -91,8 +91,8 @@ def main():
     params["duration"] = 30
     params["properties"] = {}
     params["company"] = args.company
-    params["user"] = args.user
-    params["password"] = args.password
+    params['accessid'] = args.accessid
+    params['accesskey'] = args.accesskey
 
     group = Hostgroup(params)
     group.add()

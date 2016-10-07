@@ -62,19 +62,17 @@ You will also need to identify the Collector description that you want to use, i
 ```
 $> python ./examples/lm_itop_sync.py -h
 usage: Synchronize LogicMonitor devices to iTop CMDB (federation)
-       [-h] -c CUSTOMER_PORTAL -u USERNAME -p PASSWORD -ih ITOP_HOST -iu
+       [-h] -c CUSTOMER_PORTAL -t ACCESSID -k ACCESSKEY -ih ITOP_HOST -iu
        ITOP_USERNAME -ip ITOP_PASSWORD -io ITOP_ORG_ID [-mh MYSQL_HOST] -mu
        MYSQL_USERNAME -mp MYSQL_PASSWORD -md MYSQL_DATABASE -st SERVER_TABLE
        -pt PRINTER_TABLE -ht HYPERVISOR_TABLE
 
 optional arguments:
   -h, --help            show this help message and exit
-  -c CUSTOMER_PORTAL, --company CUSTOMER_PORTAL
-                        LogicMonitor account
-  -u USERNAME, --user USERNAME
-                        LogicMonitor username
-  -p PASSWORD, --password PASSWORD
-                        LogicMonitor password
+  -c CUSTOMER_PORTAL, --company CUSTOMER_PORTAL LogicMonitor account
+  -t ACCESSID, --accessid ACCESSID API Token Access Id
+  -k ACCESSKEY, --accesskey ACCESSKEY API Token Access Key
+                        API Token Access Key
   -ih ITOP_HOST         iTop server hostname
   -iu ITOP_USERNAME     iTop server username
   -ip ITOP_PASSWORD     iTop server password
@@ -93,8 +91,8 @@ The **itop_lm_sync.py** script can be executed on its own schedule, with the fol
 
 ```
 $> python ./examples/itop_lm_sync.py -h
-usage: Synchronize iTop CMDB CIs to LogicMonitor [-h] -c CUSTOMER_PORTAL -u
-                                                 USERNAME -p PASSWORD -cn
+usage: Synchronize iTop CMDB CIs to LogicMonitor [-h] -c CUSTOMER_PORTAL -i
+                                                 ACCESSID -k ACCESSKEY -cn
                                                  COLLECTOR_NAME -ih ITOP_HOST
                                                  -iu ITOP_USERNAME -ip
                                                  ITOP_PASSWORD -iq
@@ -102,12 +100,10 @@ usage: Synchronize iTop CMDB CIs to LogicMonitor [-h] -c CUSTOMER_PORTAL -u
 
 optional arguments:
   -h, --help            show this help message and exit
-  -c CUSTOMER_PORTAL, --company CUSTOMER_PORTAL
-                        LogicMonitor account
-  -u USERNAME, --user USERNAME
-                        LogicMonitor username
-  -p PASSWORD, --password PASSWORD
-                        LogicMonitor password
+  -c CUSTOMER_PORTAL, --company CUSTOMER_PORTAL LogicMonitor account
+  -t ACCESSID, --accessid ACCESSID API Token Access Id
+  -k ACCESSKEY, --accesskey ACCESSKEY API Token Access Key
+                        API Token Access Key
   -cn COLLECTOR_NAME    LogicMonitor collector description
   -ih ITOP_HOST         iTop server hostname
   -iu ITOP_USERNAME     iTop server username
