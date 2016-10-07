@@ -118,8 +118,9 @@ class Collector(LogicMonitor):
 
             f = open(installfilepath, 'w')
 
-            download_path = ('/setting/collectors/' + self.id +
-                             '/installers/linux' + arch)
+            download_path = ('/setting/collectors/' +
+                             str(self.id) +
+                             '/installers/linux' + str(arch))
             installer = self.api(download_path, 'GET')
 
             f.write(installer)
