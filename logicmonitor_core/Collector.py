@@ -425,6 +425,14 @@ class Collector(LogicMonitor):
             self.start()
             self.fail(msg='Error unregistering collector.')
 
+    def _os_check(self):
+        if self.platform == 'Linux':
+            logging.debug('Platform is Linux')
+        else:
+            self.fail(msg='Error: LogicMonitor Collector ' +
+                          'must be installed on a Linux ' +
+                          'device.')
+
     def _changed(self, changed):
         self.change = changed
         if self.change is True:
