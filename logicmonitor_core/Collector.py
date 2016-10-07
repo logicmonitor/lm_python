@@ -58,7 +58,7 @@ class Collector(LogicMonitor):
         logging.debug('Running Collector.create...')
 
         self._create()
-        self.intaller = self.get_installer_binary()
+        self.installer = self.get_installer_binary()
         self.install()
         self.start()
         logging.debug('Collector created')
