@@ -152,7 +152,8 @@ class Collector(LogicMonitor):
 
         logging.debug('Executing installer')
         p = (Popen([self.installer, '-y'],
-                   stdout=subprocess.PIPE))
+                   stdout=subprocess.PIPE,
+                   cwd=self.installdir))
         ret, err = p.communicate()
         cmd_result = p.returncode
         if cmd_result != 0:
