@@ -100,7 +100,12 @@ class LogicMonitor(object):
         if ((method == 'PATCH' or
              method == 'POST') and
            data is None):
-            self.fail('Message body required for method ' + method)
+            self.fail('Message body required for method ' +
+                      method)
+
+        # convert data to json
+        if data is not None:
+            data = json.dumps(data)
         try:
             url = ('https://' + self.company + '.' +
                    self.lm_url + '/rest' + path)
