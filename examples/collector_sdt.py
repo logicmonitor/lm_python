@@ -38,8 +38,8 @@ def main():
 
     # Required params
     params['company'] = args.company
-    params['user'] = args.user
-    params['password'] = args.password
+    params['accessid'] = args.accessid
+    params['accesskey'] = args.accesskey
     params['collector_id'] = args.collector_id
 
     # Optional params
