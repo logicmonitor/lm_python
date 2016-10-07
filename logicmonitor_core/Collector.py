@@ -50,25 +50,25 @@ class Collector(LogicMonitor):
             self.id = self.info["id"]
 
     def create(self):
-        """Idempotent function to make sure that there is
-        a running collector installed and registered"""
-        logging.debug("Running Collector.create...")
+        '''Idempotent function to make sure that there is
+        a running collector installed and registered'''
+        logging.debug('Running Collector.create...')
 
         self._create()
-        self.get_installer_binary()
+        self.intaller = self.get_installer_binary()
         self.install()
         self.start()
-        logging.debug("Collector created")
+        logging.debug('Collector created')
 
     def remove(self):
-        """Idempotent function to make sure that there is
-        not a running collector installed and registered"""
-        logging.debug("Running Collector.destroy...")
+        '''Idempotent function to make sure that there is
+        not a running collector installed and registered'''
+        logging.debug('Running Collector.destroy...')
 
         self.stop()
         self._unregister()
         self.uninstall()
-        logging.debug("Collector removed")
+        logging.debug('Collector removed')
 
     def get_installer_binary(self):
         """Download the LogicMonitor collector installer binary"""
