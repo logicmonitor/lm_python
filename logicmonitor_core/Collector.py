@@ -192,127 +192,64 @@ class Collector(LogicMonitor):
                               'uninstaller.')
 
     def start(self):
-        """Start the LogicMonitor collector"""
-        logging.debug("Running Collector.start")
+        '''Start the LogicMonitor collector'''
+        logging.debug('Running Collector.start')
 
-        if self.platform == "Linux":
-            logging.debug("Platform is Linux")
+        self._os_check()
 
-            output = Service.getStatus("logicmonitor-agent")
-            if "is running" not in output:
-                logging.debug("Service logicmonitor-agent is not running")
-                logging.debug("System changed")
-                self.change = True
+        output = Service.getStatus('logicmonitor-agent')
+        if 'is running' not in output:
+            self._changed(True)
 
-                if self.check_mode:
-                    self.exit(changed=True)
+            output, err = Service.start('logicmonitor-agent')
+            if output != 0:
+                self.fail(err)
 
-                logging.debug("Starting logicmonitor-agent service")
-                (output, err) = Service.doAction("logicmonitor-agent", "start")
+        output = Service.getStatus('logicmonitor-watchdog')
+        if 'is running' not in output:
+            self._changed(True)
 
-                if output != 0:
-                    self.fail(
-                        msg="Error: Failed starting logicmonitor-agent " +
-                            "service. " + err)
+            output, err = Service.start(
+                'logicmonitor-watchdog')
 
-            output = Service.getStatus("logicmonitor-watchdog")
-
-            if "is running" not in output:
-                logging.debug("Service logicmonitor-watchdog is not running")
-                logging.debug("System changed")
-                self.change = True
-
-                if self.check_mode:
-                    self.exit(changed=True)
-
-                logging.debug("Starting logicmonitor-watchdog service")
-                (output, err) = Service.doAction("logicmonitor-watchdog",
-                                                 "start")
-
-                if output != 0:
-                    self.fail(
-                        msg="Error: Failed starting logicmonitor-watchdog " +
-                            "service. " + err)
-        else:
-            self.fail(
-                msg="Error: LogicMonitor Collector must be " +
-                "installed on a Linux device.")
+            if output != 0:
+                self.fail(msg=err)
 
     def restart(self):
-        """Restart the LogicMonitor collector"""
-        logging.debug("Running Collector.restart...")
+        '''Restart the LogicMonitor collector'''
+        logging.debug('Running Collector.restart...')
 
-        if self.platform == "Linux":
-            logging.debug("Platform is Linux")
+        self._os_check()
 
-            logging.debug("Restarting logicmonitor-agent service")
-            (output, err) = Service.doAction("logicmonitor-agent", "restart")
+        output, err = Service.restart('logicmonitor-agent')
+        if output != 0:
+            self.fail(msg=err)
 
-            if output != 0:
-                self.fail(
-                    msg="Error: Failed starting logicmonitor-agent " +
-                        "service. " + err)
-
-            logging.debug("Restarting logicmonitor-watchdog service")
-            (output, err) = Service.doAction("logicmonitor-watchdog",
-                                             "restart")
-
-            if output != 0:
-                self.fail(
-                    msg="Error: Failed starting logicmonitor-watchdog " +
-                        "service. " + err)
-        else:
-            (self.fail(
-                msg="Error: LogicMonitor Collector must be installed " +
-                    "on a Linux device."))
+        output, err = Service.restart('logicmonitor-watchdog')
+        if output != 0:
+            self.fail(msg=err)
 
     def stop(self):
-        """Stop the LogicMonitor collector"""
-        logging.debug("Running Collector.stop...")
+        '''Stop the LogicMonitor collector'''
+        logging.debug('Running Collector.stop...')
 
-        if self.platform == "Linux":
-            logging.debug("Platform is Linux")
+        self._os_check()
 
-            output = Service.getStatus("logicmonitor-agent")
+        output = Service.getStatus('logicmonitor-agent')
+        if 'is running' in output:
+            self._changed(True)
 
-            if "is running" in output:
-                logging.debug("Service logicmonitor-agent is running")
-                logging.debug("System changed")
-                self.change = True
+            output, err = Service.stop('logicmonitor-agent')
+            if output != 0:
+                self.fail(msg=err)
 
-                if self.check_mode:
-                    self.exit(changed=True)
+        output = Service.getStatus('logicmonitor-watchdog')
+        if 'is running' in output:
+            self._changed(True)
 
-                logging.debug("Stopping service logicmonitor-agent")
-                (output, err) = Service.doAction("logicmonitor-agent", "stop")
-
-                if output != 0:
-                    self.fail(
-                        msg="Error: Failed stopping logicmonitor-agent " +
-                            "service. " + err)
-
-            output = Service.getStatus("logicmonitor-watchdog")
-
-            if "is running" in output:
-                logging.debug("Service logicmonitor-watchdog is running")
-                logging.debug("System changed")
-                self.change = True
-
-                if self.check_mode:
-                    self.exit(changed=True)
-
-                logging.debug("Stopping service logicmonitor-watchdog")
-                (output, err) = Service.doAction("logicmonitor-watchdog",
-                                                 "stop")
-
-                if output != 0:
-                    self.fail(
-                        msg="Error: Failed stopping logicmonitor-watchdog " +
-                            "service. " + err)
-        else:
-            self.fail(
-                msg="Error: LogicMonitor Collector must be " +
-                "installed on a Linux device.")
+            output, err = Service.stop('logicmonitor-watchdog')
+            if output != 0:
+                self.fail(msg=err)
 
     def sdt(self):
         """Create a scheduled down time
