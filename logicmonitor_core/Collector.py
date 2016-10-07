@@ -120,9 +120,9 @@ class Collector(LogicMonitor):
                         if chunk:
                             f.write(chunk)
             return installfilepath
-        except Exception as err:
+        except Exception as e:
             self.fail(msg='Unable to open installer file for writing. ' +
-                          str(err))
+                          e.message)
 
     def install(self):
         '''Execute the LogicMonitor installer if not already installed'''
@@ -155,7 +155,7 @@ class Collector(LogicMonitor):
                               str(ret))
             logging.debug('Collector installed successfully')
         except Exception as e:
-            self.fail('Error: Unable to installer collector. ' + str(e))
+            self.fail('Error: Unable to installer collector. ' + e.message)
 
     def uninstall(self):
         '''Uninstall LogicMontitor collector from the system'''
@@ -176,11 +176,11 @@ class Collector(LogicMonitor):
                 cmd_result = p.returncode
                 if cmd_result != 0:
                     self.fail(msg='Error: Unable to uninstall collector: ' +
-                              str(err))
+                              e.message)
 
                 logging.debug('Collector successfully uninstalled')
             except Exception as e:
-                self.fail('Error: Unable to uninstall collector. ' + str(e))
+                self.fail('Error: Unable to uninstall collector. ' + e.message)
         else:
             if os.path.exists(self.installdir + '/agent'):
                 self.fail(msg='Unable to uninstall LogicMonitor Collector. ' +
