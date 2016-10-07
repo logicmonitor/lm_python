@@ -40,6 +40,7 @@ def main():
     params['company'] = args.company
     params['user'] = args.user
     params['password'] = args.password
+    params['collector_id'] = args.collector_id
 
     # Optional params
     if args.duration is not None:
@@ -47,12 +48,6 @@ def main():
 
     if args.starttime is not None:
         params['starttime'] = args.starttime
-
-    if args.collector_id is not None:
-        params['collector_id'] = args.collector_id
-
-    if args.description is not None:
-        params['description'] = args.description
 
     col = Collector(params)
 

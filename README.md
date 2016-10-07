@@ -68,8 +68,9 @@ required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
     -u USER,     --user USER            LogicMonitor user name
     -p PASSWORD, --password PASSWORD    LogicMonitor password
+    -i ID,       --id                   Collector ID
 optional arguments:
-    -h,          --help                 Show this help message and exit
+    -h,             --help                 Show this help message and exit
 ```
 
 ### collector_remove.py
@@ -86,8 +87,9 @@ required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
     -u USER,     --user USER            LogicMonitor user name
     -p PASSWORD, --password PASSWORD    LogicMonitor password
+    -i ID,       --id                   Collector ID
 optional arguments:
-    -h,          --help                 Show this help message and exit
+    -h,             --help                 Show this help message and exit
 ```
 
 ### collector_sdt.py
@@ -105,10 +107,12 @@ required arguments:
     -c COMPANY,  --company COMPANY      LogicMonitor account
     -u USER,     --user USER            LogicMonitor user name
     -p PASSWORD, --password PASSWORD    LogicMonitor password
+    -i ID,       --id                   Collector ID
 optional arguments:
     -h,           --help                Show this help message and exit
+    -d DESCRIPTION, --description          Collector description
     -d DURATION,  --duration DURATION   SDT duration
-    -s STARTTIME, --starttime STARTTIME SDT start time
+    -s STARTTIME, --starttime STARTTIME SDT start time (Y-m-d H:M)
 ```
 
 ### device_add.py
@@ -206,7 +210,7 @@ optional arguments:
     -H HOSTNAME,    --hostname HOSTNAME           Device hostname
     -d DISPLAYNAME, --displayname DISPLAYNAME     Device display name
     -D DURATION,    --duration DURATION           SDT duration
-    -s STARTTIME,   --starttime STARTTIME         SDT start time
+    -s STARTTIME,   --starttime STARTTIME         SDT start time (Y-m-d H:M)
 ```
 
 ### device_info.py
@@ -349,7 +353,7 @@ required arguments:
 optional arguments:
     -h,           --help                  Show this help message and exit
     -D DURATION,  --duration DURATION     SDT duration
-    -s STARTTIME, --starttime STARTTIME   SDT start time
+    -s STARTTIME, --starttime STARTTIME   SDT start time (Y-m-d H:M)
 ```
 
 ### devicegroup_info.py

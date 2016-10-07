@@ -35,13 +35,8 @@ def main():
     params['company'] = args.company
     params['accessid'] = args.accessid
     params['accesskey'] = args.accesskey
-
-    if args.collector_id is not None:
-        params['collector_id'] = args.collector_id
-
-    if args.description is not None:
-        params['description'] = args.description
-
+    params['collector_id'] = args.collector_id
+    
     col = Collector(params)
 
     exit_code = col.remove()
