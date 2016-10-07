@@ -15,39 +15,42 @@ from Service import Service
 class Collector(LogicMonitor):
 
     def __init__(self, params):
-        """Initializor for the LogicMonitor Collector object"""
+        '''Initializor for the LogicMonitor Collector object'''
         logging.basicConfig(level=logging.DEBUG)
-        logging.debug("Instantiating Collector object")
+        logging.debug('Instantiating Collector object')
         self.change = False
         self.params = params
-        self.api = self.rpc
+        self.api = self.rest
+        self.resource = '/setting/collectors/'
+        self.path = self.resource + ''
 
         LogicMonitor.__init__(self, **params)
 
-        if "description" in self.params:
+        if 'description' in self.params:
             self.description = self.params['description']
         else:
             self.description = self.fqdn
 
-        if "collector_id" in self.params:
-            self.collector_id = self.params["collector_id"]
+        if 'collector_id' in self.params:
+            self.collector_id = self.params['collector_id']
         else:
             self.collector_id = None
 
         self.info = self._get()
-        self.installdir = "/usr/local/logicmonitor"
+        self.installdir = '/usr/local/logicmonitor'
         self.platform = platform.system()
         self.is_64bits = sys.maxsize > 2**32
 
-        if "duration" in self.params:
+        if 'duration' in self.params:
             self.duration = self.params['duration']
-        if "starttime" in self.params:
+        if 'starttime' in self.params:
             self.starttime = self.params['starttime']
 
         if self.info is None:
             self.id = None
         else:
-            self.id = self.info["id"]
+            self.id = self.info['id']
+            self.path = self.resource + self.id
 
     def create(self):
         '''Idempotent function to make sure that there is
