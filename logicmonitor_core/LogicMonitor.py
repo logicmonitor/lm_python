@@ -64,35 +64,6 @@ class LogicMonitor(object):
             logging.debug(ioe)
             self.fail(msg="Error: Unknown exception making API call")
 
-    def do(self, action, params):
-        """Make a call to the LogicMonitor
-         server \"do\" function"""
-        logging.debug("Running LogicMonitor.do...")
-
-        param_str = urllib.urlencode(params)
-        creds = (urllib.urlencode(
-            {"c": self.company,
-                "u": self.user,
-                "p": self.password}))
-
-        if param_str:
-            param_str = param_str + "&"
-        param_cred_str = param_str + creds
-
-        try:
-            # log param string without credentials
-            logging.debug("Attempting to open URL: " +
-                          "https://" + self.company + "." +
-                          self.lm_url +
-                          "/do/" + action + "?" + param_str)
-            f = self.urlopen(
-                "https://" + self.company + "." + self.lm_url +
-                "/do/" + action + "?" + param_cred_str)
-            return f.read()
-        except IOError as ioe:
-            logging.debug("Error opening URL. " + ioe)
-            self.fail("Unknown exception opening URL")
-
     def rest(self, path, method, data=None):
         '''Make a call to the LogicMonitor server REST API'''
         logging.debug("Running LogicMonitor.rest...")
