@@ -202,19 +202,17 @@ class Collector(LogicMonitor):
         if 'is running' not in output:
             self._changed(True)
 
-            output, err = Service.start('logicmonitor-agent')
+            output = Service.start('logicmonitor-agent')
             if output != 0:
-                self.fail(msg=str(err))
+                self.fail(msg=str(output))
 
         output = Service.getStatus('logicmonitor-watchdog')
         if 'is running' not in output:
             self._changed(True)
 
-            output, err = Service.start(
-                'logicmonitor-watchdog')
-
+            output = Service.start('logicmonitor-watchdog')
             if output != 0:
-                self.fail(msg=str(err))
+                self.fail(msg=str(output))
 
     def restart(self):
         '''Restart the LogicMonitor collector'''
@@ -222,13 +220,13 @@ class Collector(LogicMonitor):
 
         self._os_check()
 
-        output, err = Service.restart('logicmonitor-agent')
+        output = Service.restart('logicmonitor-agent')
         if output != 0:
-            self.fail(msg=str(err))
+            self.fail(msg=str(output))
 
-        output, err = Service.restart('logicmonitor-watchdog')
+        output = Service.restart('logicmonitor-watchdog')
         if output != 0:
-            self.fail(msg=str(err))
+            self.fail(msg=str(output))
 
     def stop(self):
         '''Stop the LogicMonitor collector'''
@@ -240,17 +238,17 @@ class Collector(LogicMonitor):
         if 'is running' in output:
             self._changed(True)
 
-            output, err = Service.stop('logicmonitor-agent')
+            output = Service.stop('logicmonitor-agent')
             if output != 0:
-                self.fail(msg=str(err))
+                self.fail(msg=str(output))
 
         output = Service.getStatus('logicmonitor-watchdog')
         if 'is running' in output:
             self._changed(True)
 
-            output, err = Service.stop('logicmonitor-watchdog')
+            output = Service.stop('logicmonitor-watchdog')
             if output != 0:
-                self.fail(msg=str(err))
+                self.fail(msg=str(output))
 
     def sdt(self):
         """Create a scheduled down time
