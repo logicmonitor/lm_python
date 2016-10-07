@@ -155,10 +155,9 @@ class Collector(LogicMonitor):
                    stdout=subprocess.PIPE))
         ret, err = p.communicate()
         cmd_result = p.returncode
-
         if cmd_result != 0:
             self.fail(msg='Error: Unable to install ' +
-                          'collector: ' + str(err))
+                          'collector: ' + str(ret))
         else:
             logging.debug('Collector installed successfully')
 
