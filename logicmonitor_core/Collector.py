@@ -180,7 +180,7 @@ class Collector(LogicMonitor):
 
                 logging.debug('Collector successfully uninstalled')
             except Exception as e:
-                self.fail('Error: Unable to uninstaller collector. ' + str(e))
+                self.fail('Error: Unable to uninstall collector. ' + str(e))
         else:
             if os.path.exists(self.installdir + '/agent'):
                 self.fail(msg='Unable to uninstall LogicMonitor Collector. ' +
