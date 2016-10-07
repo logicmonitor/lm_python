@@ -124,10 +124,10 @@ class Collector(LogicMonitor):
 
             f.write(installer)
             f.closed
-        except:
+        except Exception as err:
             f.closed
             self.fail(msg='Unable to open installer file ' +
-                          'for writing')
+                          'for writing. ' + str(err))
 
     def install(self):
         '''Execute the LogicMonitor installer if not
