@@ -382,10 +382,18 @@ class Collector(LogicMonitor):
             self.id = resp['data']['id']
             return resp['data']
 
+    def get_collectors(self):
+        '''Returns a JSON object containing a list of
+        LogicMonitor collectors'''
+        logging.debug('Running LogicMonitor.get_collectors...')
+
+        resp = self.api(self.resource, 'GET')
+        if resp.status_code == 200:
+            logging.debug('API call succeeded')
+            resp = resp.json()
+            return resp['data']
         else:
-            self.fail(
-                msg="Error: LogicMonitor Collector must be " +
-                "installed on a Linux device.")
+            self.fail(msg='Failed to retrieve collectors')
 
     def _unregister(self):
         """Delete this collector from the associated
