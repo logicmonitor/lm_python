@@ -97,18 +97,14 @@ class LogicMonitor(object):
         '''Make a call to the LogicMonitor server REST API'''
         logging.debug("Running LogicMonitor.rest...")
 
-        if ((method == 'PATCH' or
-             method == 'POST') and
-           data is None):
-            self.fail('Message body required for method ' +
-                      method)
+        if method == 'PATCH' or method == 'POST' and data is None:
+            self.fail('Message body required for method ' + method)
 
         # convert data to json
         if data is not None:
             data = json.dumps(data)
         try:
-            url = ('https://' + self.company + '.' +
-                   self.lm_url + '/rest' + path)
+            url = 'https://' + self.company + '.' + self.lm_url + '/rest' + path
 
             auth_header = self.get_auth_header(path, method, data)
             headers = {'Content-Type': 'application/json',
@@ -137,8 +133,7 @@ class LogicMonitor(object):
                 logging.debug('Successful API call to ' + url)
             return resp
         except Exception as e:
-            logging.error('Error making API request: '
-                          + e.message)
+            logging.error('Error making API request: ' + e.message)
             return None
 
     def get_auth_header(self, path, method, data):
