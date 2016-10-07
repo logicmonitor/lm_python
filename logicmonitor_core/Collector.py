@@ -425,3 +425,9 @@ class Collector(LogicMonitor):
             self.start()
             self.fail(msg='Error unregistering collector.')
 
+    def _changed(self, changed):
+        self.change = changed
+        if self.change is True:
+            logging.debug('System changed')
+            if self.check_mode:
+                self.exit(changed=True)
