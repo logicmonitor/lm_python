@@ -118,47 +118,48 @@ class Collector(LogicMonitor):
 
             f = open(installfilepath, 'w')
 
+            download_path = ('/setting/collectors/' + self.id +
+                             '/installers/linux' + arch)
+            installer = self.api(download_path, 'GET')
+
+            f.write(installer)
+            f.closed
+        except:
+            f.closed
+            self.fail(msg='Unable to open installer file ' +
+                          'for writing')
+
     def install(self):
-        """Execute the LogicMonitor installer if not
-        already installed"""
-        logging.debug("Running Collector.install...")
+        '''Execute the LogicMonitor installer if not
+        already installed'''
+        logging.debug('Running Collector.install...')
 
-        if self.platform == "Linux":
-            logging.debug("Platform is Linux")
+        self._os_check()
 
-            installer = self.get_installer_binary()
+        if self.info is None:
+            logging.debug('Retriving collector information')
+            self.info = self._get()
 
-            if self.info is None:
-                logging.debug("Retriving collector information")
-                self.info = self._get()
+        if os.path.exists(self.installdir + '/agent'):
+            logging.debug('Collector already installed')
+            return
 
-            if not os.path.exists(self.installdir + "/agent"):
-                logging.debug("System changed")
-                self.change = True
+        self._changed(True)
 
-                if self.check_mode:
-                    self.exit(changed=True)
+        logging.debug('Setting installer file permissions')
+        os.chmod(self.installer, 0744)
 
-                logging.debug("Setting installer file permissions")
-                os.chmod(installer, 0744)
+        logging.debug('Executing installer')
+        p = (Popen([self.installer, '-y'],
+                   stdout=subprocess.PIPE))
+        ret, err = p.communicate()
+        cmd_result = p.returncode
 
-                logging.debug("Executing installer")
-                p = (Popen([installer, "-y"],
-                           stdout=subprocess.PIPE))
-                ret, err = p.communicate()
-                cmd_result = p.returncode
-
-                if cmd_result != 0:
-                    self.fail(
-                        msg="Error: Unable to install collector: " + err)
-                else:
-                    logging.debug("Collector installed successfully")
-            else:
-                logging.debug("Collector already installed")
+        if cmd_result != 0:
+            self.fail(msg='Error: Unable to install ' +
+                          'collector: ' + err)
         else:
-            self.fail(
-                msg="Error: LogicMonitor Collector must be " +
-                "installed on a Linux device")
+            logging.debug('Collector installed successfully')
 
     def uninstall(self):
         """Uninstall LogicMontitor collector from the system"""
