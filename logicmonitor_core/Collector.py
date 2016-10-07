@@ -313,16 +313,17 @@ class Collector(LogicMonitor):
             self.fail(msg=resp["errmsg"])
 
     def site_facts(self):
-        """Output current properties information for the Collector"""
-        logging.debug("Running Collector.site_facts...")
+        '''Output current properties information
+        for the Collector'''
+        logging.debug('Running Collector.site_facts...')
 
-        if self.info:
-            logging.debug("Collector exists")
-            props = self.get_properties(True)
+        if not self.info:
+            self.fail(msg='Error: Collector does not exit.')
 
-            self.output_info(props)
-        else:
-            self.fail(msg="Error: Collector doesn't exit.")
+        logging.debug('Collector exists')
+        props = self.get_properties(True)
+
+        self.output_info(props)
 
     def _get(self):
         """Returns a JSON object representing this collector"""
