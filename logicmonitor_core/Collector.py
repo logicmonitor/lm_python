@@ -147,7 +147,7 @@ class Collector(LogicMonitor):
         self._changed(True)
 
         logging.debug('Setting installer file permissions')
-        os.chmod(self.installer, 0744)
+        os.chmod(self.installer, 484)  # decimal for 0o744
 
         logging.debug('Executing installer')
         p = (Popen([self.installer, '-y'],
