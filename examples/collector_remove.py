@@ -9,11 +9,11 @@ def main():
     parser.add_argument('-c', '--company',
                         help='LogicMonitor account',
                         required=True)
-    parser.add_argument('-u', '--user',
-                        help='LogicMonitor user name',
+    parser.add_argument('-t', '--accessid',
+                        help="API Token Access Id",
                         required=True)
-    parser.add_argument('-p', '--password',
-                        help='LogicMonitor password',
+    parser.add_argument('-k', '--accesskey',
+                        help="API Token Access Key",
                         required=True)
     parser.add_argument('-i', '--collector_id',
                         help='ID of an existing collector to add')
@@ -36,7 +36,7 @@ def main():
     params['accessid'] = args.accessid
     params['accesskey'] = args.accesskey
     params['collector_id'] = args.collector_id
-    
+
     col = Collector(params)
 
     exit_code = col.remove()

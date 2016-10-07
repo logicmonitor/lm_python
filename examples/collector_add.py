@@ -36,9 +36,13 @@ def main():
     params['collector_id'] = args.collector_id
 
     # Require params
-    params['company'] = args.company
+    params["company"] = args.company
     params['accessid'] = args.accessid
     params['accesskey'] = args.accesskey
+
+    # Optional params
+    if args.collector_id is not None:
+        params["collector_id"] = args.collector_id
 
     col = Collector(params)
 

@@ -27,10 +27,10 @@ def main():
     parser = argparse.ArgumentParser(description)
     parser.add_argument("-c", "--company", metavar="CUSTOMER_PORTAL",
                         help="LogicMonitor account", required=True)
-    parser.add_argument("-u", "--user", metavar="USERNAME",
-                        help="LogicMonitor username", required=True)
-    parser.add_argument("-p", "--password", metavar="PASSWORD",
-                        help="LogicMonitor password", required=True)
+    parser.add_argument('-t', '--accessid', metavar="ACCESSID",
+                        help="API Token Access Id", required=True)
+    parser.add_argument('-k', '--accesskey', metavar="ACCESSID",
+                        help="API Token Access Key", required=True)
     parser.add_argument("-ih", metavar="ITOP_HOST",
                         help="iTop server hostname", required=True)
     parser.add_argument("-iu", metavar="ITOP_USERNAME",
@@ -86,8 +86,8 @@ def main():
     params = {}
     params["group"] = None
     params["company"] = args.company
-    params["user"] = args.user
-    params["password"] = args.password
+    params['accessid'] = args.accessid
+    params['accesskey'] = args.accesskey
 
     # Get JSON of all devices
     host_list = HostList(params)
