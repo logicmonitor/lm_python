@@ -158,7 +158,7 @@ class Collector(LogicMonitor):
 
         if cmd_result != 0:
             self.fail(msg='Error: Unable to install ' +
-                          'collector: ' + err)
+                          'collector: ' + str(err))
         else:
             logging.debug('Collector installed successfully')
 
@@ -181,7 +181,7 @@ class Collector(LogicMonitor):
 
             if p.returncode != 0:
                 self.fail(msg='Error: Unable to uninstall ' +
-                          'collector: ' + err)
+                          'collector: ' + str(err))
             else:
                 logging.debug('Collector successfully ' +
                               'uninstalled')
