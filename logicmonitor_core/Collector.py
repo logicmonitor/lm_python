@@ -120,10 +120,12 @@ class Collector(LogicMonitor):
                              str(self.id) +
                              '/installers/linux' + str(arch))
             installer = self.api(download_path, 'GET')
+            logging.debug('Writing installer file')
             with open(installfilepath, 'wb') as f:
                     for chunk in installer.iter_content():
                         if chunk:
                             f.write(chunk)
+            return installfilepath
         except Exception as err:
             self.fail(msg='Unable to open installer file ' +
                           'for writing. ' + str(err))
