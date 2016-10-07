@@ -150,17 +150,20 @@ class Collector(LogicMonitor):
         logging.debug('Setting installer file permissions')
         os.chmod(self.installer, 484)  # decimal for 0o744
 
-        logging.debug('Executing installer')
-        p = (Popen([self.installer, '-y'],
-                   stdout=subprocess.PIPE,
-                   cwd=self.installdir))
-        ret, err = p.communicate()
-        cmd_result = p.returncode
-        if cmd_result != 0:
-            self.fail(msg='Error: Unable to install ' +
-                          'collector: ' + str(ret))
-        else:
+        try:
+            logging.debug('Executing installer')
+            p = (Popen([self.installer, '-y'],
+                       stdout=subprocess.PIPE,
+                       cwd=self.installdir))
+            ret, err = p.communicate()
+            cmd_result = p.returncode
+            if cmd_result != 0:
+                self.fail(msg='Error: Unable to install ' +
+                              'collector: ' + str(ret))
             logging.debug('Collector installed successfully')
+        except Exception as e:
+            self.fail('Error: Unable to installer collector. ' +
+                      str(e))
 
     def uninstall(self):
         '''Uninstall LogicMontitor collector from the system'''
@@ -174,17 +177,21 @@ class Collector(LogicMonitor):
 
             self._changed(True)
 
-            logging.debug('Running collector uninstaller')
-            p = (Popen([uninstallfile],
-                       stdout=subprocess.PIPE))
-            ret, err = p.communicate()
+            try:
+                logging.debug('Running collector uninstaller')
+                p = (Popen([uninstallfile],
+                           stdout=subprocess.PIPE))
+                ret, err = p.communicate()
+                cmd_result = p.returncode
+                if cmd_result != 0:
+                    self.fail(msg='Error: Unable to ' +
+                              'uninstall collector: ' +
+                              str(err))
 
-            if p.returncode != 0:
-                self.fail(msg='Error: Unable to uninstall ' +
-                          'collector: ' + str(err))
-            else:
-                logging.debug('Collector successfully ' +
-                              'uninstalled')
+                logging.debug('Collector successfully uninstalled')
+            except Exception as e:
+                self.fail('Error: Unable to uninstaller ' +
+                          'collector. ' + str(e))
         else:
             if os.path.exists(self.installdir + '/agent'):
                 self.fail(msg='Unable to uninstall ' +
