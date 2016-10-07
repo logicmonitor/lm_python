@@ -396,37 +396,32 @@ class Collector(LogicMonitor):
             self.fail(msg='Failed to retrieve collectors')
 
     def _unregister(self):
-        """Delete this collector from the associated
-        LogicMonitor account"""
-        logging.debug("Running Collector._unregister...")
+        '''Delete this collector from the associated
+        LogicMonitor account'''
+        logging.debug('Running Collector._unregister...')
 
         if self.info is None:
-            logging.debug("Retrieving collector information")
+            logging.debug('Retrieving collector information')
             self.info = self._get()
 
-        if self.info is not None:
-            logging.debug("Collector found")
-            logging.debug("System changed")
-            self.change = True
-
-            if self.check_mode:
-                self.exit(changed=True)
-
-            logging.debug("Making API call to 'deleteAgent'")
-            delete = json.loads(self.api("deleteAgent",
-                                         {"id": self.id}))
-
-            if delete["status"] is 200:
-                logging.debug("API call succeeded")
-                return delete
-            else:
-                # The collector couldn't unregister. Start the service again
-                logging.debug("Error unregistering collecting. " +
-                              delete["errmsg"])
-                logging.debug("The collector service will be restarted")
-
-                self.start()
-                self.fail(msg=delete["errmsg"])
-        else:
-            logging.debug("Collector not found")
+        if self.info is None:
+            logging.debug('Collector not found')
             return None
+
+        logging.debug('Collector found')
+
+        self._changed(True)
+
+        resp = self.api(self.path, 'DELETE')
+        if resp.status_code == 200:
+            logging.debug('API call succeeded')
+            return resp.json()
+        else:
+            # The collector couldn't unregister. Restart service
+            logging.debug('Error unregistering collector.')
+            logging.debug('The collector service will be ' +
+                          'restarted')
+
+            self.start()
+            self.fail(msg='Error unregistering collector.')
+
