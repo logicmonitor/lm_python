@@ -162,34 +162,34 @@ class Collector(LogicMonitor):
             logging.debug('Collector installed successfully')
 
     def uninstall(self):
-        """Uninstall LogicMontitor collector from the system"""
-        logging.debug("Running Collector.uninstall...")
+        '''Uninstall LogicMontitor collector from the system'''
+        logging.debug('Running Collector.uninstall...')
 
-        uninstallfile = self.installdir + "/agent/bin/uninstall.pl"
+        uninstallfile = (self.installdir +
+                         '/agent/bin/uninstall.pl')
 
         if os.path.isfile(uninstallfile):
-            logging.debug("Collector uninstall file exists")
-            logging.debug("System changed")
-            self.change = True
+            logging.debug('Collector uninstall file exists')
 
-            if self.check_mode:
-                self.exit(changed=True)
+            self._changed(True)
 
-            logging.debug("Running collector uninstaller")
+            logging.debug('Running collector uninstaller')
             p = (Popen([uninstallfile],
                        stdout=subprocess.PIPE))
             ret, err = p.communicate()
 
             if p.returncode != 0:
-                self.fail(msg="Error: Unable to uninstall collector: " + err)
+                self.fail(msg='Error: Unable to uninstall ' +
+                          'collector: ' + err)
             else:
-                logging.debug("Collector successfully uninstalled")
+                logging.debug('Collector successfully ' +
+                              'uninstalled')
         else:
-            if os.path.exists(self.installdir + "/agent"):
-                (self.fail(
-                    msg="Unable to uninstall LogicMonitor " +
-                    "Collector. Can not find LogicMonitor " +
-                    "uninstaller."))
+            if os.path.exists(self.installdir + '/agent'):
+                self.fail(msg='Unable to uninstall ' +
+                              'LogicMonitor Collector. ' +
+                              'Can not find LogicMonitor ' +
+                              'uninstaller.')
 
     def start(self):
         """Start the LogicMonitor collector"""
