@@ -50,7 +50,7 @@ class Collector(LogicMonitor):
             self.id = None
         else:
             self.id = self.info['id']
-            self.path = self.resource + self.id
+            self.path = self.resource + str(self.id)
 
     def create(self):
         '''Idempotent function to make sure that there is
@@ -366,7 +366,7 @@ class Collector(LogicMonitor):
         if ret is not None:
             self.info = ret
             self.id = ret['id']
-            self.path = self.resource + self.id
+            self.path = self.resource + str(self.id)
             return ret
 
         self._changed(True)
