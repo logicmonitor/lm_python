@@ -178,21 +178,6 @@ class LogicMonitor(object):
 
         return auth
 
-    def get_collectors(self):
-        """Returns a JSON object containing a list of
-        LogicMonitor collectors"""
-        logging.debug("Running LogicMonitor.get_collectors...")
-
-        logging.debug("Making API call to 'getAgents'")
-        resp = self.api("getAgents", {})
-        resp_json = json.loads(resp)
-
-        if resp_json["status"] is 200:
-            logging.debug("API call succeeded")
-            return resp_json["data"]
-        else:
-            self.fail(msg=resp)
-
     def get_host_by_hostname(self, hostname, collector):
         """Returns a host object for the host matching the
         specified hostname"""
@@ -244,22 +229,6 @@ class LogicMonitor(object):
             logging.debug("API call failed")
             logging.debug(host_json)
             return None
-
-    def get_collector_by_description(self, description):
-        """Returns a JSON collector object for the collector
-        matching the specified FQDN (description)"""
-        logging.debug("Running LogicMonitor.get_collector_by_description...")
-
-        collector_list = self.get_collectors()
-        if collector_list is not None:
-            logging.debug("Looking for collector with description " +
-                          description)
-            for collector in collector_list:
-                if collector["description"] == description:
-                    logging.debug("Collector match found")
-                    return collector
-        logging.debug("No collector match found")
-        return None
 
     def get_group(self, fullpath):
         """Returns a JSON group object for the group matching the
