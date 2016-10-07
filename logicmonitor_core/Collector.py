@@ -326,34 +326,32 @@ class Collector(LogicMonitor):
         self.output_info(props)
 
     def _get(self):
-        """Returns a JSON object representing this collector"""
-        logging.debug("Running Collector._get...")
+        '''Returns a JSON object representing this collector'''
+        logging.debug('Running Collector._get...')
 
         ret = None
 
         collector_list = self.get_collectors()
+        if collector_list is None:
+            logging.debug('No collectors returned')
+            return ret
 
-        if collector_list is not None:
-            logging.debug("Collectors returned")
-            for collector in collector_list:
-                if (
-                    collector["description"] == self.description and
-                    collector["description"] != ""
-                ):
-                    logging.debug(
-                        "Collector matching description " +
-                        self.description + " found."
-                    )
-                    ret = collector
-                elif str(collector["id"]) == str(self.collector_id):
-                    logging.debug(
-                        "Collector id " + self.collector_id + " found."
-                    )
-                    ret = collector
-
-        else:
-            logging.debug("No collectors returned")
-            ret = None
+        logging.debug('Collectors returned')
+        for collector in collector_list['items']:
+            if (
+                collector['description'] == self.description and
+                collector['description'] != ''
+            ):
+                logging.debug('Collector matching ' +
+                              'description ' +
+                              self.description + ' found.')
+                ret = collector
+                break
+            elif str(collector['id']) == str(self.collector_id):
+                logging.debug('Collector id ' +
+                              self.collector_id + ' found.')
+                ret = collector
+                break
         return ret
 
     def _create(self):
