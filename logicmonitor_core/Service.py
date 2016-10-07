@@ -9,15 +9,15 @@ from subprocess import Popen
 class Service(object):
     @staticmethod
     def start(name):
-        Service.doAction(name, 'start')
+        return Service.doAction(name, 'start')
 
     @staticmethod
     def stop(name):
-        Service.doAction(name, 'stop')
+        return Service.doAction(name, 'stop')
 
     @staticmethod
     def restart(name):
-        Service.doAction(name, 'restart')
+        return Service.doAction(name, 'restart')
 
     @staticmethod
     def getStatus(name):
@@ -49,7 +49,8 @@ class Service(object):
 
     @staticmethod
     def doAction(name, action):
-        logging.debug('Performing ' + action + ' on service ' + name)
+        logging.debug('Performing ' + action +
+                      ' on service ' + name)
 
         startType = Service._getType(name)
 
@@ -73,19 +74,19 @@ class Service(object):
             ret = msg
 
         if ret == 0:
-            logging.debug(msg='successfully performed ' +
-                          action + ' on service ' +
-                          name + '. ')
+            ret = ('Successfully performed ' + action +
+                   ' on service ' + name)
+            logging.debug(msg=ret)
         else:
-            logging.error(msg='Error: Failed performing ' +
-                          action + ' on service ' +
-                          name + '. ')
-
-        return (ret, msg)
+            ret = ('Error: Failed performing ' +
+                   action + ' on service ' + name)
+            logging.error(msg=ret)
+        return ret
 
     @staticmethod
     def _getType(name):
-        logging.debug('Getting service ' + name + ' control type')
+        logging.debug('Getting service ' + name +
+                      ' control type')
 
         if os.path.isdir('/etc/init.d'):
             logging.debug('Service control is via init.d')
