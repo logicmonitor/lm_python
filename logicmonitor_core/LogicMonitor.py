@@ -110,8 +110,7 @@ class LogicMonitor(object):
             url = ('https://' + self.company + '.' +
                    self.lm_url + '/rest' + path)
 
-            auth_header = self.get_auth_header(
-                            path, method, data)
+            auth_header = self.get_auth_header(path, method, data)
             headers = {'Content-Type': 'application/json',
                        'Authorization': auth_header}
 
@@ -122,26 +121,17 @@ class LogicMonitor(object):
             elif method == 'GET':
                 resp = requests.get(url, headers=headers)
             elif method == 'PATCH':
-                resp = requests.patch(url,
-                                      data=data,
-                                      headers=headers)
+                resp = requests.patch(url, data=data, headers=headers)
             elif method == 'POST':
-                resp = requests.post(url,
-                                     data=data,
-                                     headers=headers)
+                resp = requests.post(url, data=data, headers=headers)
             elif method == 'PUT':
-                resp = requests.put(url,
-                                    data=data,
-                                    headers=headers)
+                resp = requests.put(url, data=data, headers=headers)
             else:
-                self.fail('Invalid method ' +
-                          method + 'specified')
+                self.fail('Invalid method ' + method + 'specified')
 
             if resp.status_code != 200:
-                logging.error('HTTP response ' +
-                              str(resp.status_code) +
-                              ' from API while making ' +
-                              method +
+                logging.error('HTTP response ' + str(resp.status_code) +
+                              ' from API while making ' + method +
                               ' request to ' + url)
             else:
                 logging.debug('Successful API call to ' + url)
@@ -156,8 +146,8 @@ class LogicMonitor(object):
         logging.debug("Running LogicMonitor.get_auth_header...")
 
         if self.accesskey is None or self.accessid is None:
-            self.fail('Must specify Access Key and ' +
-                      'Access ID for authenticating')
+            self.fail('Must specify Access Key and Access ID for ' +
+                      'authenticating')
 
         epoch = str(int(time.time() * 1000))
 
@@ -172,13 +162,10 @@ class LogicMonitor(object):
         digest = hmac.new(self.accesskey,
                           msg=msg,
                           digestmod=hashlib.sha256).hexdigest()
-
         signature = base64.b64encode(digest)
+
         # construct header
-        auth = ('LMv1 ' +
-                self.accessid + ':' +
-                signature + ':' +
-                epoch)
+        auth = ('LMv1 ' + self.accessid + ':' + signature + ':' + epoch)
 
         return auth
 
