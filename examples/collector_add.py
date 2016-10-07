@@ -2,46 +2,49 @@
 
 import argparse
 import logging
-from logicmonitor_core.Collector import Collector
+from Collector import Collector
 
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--company",
-                        help="LogicMonitor account",
+    parser.add_argument('-c', '--company',
+                        help='LogicMonitor account',
                         required=True)
-    parser.add_argument("-u", "--user",
-                        help="LogicMonitor user name",
+    parser.add_argument('-t', '--accessid',
+                        help='API Token Access Id',
                         required=True)
-    parser.add_argument("-p", "--password",
-                        help="LogicMonitor password",
+    parser.add_argument('-k', '--accesskey',
+                        help='API Token Access Key',
                         required=True)
-    parser.add_argument("-i", "--collector_id",
-                        help="ID of an existing collector to add")
+    parser.add_argument('-i', '--collector_id',
+                        help='ID of an existing collector to add')
     args = parser.parse_args()
 
     params = {}
-    params["alertenable"] = True
-    params["collector"] = None
-    params["description"] = ""
-    params["displayname"] = None
-    params["duration"] = 30
-    params["fullpath"] = None
-    params["groups"] = []
-    params["hostname"] = None
-    params["properties"] = {}
-    params["starttime"] = None
+    params['alertenable'] = True
+    params['collector'] = None
+    params['description'] = ''
+    params['displayname'] = None
+    params['duration'] = 30
+    params['fullpath'] = None
+    params['groups'] = []
+    params['hostname'] = None
+    params['properties'] = {}
+    params['starttime'] = None
 
     # Require params
-    params["company"] = args.company
-    params["user"] = args.user
-    params["password"] = args.password
+    params['company'] = args.company
+    params['accessid'] = args.accessid
+    params['accesskey'] = args.accesskey
 
     # Optional params
     if args.collector_id is not None:
-        params["collector_id"] = args.collector_id
+        params['collector_id'] = args.collector_id
+
+    if args.collector_id is not None:
+        params['description'] = args.description
 
     col = Collector(params)
 
