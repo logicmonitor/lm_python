@@ -74,69 +74,49 @@ class Collector(LogicMonitor):
         logging.debug('Collector removed')
 
     def get_installer_binary(self):
-        """Download the LogicMonitor collector installer binary"""
-        logging.debug("Running Collector.get_installer_binary...")
+        '''Download the LogicMonitor collector
+        installer binary'''
+        logging.debug('Running ' +
+                      'Collector.get_installer_binary...')
+
+        self._os_check()
 
         arch = 32
-
         if self.is_64bits:
-            logging.debug("64 bit system")
+            logging.debug('64 bit system')
             arch = 64
         else:
-            logging.debug("32 bit system")
+            logging.debug('32 bit system')
 
-        if self.platform == "Linux" and self.id is not None:
-            logging.debug("Platform is Linux")
-            logging.debug("Agent ID is " + str(self.id))
+        if self.id is None:
+            self.fail(msg='Error: Unable  to retrieve the ' +
+                          'installer from the server')
 
+        logging.debug('Agent ID is ' + str(self.id))
+
+        installfilepath = (self.installdir +
+                           '/logicmonitorsetup' + str(self.id) +
+                           '_' + str(arch) + '.bin')
+
+        logging.debug('Looking for existing installer at ' +
+                      installfilepath)
+
+        if os.path.isfile(installfilepath):
+            logging.debug('Collector installer already exists')
+            return installfilepath
+
+        logging.debug('No previous installer found')
+        self._changed(True)
+
+        logging.debug('Downloading installer file')
+        try:
+            # create install dir if it doesn't exist
             if not os.path.exists(self.installdir):
                 os.makedirs(self.installdir)
-                logging.debug("Created installdir at " +
+                logging.debug('Created installdir at ' +
                               self.installdir)
 
-            installfilepath = (self.installdir +
-                               "/logicmonitorsetup" +
-                               str(self.id) + "_" + str(arch) +
-                               ".bin")
-
-            logging.debug("Looking for existing installer at " +
-                          installfilepath)
-            if not os.path.isfile(installfilepath):
-                logging.debug("No previous installer found")
-                logging.debug("System changed")
-                self.change = True
-
-                if self.check_mode:
-                    self.exit(changed=True)
-
-                logging.debug("Downloading installer file")
-                try:
-                    f = open(installfilepath, "w")
-                    installer = (self.do("logicmonitorsetup",
-                                         {"id": self.id,
-                                          "arch": arch}))
-                    f.write(installer)
-                    f.closed
-                except:
-                    self.fail(msg="Unable to open installer file for writing")
-                    f.closed
-            else:
-                logging.debug("Collector installer already exists")
-                return installfilepath
-
-        elif self.id is None:
-            self.fail(
-                msg="Error: There is currently no collector " +
-                    "associated with this device. To download " +
-                    " the installer, first create a collector " +
-                    "for this device.")
-        elif self.platform != "Linux":
-            self.fail(
-                msg="Error: LogicMonitor Collector must be " +
-                "installed on a Linux device.")
-        else:
-            self.fail(
-                msg="Error: Unable  to retrieve the installer from the server")
+            f = open(installfilepath, 'w')
 
     def install(self):
         """Execute the LogicMonitor installer if not
