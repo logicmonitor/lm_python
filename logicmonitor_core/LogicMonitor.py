@@ -104,7 +104,8 @@ class LogicMonitor(object):
         if data is not None:
             data = json.dumps(data)
         try:
-            url = 'https://' + self.company + '.' + self.lm_url + '/rest' + path
+            url = 'https://' + self.company + '.' + self.lm_url + '
+            /rest' + path
 
             auth_header = self.get_auth_header(path, method, data)
             headers = {'Content-Type': 'application/json',
