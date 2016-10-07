@@ -355,38 +355,33 @@ class Collector(LogicMonitor):
         return ret
 
     def _create(self):
-        """Create a new collector in the associated
-        LogicMonitor account"""
-        logging.debug("Running Collector._create...")
+        '''Create a new collector in the associated
+        LogicMonitor account'''
+        logging.debug('Running Collector._create...')
 
-        if self.platform == "Linux":
-            logging.debug("Platform is Linux")
-            ret = self.info or self._get()
+        self._os_check()
 
-            if ret is None:
-                self.change = True
-                logging.debug("System changed")
+        ret = self.info or self._get()
+        if ret is not None:
+            self.info = ret
+            self.id = ret['id']
+            self.path = self.resource + self.id
+            return ret
 
-                if self.check_mode:
-                    self.exit(changed=True)
+        self._changed(True)
 
-                h = {"autogen": True,
-                     "description": self.description}
+        resp = self.api('/setting/collectors',
+                        'POST',
+                        {'name': self.description})
+        if resp.status_code != 200:
+            self.fail('Error: Invalid API response')
 
-                logging.debug("Making API call to 'addAgent'")
-                create = (json.loads(self.api("addAgent", h)))
+        resp = resp.json()
+        if 'data' in resp and 'id' in resp['data']:
+            self.info = resp['data']
+            self.id = resp['data']['id']
+            return resp['data']
 
-                if create["status"] is 200:
-                    logging.debug("API call succeeded")
-                    self.info = create["data"]
-                    self.id = create["data"]["id"]
-                    return create["data"]
-                else:
-                    self.fail(msg=create["errmsg"])
-            else:
-                self.info = ret
-                self.id = ret["id"]
-                return ret
         else:
             self.fail(
                 msg="Error: LogicMonitor Collector must be " +
