@@ -17,7 +17,7 @@ class Host(LogicMonitor):
         self.collector = None
         self.api = self.rest
 
-        LogicMonitor.__init__(self, **self.params)
+        LogicMonitor.__init__(self, **params)
 
         if self.params['hostname']:
             logging.debug('Hostname is ' + self.params['hostname'])
