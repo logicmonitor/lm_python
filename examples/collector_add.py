@@ -2,7 +2,7 @@
 
 import argparse
 import logging
-from Collector import Collector
+from logicmonitor_core.Collector import Collector
 
 
 def main():
