@@ -349,7 +349,6 @@ class Collector(LogicMonitor):
 
         resp = self.api(self.resource, 'GET')
         if resp.status_code == 200:
-            logging.debug('API call succeeded')
             resp = resp.json()
             return resp['data']
         else:
@@ -373,7 +372,6 @@ class Collector(LogicMonitor):
 
         resp = self.api(self.path, 'DELETE')
         if resp.status_code == 200:
-            logging.debug('API call succeeded')
             return resp.json()
         else:
             # The collector couldn't unregister. Restart service
