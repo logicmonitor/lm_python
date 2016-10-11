@@ -20,7 +20,7 @@ class Service(object):
         return Service.doAction(name, 'restart')
 
     @staticmethod
-    def getStatus(name):
+    def status(name):
         logging.basicConfig(level=logging.DEBUG)
         logging.debug('Retrieving status of service ' + name)
 

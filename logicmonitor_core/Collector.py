@@ -86,7 +86,7 @@ class Collector(LogicMonitor):
             logging.debug('32 bit system')
 
         if self.id is None:
-            self.fail(msg='Error: Unable  to retrieve the installer from ' +
+            self.fail(msg='Error: Unable to retrieve the installer from ' +
                           'the server')
 
         logging.debug('Agent ID is ' + str(self.id))
@@ -191,7 +191,7 @@ class Collector(LogicMonitor):
 
         self._os_check()
 
-        output = Service.getStatus('logicmonitor-agent')
+        output = Service.status('logicmonitor-agent')
         if 'is running' not in output:
             self._changed(True)
 
@@ -199,7 +199,7 @@ class Collector(LogicMonitor):
             if output != 0:
                 self.fail(msg=str(output))
 
-        output = Service.getStatus('logicmonitor-watchdog')
+        output = Service.status('logicmonitor-watchdog')
         if 'is running' not in output:
             self._changed(True)
 
@@ -227,7 +227,7 @@ class Collector(LogicMonitor):
 
         self._os_check()
 
-        output = Service.getStatus('logicmonitor-agent')
+        output = Service.status('logicmonitor-agent')
         if 'is running' in output:
             self._changed(True)
 
@@ -235,7 +235,7 @@ class Collector(LogicMonitor):
             if output != 0:
                 self.fail(msg=str(output))
 
-        output = Service.getStatus('logicmonitor-watchdog')
+        output = Service.status('logicmonitor-watchdog')
         if 'is running' in output:
             self._changed(True)
 
