@@ -15,14 +15,15 @@ import urllib2
 
 class LogicMonitor(object):
 
-    def __init__(self, **params):
+    def __init__(self, company, accessid, accesskey, **params):
         self.__version__ = "1.0-python"
         logging.debug("Instantiating LogicMonitor object")
 
+        self.company = company
+        self.accessid = accessid
+        self.accesskey = accesskey
+
         self.check_mode = False
-        self.company = params["company"]
-        self.accessid = params['accessid']
-        self.accesskey = params['accesskey']
         self.fqdn = socket.getfqdn()
         self.lm_url = "logicmonitor.com/santaba"
         self.urlopen = urllib2.urlopen
@@ -104,8 +105,8 @@ class LogicMonitor(object):
         if data is not None:
             data = json.dumps(data)
         try:
-            url = 'https://' + self.company + '.' + self.lm_url + '
-            /rest' + path
+            url = ('https://' + self.company + '.' + self.lm_url +
+                   '/rest' + path)
 
             auth_header = self.get_auth_header(path, method, data)
             headers = {'Content-Type': 'application/json',
