@@ -15,7 +15,7 @@ class Host(LogicMonitor):
         self.change = False
         self.params = params
         self.collector = None
-        self.api = self.rpc
+        self.api = self.rest
 
         LogicMonitor.__init__(self, **self.params)
 
