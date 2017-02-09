@@ -160,7 +160,8 @@ class Collector(LogicMonitor):
 
                 logging.debug("Executing installer")
                 p = (Popen([installer, "-y"],
-                           stdout=subprocess.PIPE))
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE))
                 ret, err = p.communicate()
                 cmd_result = p.returncode
 
@@ -192,7 +193,8 @@ class Collector(LogicMonitor):
 
             logging.debug("Running collector uninstaller")
             p = (Popen([uninstallfile],
-                       stdout=subprocess.PIPE))
+                       stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE))
             ret, err = p.communicate()
 
             if p.returncode != 0:
