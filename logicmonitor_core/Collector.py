@@ -160,13 +160,14 @@ class Collector(LogicMonitor):
 
                 logging.debug("Executing installer")
                 p = (Popen([installer, "-y"],
-                           stdout=subprocess.PIPE))
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE))
                 ret, err = p.communicate()
                 cmd_result = p.returncode
 
                 if cmd_result != 0:
                     self.fail(
-                        msg="Error: Unable to install collector: " + err)
+                        msg="Error: Unable to install collector: " + str(err))
                 else:
                     logging.debug("Collector installed successfully")
             else:
@@ -192,11 +193,12 @@ class Collector(LogicMonitor):
 
             logging.debug("Running collector uninstaller")
             p = (Popen([uninstallfile],
-                       stdout=subprocess.PIPE))
+                       stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE))
             ret, err = p.communicate()
 
             if p.returncode != 0:
-                self.fail(msg="Error: Unable to uninstall collector: " + err)
+                self.fail(msg="Error: Unable to uninstall collector: " + str(err))
             else:
                 logging.debug("Collector successfully uninstalled")
         else:
