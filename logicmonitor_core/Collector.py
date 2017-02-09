@@ -166,7 +166,7 @@ class Collector(LogicMonitor):
 
                 if cmd_result != 0:
                     self.fail(
-                        msg="Error: Unable to install collector: " + err)
+                        msg="Error: Unable to install collector: " + str(err))
                 else:
                     logging.debug("Collector installed successfully")
             else:
@@ -196,7 +196,7 @@ class Collector(LogicMonitor):
             ret, err = p.communicate()
 
             if p.returncode != 0:
-                self.fail(msg="Error: Unable to uninstall collector: " + err)
+                self.fail(msg="Error: Unable to uninstall collector: " + str(err))
             else:
                 logging.debug("Collector successfully uninstalled")
         else:
